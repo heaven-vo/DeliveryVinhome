@@ -25,6 +25,8 @@ builder.Services.AddSwaggerGen(c =>
             Url = new Uri("https://www.facebook.com/duong.as.35/"),
         }
     });
+   // var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+   // c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 builder.Services.AddCors(c =>
 {
@@ -34,9 +36,12 @@ builder.Services.AddCors(c =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()) 
 {
-    app.UseSwagger();
+    app.UseSwagger(options =>
+    {
+        options.SerializeAsV2 = true;
+    });
     app.UseSwaggerUI(c => {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "VHGP Delivery Web API v1");
         c.RoutePrefix = string.Empty;
