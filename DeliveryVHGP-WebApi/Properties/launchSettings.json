@@ -11,7 +11,7 @@
   "profiles": {
     "DeliveryVHGP_WebApi": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
+      "dotnetRunMessages": "true",
       "launchBrowser": true,
       "launchUrl": "",
       "applicationUrl": "https://localhost:7102;http://localhost:5102",

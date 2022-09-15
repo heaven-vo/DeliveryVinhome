@@ -23,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="IRepositories\" />
+    <Folder Include="Repositories\" />
     <Folder Include="Settings\" />
     <Folder Include="ViewModels\" />
     <Folder Include="Services\" />
