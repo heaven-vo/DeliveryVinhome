@@ -22,13 +22,13 @@ namespace DeliveryVHGP_WebApi.Models
         public double? MaximumQuantity { get; set; }
         public double? MinimumQuantity { get; set; }
         public double? MinimumDeIn { get; set; }
-        public string? ShopId { get; set; }
+        public string? StoreId { get; set; }
         public string? CategoryId { get; set; }
         public string? Description { get; set; }
         public string? Status { get; set; }
 
         public virtual Category? Category { get; set; }
-        public virtual Store? Shop { get; set; }
+        public virtual Store? Store { get; set; }
         public virtual ICollection<ProductInCollection> ProductInCollections { get; set; }
         public virtual ICollection<ProductInMenu> ProductInMenus { get; set; }
         public virtual ICollection<ProductTag> ProductTags { get; set; }
