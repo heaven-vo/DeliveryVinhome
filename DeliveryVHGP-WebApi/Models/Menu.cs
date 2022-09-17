@@ -18,6 +18,8 @@ namespace DeliveryVHGP_WebApi.Models
         public string? EndDate { get; set; }
         public string? DayFilter { get; set; }
         public string? HourFilter { get; set; }
+        public string? StartHour { get; set; }
+        public string? EndHour { get; set; }
         public string? ModeId { get; set; }
 
         public virtual DeliveryMode? Mode { get; set; }
