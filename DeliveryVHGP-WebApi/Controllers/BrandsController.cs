@@ -21,6 +21,9 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         // GET: api/Brands
+        /// <summary>
+        /// Get list all mentors with pagination
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult> GetBrands()
         {

@@ -29,7 +29,7 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await menuRepository.getListMenuNow());
         }
 
-        [HttpGet("detail/{id}")]
+        [HttpGet("{id}/products")]
         public async Task<ActionResult<List<ProductViewInList>>> getAllProductInMenu(string id, int page, int pageSize)
         {
             return Ok(await menuRepository.getListProductInMenu(id, page, pageSize));
