@@ -24,15 +24,21 @@ namespace DeliveryVHGP_WebApi.Controllers
 
         // GET: api/Menus
         [HttpGet]
-        public async Task<ActionResult<List<MenuView>>> getMenus()
+        public async Task<ActionResult<List<MenuView>>> GetMenus()
         {
-            return Ok(await menuRepository.getListMenuNow());
+            return Ok(await menuRepository.GetListMenuNow());
+        }
+
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<MenuView>>> GetMenuByModeId(string modeId)
+        {
+            return Ok(await menuRepository.GetListMenuByMode(modeId));
         }
 
         [HttpGet("{id}/products")]
-        public async Task<ActionResult<List<ProductViewInList>>> getAllProductInMenu(string id, int page, int pageSize)
+        public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenu(string id, int page, int pageSize)
         {
-            return Ok(await menuRepository.getListProductInMenu(id, page, pageSize));
+            return Ok(await menuRepository.GetListProductInMenu(id, page, pageSize));
         }
     }
 }

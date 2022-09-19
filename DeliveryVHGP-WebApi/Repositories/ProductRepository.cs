@@ -13,9 +13,9 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             this.context = context;
         }
-        public async Task<List<ProductViewInList>> getListProductInStore(string storeId, int page, int pageSize) 
+        public async Task<List<ProductViewInList>> GetListProductInStore(string storeId, int page, int pageSize) 
         {
-            double time = await getTime();
+            double time = await GetTime();
             var listProducts = await ( from product in context.Products
                                        join store in context.Stores on product.StoreId equals store.Id
                                        join pm in context.ProductInMenus on product.Id equals pm.ProductId
@@ -33,9 +33,9 @@ namespace DeliveryVHGP_WebApi.Repositories
             return listProducts;
         }
 
-        public async Task<List<ProductViewInList>> getListProductInCategory(string categoryId, int page, int pageSize)
+        public async Task<List<ProductViewInList>> GetListProductInCategory(string categoryId, int page, int pageSize)
         {
-            double time = await getTime();
+            double time = await GetTime();
             var listProducts = await (from product in context.Products
                                       join store in context.Stores on product.StoreId equals store.Id
                                       join category in context.Categories on product.CategoryId equals category.Id
@@ -53,7 +53,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
-        public async Task<double> getTime()
+        public async Task<double> GetTime()
         {
             DateTime utcDateTime = DateTime.UtcNow;
             string vnTimeZoneKey = "SE Asia Standard Time";
