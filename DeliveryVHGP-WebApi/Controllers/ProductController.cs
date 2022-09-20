@@ -21,9 +21,18 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             _productRepository = productRepository;
         }
-
-        
-
+        /// <summary>
+        /// Get product by id with pagination
+        /// </summary>
+        //GET: api/v1/productbyId?pageIndex=1&pageSize=3
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetProductDetail(string id)
+        {
+            var pro = await _productRepository.GetById(id);
+            if (pro == null)
+                return NotFound();
+            return Ok(pro);
+        }
         /// <summary>
         /// Update product Detail with pagination
         /// </summary>

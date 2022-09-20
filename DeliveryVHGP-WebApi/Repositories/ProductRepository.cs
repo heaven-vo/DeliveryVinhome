@@ -13,6 +13,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             this.context = context;
         }
+
         public async Task<IEnumerable<ProductDetailsModel>> GetAll(int pageIndex, int pageSize)
         {
             var listproductdetail = await (from p in context.Products
@@ -42,7 +43,36 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return listproductdetail;
         }
+        public async Task<Object> GetById(string proId)
+        {
+            var product = await (from p in context.Products
+                                 join s in context.Stores on p.StoreId equals s.Id
+                                 join c in context.Categories on p.CategoryId equals c.Id
+                                 where p.Id == proId
+                                 select new ProductDetailsModel()
+                                 {
+                                     Id = p.Id,
+                                     Name = p.Name,
+                                     Image = p.Image,
+                                     Unit = p.Unit,
+                                     PricePerPack = p.PricePerPack,
+                                     PackNetWeight = p.PackNetWeight,
+                                     PackDescription = p.PackDescription,
+                                     MaximumQuantity = p.MaximumQuantity,
+                                     MinimumQuantity = p.MinimumQuantity,
+                                     Description = p.Description,
+                                     Rate = p.Rate,
+                                     StoreId = s.Id,
+                                     StoreName = s.Name,
+                                     StoreImage = s.Image,
+                                     Slogan = s.Slogan,
+                                     CategoryId = c.Id,
+                                     ProductCategory = c.Name
 
+                                 }).ToListAsync();
+
+            return product;
+        }
         public async Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product)
         {
             if (proId == null)
