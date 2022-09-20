@@ -24,6 +24,7 @@ namespace DeliveryVHGP_WebApi.Models
         public double? MinimumDeIn { get; set; }
         public string? StoreId { get; set; }
         public string? CategoryId { get; set; }
+        public double? Rate { get; set; }
         public string? Description { get; set; }
         public string? Status { get; set; }
 

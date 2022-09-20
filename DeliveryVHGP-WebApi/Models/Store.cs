@@ -21,6 +21,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? OpenTime { get; set; }
         public string? Image { get; set; }
         public string? StoreCategoryId { get; set; }
+        public string? Slogan { get; set; }
 
         public virtual Brand? Brand { get; set; }
         public virtual StoreCategory? StoreCategory { get; set; }
