@@ -1,5 +1,6 @@
 using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.Models;
+using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -7,7 +8,12 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
+builder.Services.AddScoped<IProductv1Repository, ProductDetailRepository>();
+builder.Services.AddScoped<IBrandRepository, BrandRepository>();
+builder.Services.AddScoped<IStoreCategoryRepository, StoreCategoryRepository>();
+builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>(); 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
