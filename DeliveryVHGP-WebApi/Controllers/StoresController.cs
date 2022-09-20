@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
@@ -15,10 +16,12 @@ namespace DeliveryVHGP_WebApi.Controllers
     public class StoresController : ControllerBase
     {
         private readonly IStoreRepository _storeRepository;
+        private readonly IMenuRepository _menuRepository;
 
-        public StoresController(IStoreRepository storeRepository)
+        public StoresController(IStoreRepository storeRepository, IMenuRepository menuRepository)
         {
             _storeRepository = storeRepository;
+            _menuRepository = menuRepository;
         }
 
         /// <summary>
@@ -29,6 +32,16 @@ namespace DeliveryVHGP_WebApi.Controllers
         public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
         {
             return Ok(await _storeRepository.GetAll(pageIndex, pageSize));
+        }
+
+        /// <summary>
+        /// Get list menu in store
+        /// </summary>
+        //GET: api/v1/category/{id}/menus
+        [HttpGet("{id}/menus")]
+        public async Task<ActionResult<List<MenuView>>> GetListMenuInStore(string menuId)
+        {
+            return Ok(await _menuRepository.GetListMenuByStoreId(menuId));
         }
     }
 }

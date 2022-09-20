@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
-builder.Services.AddScoped<IProductv1Repository, ProductDetailRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
 builder.Services.AddScoped<IStoreCategoryRepository, StoreCategoryRepository>();
 builder.Services.AddScoped<ICategoriesRepository, CategoriesRepository>();

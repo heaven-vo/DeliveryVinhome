@@ -7,18 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/category")]
+    [Route("api/v1/categories")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoriesRepository _categoriesRepository;
+        private readonly IMenuRepository _menuRepository;
 
-        public CategoriesController(ICategoriesRepository categoriesRepository)
+        public CategoriesController(ICategoriesRepository categoriesRepository, IMenuRepository menuRepository)
         {
             _categoriesRepository = categoriesRepository;
+            _menuRepository = menuRepository;
         }
         /// <summary>
         /// Get list all category with pagination
@@ -40,6 +43,16 @@ namespace DeliveryVHGP_WebApi.Controllers
             if (category == null)
                 return NotFound();
             return Ok(category);
+        }
+
+        /// <summary>
+        /// Get list menu in category
+        /// </summary>
+        //GET: api/v1/category/{id}/menus
+        [HttpGet("{id}/menus")]
+        public async Task<ActionResult<List<MenuView>>> GetListMenuInCategory(string menuId)
+        {
+            return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
         }
     }
 }

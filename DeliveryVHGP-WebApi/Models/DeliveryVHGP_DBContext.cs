@@ -39,7 +39,9 @@ namespace DeliveryVHGP_WebApi.Models
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductInCollection> ProductInCollections { get; set; } = null!;
         public virtual DbSet<ProductInMenu> ProductInMenus { get; set; } = null!;
+        public virtual DbSet<ProductInRequest> ProductInRequests { get; set; } = null!;
         public virtual DbSet<ProductTag> ProductTags { get; set; } = null!;
+        public virtual DbSet<RequestInMenu> RequestInMenus { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Schedule> Schedules { get; set; } = null!;
         public virtual DbSet<Shift> Shifts { get; set; } = null!;
@@ -603,6 +605,27 @@ namespace DeliveryVHGP_WebApi.Models
                     .HasConstraintName("FK_ProductInMenu_Product");
             });
 
+            modelBuilder.Entity<ProductInRequest>(entity =>
+            {
+                entity.ToTable("ProductInRequest");
+
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.ProductId).HasMaxLength(50);
+
+                entity.Property(e => e.RequestId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductInRequests)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_ProductInRequest_Product");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.ProductInRequests)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("FK_ProductInRequest_RequestInMenu");
+            });
+
             modelBuilder.Entity<ProductTag>(entity =>
             {
                 entity.ToTable("ProductTag");
@@ -622,6 +645,30 @@ namespace DeliveryVHGP_WebApi.Models
                     .WithMany(p => p.ProductTags)
                     .HasForeignKey(d => d.TagId)
                     .HasConstraintName("FK_ProductTag_Tag");
+            });
+
+            modelBuilder.Entity<RequestInMenu>(entity =>
+            {
+                entity.ToTable("RequestInMenu");
+
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.MenuId).HasMaxLength(50);
+
+                entity.Property(e => e.Status).HasMaxLength(100);
+
+                entity.Property(e => e.StoreId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.RequestInMenus)
+                    .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RequestInMenu_Menu");
+
+                entity.HasOne(d => d.Store)
+                    .WithMany(p => p.RequestInMenus)
+                    .HasForeignKey(d => d.StoreId)
+                    .HasConstraintName("FK_RequestInMenu_Store");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -761,9 +808,7 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(10)

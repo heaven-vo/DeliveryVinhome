@@ -10,7 +10,7 @@ using DeliveryVHGP_WebApi.IRepositories;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v2/brand")]
+    [Route("api/v2/brands")]
     [ApiController]
     public class BrandsController : ControllerBase
     {

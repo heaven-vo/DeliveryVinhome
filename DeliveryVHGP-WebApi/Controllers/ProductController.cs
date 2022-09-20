@@ -11,26 +11,18 @@ using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/productDetail")]
+    [Route("api/v1/products")]
     [ApiController]
-        public class ProductDetailController : ControllerBase
+        public class ProductController : ControllerBase
     {
-        private readonly IProductv1Repository _productRepository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductDetailController(IProductv1Repository productRepository)
+        public ProductController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        /// <summary>
-        /// Get list all product with pagination
-        /// </summary>
-        //GET: api/v1/product?pageIndex=1&pageSize=3
-        [HttpGet]
-        public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
-        {
-            return Ok(await _productRepository.GetAll(pageIndex, pageSize));
-        }
+        
 
         /// <summary>
         /// Update product Detail with pagination
