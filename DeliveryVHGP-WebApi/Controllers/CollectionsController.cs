@@ -10,38 +10,38 @@ using DeliveryVHGP_WebApi.IRepositories;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v2/brand")]
+    [Route("api/v1/collection")]
     [ApiController]
-    public class BrandsController : ControllerBase
+    public class CollectionsController : ControllerBase
     {
-        private readonly IBrandRepository _brandRepository;
+        private readonly ICollectionRepository _collectionRepository;
 
-        public BrandsController(IBrandRepository brandRepository)
+        public CollectionsController(ICollectionRepository collectionRepository)
         {
-            _brandRepository = brandRepository;
+            _collectionRepository = collectionRepository;
         }
 
         /// <summary>
-        /// Get list all Brand with pagination
+        /// Get list all collection with pagination
         /// </summary>
-        //GET: api/v1/Brand?pageIndex=1&pageSize=3
+        //GET: api/v1/collection?pageIndex=1&pageSize=3
         [HttpGet]
         public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
         {
-            return Ok(await _brandRepository.GetAll(pageIndex, pageSize));
+            return Ok(await _collectionRepository.GetAll(pageIndex, pageSize));
         }
 
         /// <summary>
-        /// Get a brand by id
+        /// Get a collection by id
         /// </summary>
-        //GET: api/v1/brand/{id}
+        //GET: api/v1/collection/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult> GetById(string id)
         {
-            var brand = await _brandRepository.GetById(id);
-            if (brand == null)
+            var collection = await _collectionRepository.GetById(id);
+            if (collection == null)
                 return NotFound();
-            return Ok(brand);
+            return Ok(collection);
         }
     }
 }
