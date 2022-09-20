@@ -24,11 +24,6 @@ namespace DeliveryVHGP_WebApi.Repositories
                 Name = x.Name,
                 Image = x.Image
             }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            foreach (BrandModels brand in listbrand)
-            {
-                brand.ListStore = await GetbrandByStoreId(brand.Id);
-               
-            }
             return listbrand;
         }
 
@@ -40,21 +35,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 Name=x.Name,
                 Image=x.Image
             }).FirstOrDefaultAsync();
-            if (brand != null)
-            {
-                brand.ListStore = await GetbrandByStoreId(brand.Id);
-            }
             return brand;
-        }
-
-        public async Task<List<string>> GetbrandByStoreId(string storeId)
-        {
-            List<string> ListStore = await (from b in _context.Brands
-                                                      join s in _context.Stores on b.Id equals s.BrandId
-                                                      where b.Id == storeId
-                                              select s.Name
-                              ).ToListAsync();
-            return ListStore;
         }
     }
 }

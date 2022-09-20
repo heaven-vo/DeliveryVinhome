@@ -12,7 +12,7 @@
         public double? MaximumQuantity { get; set; }
         public double? MinimumQuantity { get; set; }
         public string? Description { get; set; }
-        public string? Rate { get; set; }
+        public double? Rate { get; set; }
         public string? StoreId{ get; set; }
         public string? StoreName { get; set; }
         public string? StoreImage { get; set; }
