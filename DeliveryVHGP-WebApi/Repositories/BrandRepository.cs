@@ -37,5 +37,45 @@ namespace DeliveryVHGP_WebApi.Repositories
             }).FirstOrDefaultAsync();
             return brand;
         }
+        public async Task<BrandModels> CreateBrand(BrandModels brand)
+        {
+            _context.Brands.Add(new Brand { Id = brand.Id, Name = brand.Name, Image = brand.Image });
+            await _context.SaveChangesAsync();
+            return brand;
+
+        }
+
+        public async Task<Object> DeleteById(string brandId)
+        {
+            var brand = await _context.Brands.FindAsync(brandId);
+            _context.Brands.Remove(brand);
+            await _context.SaveChangesAsync();
+
+            return brand;
+
+        }
+
+        public async Task<Object> UpdateBrandById(string brandId, BrandModels brand)
+        {
+            if (brandId == null)
+            {
+                return null;
+            }
+            var result = await _context.Brands.FindAsync(brandId);
+            result.Id = brand.Id;
+            result.Name = brand.Name;
+            result.Image = brand.Image;
+
+            _context.Entry(result).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return brand;
+        }
     }
 }
