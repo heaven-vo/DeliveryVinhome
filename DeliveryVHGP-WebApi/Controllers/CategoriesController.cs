@@ -33,26 +33,12 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await _categoriesRepository.GetAll(pageIndex, pageSize));
         }
         /// <summary>
-        /// Get a category by id
+        /// Get list Category in a menu
         /// </summary>
-        //GET: api/v1/category/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(string id)
+        [HttpGet("menus")]
+        public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenu(string menuId, int page, int pageSize)
         {
-            var category = await _categoriesRepository.GetById(id);
-            if (category == null)
-                return NotFound();
-            return Ok(category);
-        }
-
-        /// <summary>
-        /// Get list menu in category
-        /// </summary>
-        //GET: api/v1/category/{id}/menus
-        [HttpGet("{id}/menus")]
-        public async Task<ActionResult<List<MenuView>>> GetListMenuInCategory(string menuId)
-        {
-            return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
+            return Ok(await _categoriesRepository.GetListCategoryByMenuId(menuId, page, pageSize));
         }
         /// <summary>
         /// Create a category
@@ -70,6 +56,40 @@ namespace DeliveryVHGP_WebApi.Controllers
             {
                 return Conflict();
             }
+        }
+        /// <summary>
+        /// Create new Category in Menu 
+        /// </summary>
+        [HttpPost("menus")]
+        public async Task<ActionResult> CreateCategoryInMenu(CategoryInMenuModel newCate)
+        {
+            try
+            {
+                var result = await _categoriesRepository.CreateCategoryByMenuId(newCate);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
+        /// <summary>
+        /// Delete a Category In Menu by id
+        /// </summary>
+        //DELETE: api/v1/CateGoryInMenu/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteStoreCategory(string id)
+        {
+            try
+            {
+                var result = await _categoriesRepository.DeleteCateInMenuById(id);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+
         }
         /// <summary>
         /// Update Brand with pagination

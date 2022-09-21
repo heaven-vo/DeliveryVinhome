@@ -11,7 +11,7 @@ namespace DeliveryVHGP_WebApi.Models
             Products = new HashSet<Product>();
         }
 
-        public string Id { get; set; } = null!;
+        public string Id { get; set; } = null!; 
         public string? Name { get; set; }
         public string? Image { get; set; }
 

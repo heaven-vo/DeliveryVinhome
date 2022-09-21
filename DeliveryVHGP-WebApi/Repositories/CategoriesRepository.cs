@@ -24,26 +24,6 @@ namespace DeliveryVHGP_WebApi.Repositories
                 }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listCate;
         }
-
-        public async Task<CategoryModel> GetById(string Id)
-        {
-            var categoryy = await _context.Categories.Where(x => x.Id == Id).Select(x => new CategoryModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-            }).FirstOrDefaultAsync();
-            return categoryy;
-        }
-        public async Task<List<string>> GetCategoryByMenuId(string menuId)
-        {
-            List<string> ListCategoryInMenus = await (from c in _context.Categories
-                                                      join cm in _context.CategoryInMenus on c.Id equals cm.CategoryId
-                                                      join m in _context.Menus on cm.MenuId equals m.Id
-                                            where  c.Id == menuId
-                                            select m.Name
-                              ).ToListAsync();
-            return ListCategoryInMenus;
-        }
         public async Task<CategoryModel> CreateCategory(CategoryModel category)
         {
             _context.Categories.Add(new Category { Id = category.Id, Name = category.Name });
@@ -52,6 +32,23 @@ namespace DeliveryVHGP_WebApi.Repositories
 
         }
 
+        public async Task<Object> CreateCategoryByMenuId(CategoryInMenuModel CateMenu) 
+        {
+            _context.CategoryInMenus.Add(new CategoryInMenu { Id = CateMenu.Id,CategoryId = CateMenu.CategoryId , MenuId = CateMenu.MenuId});
+           
+            await _context.SaveChangesAsync();
+            return CateMenu;
+
+        }
+        public async Task<Object> DeleteCateInMenuById(string CateInMenuId)
+        {
+            var CateMenu = await _context.CategoryInMenus.FindAsync(CateInMenuId);
+            _context.CategoryInMenus.Remove(CateMenu);
+            await _context.SaveChangesAsync();
+
+            return CateInMenuId;
+
+        }
         public async Task<Object> UpdateCategoryById(string categoryId, CategoryModel category)
         {
             if (categoryId == null)
@@ -72,6 +69,20 @@ namespace DeliveryVHGP_WebApi.Repositories
                 throw;
             }
             return category;
+        }
+        public async Task<List<CategoryModel>> GetListCategoryByMenuId(string id, int page, int pageSize)
+        {
+            var listCategories = await (from c in _context.Categories
+                                      join cm in _context.CategoryInMenus on c.Id equals cm.CategoryId
+                                      join menu in _context.Menus on cm.MenuId equals menu.Id
+                                      where menu.Id == id
+                                        select new CategoryModel
+                                      {
+                                          Id = c.Id,
+                                          Name = c.Name,
+                                          Image = c.Image
+                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listCategories;
         }
     }
 }
