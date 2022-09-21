@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
@@ -30,18 +31,45 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _collectionRepository.GetAll(pageIndex, pageSize));
         }
-
         /// <summary>
-        /// Get a collection by id
+        /// Create a collection
         /// </summary>
-        //GET: api/v1/collection/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(string id)
+        //POST: api/v1/collection
+        [HttpPost]
+        public async Task<ActionResult> CreateCollection(CollectionModel collection)
         {
-            var collection = await _collectionRepository.GetById(id);
-            if (collection == null)
-                return NotFound();
-            return Ok(collection);
+            try
+            {
+                var result = await _collectionRepository.CreateCollection(collection);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+            
+
+        }
+        /// <summary>
+        /// Update collection with pagination
+        /// </summary>
+        //PUT: api/v1/collection?id
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCollection(string id, CollectionModel collection)
+        {
+            try
+            {
+                if (id != collection.Id)
+                {
+                    return BadRequest("Collection ID mismatch");
+                }
+                var BrandToUpdate = await _collectionRepository.UpdateCollectionById(id, collection);
+                return Ok(collection);
+            }
+            catch
+            {
+                return Conflict();
+            }
         }
     }
 }
