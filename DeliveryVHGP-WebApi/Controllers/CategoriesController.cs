@@ -77,7 +77,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Delete a Category In Menu by id
         /// </summary>
         //DELETE: api/v1/CateGoryInMenu/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/menus")]
         public async Task<ActionResult> DeleteStoreCategory(string id)
         {
             try
@@ -92,9 +92,9 @@ namespace DeliveryVHGP_WebApi.Controllers
 
         }
         /// <summary>
-        /// Update Brand with pagination
+        /// Update Category with pagination
         /// </summary>
-        //PUT: api/v1/Brand?id
+        //PUT: api/v1/Category?id
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateCategory(string id, CategoryModel category)
         {
