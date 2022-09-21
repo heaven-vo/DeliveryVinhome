@@ -54,5 +54,43 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
         }
+        /// <summary>
+        /// Create a category
+        /// </summary>
+        //POST: api/v1/category
+        [HttpPost]
+        public async Task<ActionResult> CreateCategory(CategoryModel category)
+        {
+            try
+            {
+                var result = await _categoriesRepository.CreateCategory(category);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
+        /// <summary>
+        /// Update Brand with pagination
+        /// </summary>
+        //PUT: api/v1/Brand?id
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateCategory(string id, CategoryModel category)
+        {
+            try
+            {
+                if (id != category.Id)
+                {
+                    return BadRequest("Category ID mismatch");
+                }
+                var CategoryToUpdate = await _categoriesRepository.UpdateCategoryById(id, category);
+                return Ok(category);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
     }
 }

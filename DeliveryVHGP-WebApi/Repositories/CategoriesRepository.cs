@@ -21,14 +21,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Image = x.Image
                 }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            foreach (CategoryModel category in listCate)
-            {
-                category.ListCateInMenus = await GetCategoryByMenuId(category.Id);
-                category.ListProducts = await GetCategoryByProduct(category.Id);
-            }
-                return listCate;
+            return listCate;
         }
 
         public async Task<CategoryModel> GetById(string Id)
@@ -37,14 +31,8 @@ namespace DeliveryVHGP_WebApi.Repositories
             {
                 Id = x.Id,
                 Name = x.Name,
-                Image = x.Image
             }).FirstOrDefaultAsync();
-            if (categoryy != null)
-            {
-                categoryy.ListCateInMenus = await GetCategoryByMenuId(categoryy.Id);
-                categoryy.ListProducts = await GetCategoryByProduct(categoryy.Id);
-            }
-                return categoryy;
+            return categoryy;
         }
         public async Task<List<string>> GetCategoryByMenuId(string menuId)
         {
@@ -56,15 +44,34 @@ namespace DeliveryVHGP_WebApi.Repositories
                               ).ToListAsync();
             return ListCategoryInMenus;
         }
-        public async Task<List<string>> GetCategoryByProduct(string productId)
+        public async Task<CategoryModel> CreateCategory(CategoryModel category)
         {
-            List<string> ListProduct = await (from c in _context.Categories
-                                                      join p in _context.Products on c.Id equals p.CategoryId
-                                                      where c.Id == productId
-                                                      select p.Name
-                              ).ToListAsync();
-            return ListProduct;
+            _context.Categories.Add(new Category { Id = category.Id, Name = category.Name });
+            await _context.SaveChangesAsync();
+            return category;
+
         }
 
+        public async Task<Object> UpdateCategoryById(string categoryId, CategoryModel category)
+        {
+            if (categoryId == null)
+            {
+                return null;
+            }
+            var result = await _context.Categories.FindAsync(categoryId);
+            result.Id = category.Id;
+            result.Name = category.Name;
+
+            _context.Entry(result).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return category;
+        }
     }
 }

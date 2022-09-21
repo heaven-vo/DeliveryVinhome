@@ -6,8 +6,5 @@
         public string? Name { get; set; }
         public string? Image { get; set; }
 
-        public List<string> ListCateInMenus { get; set; }
-        public List<string> ListProducts { get; set; }
-
     }
 }

@@ -6,5 +6,7 @@ namespace DeliveryVHGP_WebApi.IRepositories
     {
         Task<IEnumerable<CategoryModel>> GetAll(int pageIndex, int pageSize);
         Task<CategoryModel> GetById(string Id);
+        Task<CategoryModel> CreateCategory(CategoryModel category);
+        Task<Object> UpdateCategoryById(string categoryId, CategoryModel category);
     }
 }
