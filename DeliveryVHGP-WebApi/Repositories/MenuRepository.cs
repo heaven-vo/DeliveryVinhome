@@ -170,10 +170,6 @@ namespace DeliveryVHGP_WebApi.Repositories
 
         public async Task<MenuDto> UpdateMenu(string menuId, MenuDto menu)
         {
-            if (menuId == null || menu.Id == null || menuId != menu.Id)
-            {
-                return null;
-            }
             var menuUpdate = new Menu
             {
                 Id = menuId,
