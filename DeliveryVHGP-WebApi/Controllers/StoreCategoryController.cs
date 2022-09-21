@@ -1,4 +1,5 @@
 ﻿using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,64 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeCategoryRepository.GetAll(pageIndex, pageSize));
         }
+        /// <summary>
+        /// Create a storeCategory
+        /// </summary>
+        //POST: api/v1/storeCategory
+        [HttpPost]
+        public async Task<ActionResult> CreateStoreCategory(StoreCategoryModel storeCate)
+        {
+            try
+            {
+                var result = await _storeCategoryRepository.CreateStoreCategory(storeCate);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
 
+
+        }
+        /// <summary>
+        /// Delete a storeCategory by id
+        /// </summary>
+        //DELETE: api/v1/storeCategory/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteStoreCategory(string id)
+        {
+            try
+            {
+                var result = await _storeCategoryRepository.DeleteById(id);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+
+        }
+        /// <summary>
+        /// Update storeCategory with pagination
+        /// </summary>
+        //PUT: api/v1/storeCategory?id
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateStoreCategory(string id, StoreCategoryModel storeCate)
+        {
+            try
+            {
+                if (id != storeCate.Id)
+                {
+                    return BadRequest("StoreCategory ID mismatch");
+                }
+                var BrandToUpdate = await _storeCategoryRepository.UpdateStoreCateById(id, storeCate);
+                return Ok(storeCate);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
 
     }
 }
