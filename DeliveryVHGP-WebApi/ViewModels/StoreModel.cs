@@ -4,9 +4,18 @@
     {
         public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public string? Image { get; set; }
-        public string? StoreCategoryId { get; set; }
-        public string? StoreCategoyName { get; set; }
+        public string? BrandStoreId { get; set; }
+        public string? BrandStoreName { get; set; }
+        public string? Phone { get; set; }
+        public string? BuildingId { get; set; }
+
+        public string? BuildingStore { get; set; }
+
+        public string? StoreCateId { get; set; }
+        public string? StoreCateName { get; set; }
+        public string? Status { get; set; }
+
+
 
     }
 }
