@@ -24,16 +24,6 @@ namespace DeliveryVHGP_WebApi.Controllers
 
         // GET: api/Menus
         /// <summary>
-        /// Get list menus with products inside by realtime
-        /// </summary>
-        [HttpGet]
-        public async Task<ActionResult<List<MenuView>>> GetMenus()
-        {
-            return Ok(await menuRepository.GetListMenuNow());
-        }
-
-        // GET: api/Menus
-        /// <summary>
         /// Get list name of  menus by realtime
         /// </summary>
         [HttpGet("name")]
@@ -43,39 +33,73 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         /// <summary>
-        /// Get list menus in realtime by modeId
+        /// Get list menus in realtime by modeId(customer web)
         /// </summary>
         [HttpGet("filter")]
-        public async Task<ActionResult<List<MenuView>>> GetMenuByModeId(string modeId)
+        public async Task<ActionResult<MenuView>> GetMenuByModeId(string modeId, string gb, int page, int pageSize)
         {
-            return Ok(await menuRepository.GetListMenuByMode(modeId));
+            MenuView menu = new MenuView();
+            try{
+                if (gb == "store")
+                {
+                    menu = await menuRepository.GetMenuByModeAndGroupByStore(modeId, page, pageSize);
+                }
+                if (gb == "cate")
+                {
+                    menu = await menuRepository.GetMenuByModeAndGroupByCategory(modeId, page, pageSize);
+                }
+            }
+            catch
+            {
+                return NoContent();
+            }
+            return Ok(menu);           
         }
 
         /// <summary>
-        /// Get list products in a menu
+        /// Get list category in include products in menu by store id(store web)
         /// </summary>
-        [HttpGet("{id}/products")]
-        public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenu(string menuId, int page, int pageSize)
+        [HttpGet("{menuId}/filter")]
+        public async Task<ActionResult<MenuView>> GetMenuByStoreId(string menuId, string storeId, int page, int pageSize)
         {
-            return Ok(await menuRepository.GetListProductInMenu(menuId, page, pageSize));
+            List<CategoryStoreInMenu> menu = new List<CategoryStoreInMenu>();
+            try
+            {
+                menu = await menuRepository.GetMenuByMenuIdAndStoreIdAndGroupByCategory(menuId, storeId, page, pageSize);
+            }
+            catch
+            {
+                return NoContent();
+            }
+            return Ok(menu);
         }
 
         /// <summary>
-        /// Get list products in a menu and a store
+        /// Get list products in a menu and a store(customer web)
         /// </summary>
-        [HttpGet("{id}/products/byStoreId")]
+        [HttpGet("{menuId}/products/byStoreId")]
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByStoreId(string menuId, string storeId, int page, int pageSize)
         {
             return Ok(await menuRepository.GetListProductInMenuByStoreId(storeId, menuId, page, pageSize));
         }
 
         /// <summary>
-        /// Get list products in a menu and a category
+        /// Get list products in a menu and a category(customer web)
         /// </summary>
-        [HttpGet("{id}/products/byCategoryId")]
+        [HttpGet("{menuId}/products/byCategoryId")]
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByCategoryId(string menuId, string categoryId, int page, int pageSize)
         {
             return Ok(await menuRepository.GetListProductInMenuByCategoryId(categoryId, menuId, page, pageSize));
+        }
+
+        /// <summary>
+        /// Get list products in store and not in a menu (store web)
+        /// </summary>
+        [HttpGet("{menuId}/not-products/filter")]
+        public async Task<ActionResult<List<ProductViewInList>>> GetListProductNotInMenuByCategoryIdAndStoreId(string menuId,string storeId, int page, int pageSize)
+        {
+            return Ok(await menuRepository.GetListProductNotInMenuByCategoryIdAndStoreId(storeId, menuId, page, pageSize));
+
         }
     }
 }

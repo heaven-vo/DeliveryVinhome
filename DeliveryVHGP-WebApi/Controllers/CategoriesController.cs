@@ -23,6 +23,7 @@ namespace DeliveryVHGP_WebApi.Controllers
             _categoriesRepository = categoriesRepository;
             _menuRepository = menuRepository;
         }
+
         /// <summary>
         /// Get list all category with pagination
         /// </summary>
@@ -32,6 +33,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _categoriesRepository.GetAll(pageIndex, pageSize));
         }
+
         /// <summary>
         /// Get a category by id
         /// </summary>
@@ -44,15 +46,6 @@ namespace DeliveryVHGP_WebApi.Controllers
                 return NotFound();
             return Ok(category);
         }
-
-        /// <summary>
-        /// Get list menu in category
-        /// </summary>
-        //GET: api/v1/category/{id}/menus
-        [HttpGet("{id}/menus")]
-        public async Task<ActionResult<List<MenuView>>> GetListMenuInCategory(string menuId)
-        {
-            return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
-        }
+     
     }
 }

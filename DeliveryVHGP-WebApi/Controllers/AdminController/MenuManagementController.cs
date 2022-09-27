@@ -15,6 +15,19 @@ namespace DeliveryVHGP_WebApi.Controllers.AdminController
         {
             this.menuRepository = menuRepository;
         }
+        [HttpGet("menuId")]
+        public async Task<ActionResult<MenuDto>> GetMenuDetail(string menuId)
+        {
+            try
+            {
+                var detail = await menuRepository.GetMenuDetail(menuId);
+                return Ok(detail);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex);
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult<MenuDto>> CreatNewMenu(MenuDto menu)
@@ -29,10 +42,10 @@ namespace DeliveryVHGP_WebApi.Controllers.AdminController
             }
             return Ok(menu);
         }
-        [HttpPut("{id}")]
+        [HttpPut("{menuId}")]
         public async Task<ActionResult<MenuDto>> UpdateMenu(string menuId, MenuDto menu)
         {
-            if (menuId == null || menu.Id == null || menuId != menu.Id)
+            if (menuId == null)
             {
                 return BadRequest();
             }
