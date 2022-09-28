@@ -33,15 +33,5 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeRepository.GetAll(pageIndex, pageSize));
         }
-
-        /// <summary>
-        /// Get list menu in store
-        /// </summary>
-        //GET: api/v1/category/{id}/menus
-        [HttpGet("{id}/menus")]
-        public async Task<ActionResult<List<MenuView>>> GetListMenuInStore(string menuId)
-        {
-            return Ok(await _menuRepository.GetListMenuByStoreId(menuId));
-        }
     }
 }

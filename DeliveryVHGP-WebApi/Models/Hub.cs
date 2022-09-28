@@ -14,7 +14,6 @@ namespace DeliveryVHGP_WebApi.Models
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public string? BuildId { get; set; }
-        public string? Room { get; set; }
 
         public virtual Building? Build { get; set; }
         public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
