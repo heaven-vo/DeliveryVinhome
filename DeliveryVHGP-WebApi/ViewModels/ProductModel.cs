@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DeliveryVHGP_WebApi.Models
+﻿namespace DeliveryVHGP_WebApi.ViewModels
 {
-    public partial class Product
+    public class ProductModel
     {
-        public Product()
-        {
-            ProductInCollections = new HashSet<ProductInCollection>();
-            ProductInMenus = new HashSet<ProductInMenu>();
-            ProductTags = new HashSet<ProductTag>();
-        }
-
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public string? Image { get; set; }
@@ -28,11 +18,5 @@ namespace DeliveryVHGP_WebApi.Models
         public string? Description { get; set; }
         public string? Status { get; set; }
         public string? LastUpdate { get; set; }
-
-        public virtual Category? Category { get; set; }
-        public virtual Store? Store { get; set; }
-        public virtual ICollection<ProductInCollection> ProductInCollections { get; set; }
-        public virtual ICollection<ProductInMenu> ProductInMenus { get; set; }
-        public virtual ICollection<ProductTag> ProductTags { get; set; }
     }
 }

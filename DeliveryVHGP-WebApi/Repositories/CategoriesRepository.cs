@@ -32,14 +32,6 @@ namespace DeliveryVHGP_WebApi.Repositories
 
         }
 
-        public async Task<Object> CreateCategoryByMenuId(CategoryInMenuModel CateMenu) 
-        {
-            _context.CategoryInMenus.Add(new CategoryInMenu { Id = CateMenu.Id,CategoryId = CateMenu.CategoryId , MenuId = CateMenu.MenuId});
-           
-            await _context.SaveChangesAsync();
-            return CateMenu;
-
-        }
         public async Task<Object> DeleteCateInMenuById(string CateInMenuId)
         {
             var CateMenu = await _context.CategoryInMenus.FindAsync(CateInMenuId);

@@ -43,45 +43,6 @@ namespace DeliveryVHGP_WebApi.Controllers
 
 
         }
-        /// <summary>
-        /// Delete a storeCategory by id
-        /// </summary>
-        //DELETE: api/v1/storeCategory/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteStoreCategory(string id)
-        {
-            try
-            {
-                var result = await _storeCategoryRepository.DeleteById(id);
-                return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
-
-        }
-        /// <summary>
-        /// Update storeCategory with pagination
-        /// </summary>
-        //PUT: api/v1/storeCategory?id
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateStoreCategory(string id, StoreCategoryModel storeCate)
-        {
-            try
-            {
-                if (id != storeCate.Id)
-                {
-                    return BadRequest("StoreCategory ID mismatch");
-                }
-                var BrandToUpdate = await _storeCategoryRepository.UpdateStoreCateById(id, storeCate);
-                return Ok(storeCate);
-            }
-            catch
-            {
-                return Conflict();
-            }
-        }
 
     }
 }

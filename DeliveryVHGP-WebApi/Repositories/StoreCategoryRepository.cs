@@ -17,6 +17,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<IEnumerable<StoreCategoryModel>> GetAll(int pageIndex, int pageSize)
         {
             var liststorecate = await _context.StoreCategories.
+                
                Select(x => new StoreCategoryModel
                {
                    Id = x.Id,
@@ -42,7 +43,6 @@ namespace DeliveryVHGP_WebApi.Repositories
             return storeCateId;
 
         }
-
         public async Task<Object> UpdateStoreCateById(string storecaId, StoreCategoryModel storeCate)
         {
             if (storecaId == null)

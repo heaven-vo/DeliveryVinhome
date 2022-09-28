@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DeliveryVHGP_WebApi.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.ViewModels;
+using DeliveryVHGP_WebApi.Models;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
@@ -17,7 +11,6 @@ namespace DeliveryVHGP_WebApi.Controllers
     {
         private readonly IStoreRepository _storeRepository;
         private readonly IMenuRepository _menuRepository;
-
         public StoresController(IStoreRepository storeRepository, IMenuRepository menuRepository)
         {
             _storeRepository = storeRepository;
@@ -29,19 +22,44 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //GET: api/v1/store?pageIndex=1&pageSize=3
         [HttpGet]
-        public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
+        public async Task<ActionResult> GetAll( int pageIndex, int pageSize)
         {
-            return Ok(await _storeRepository.GetAll(pageIndex, pageSize));
+            return Ok(await _storeRepository.GetListStore( pageIndex, pageSize));
         }
-
         /// <summary>
-        /// Get list menu in store
+        /// Get list all store by brand with pagination
         /// </summary>
-        //GET: api/v1/category/{id}/menus
-        [HttpGet("{id}/menus")]
-        public async Task<ActionResult<List<MenuView>>> GetListMenuInStore(string menuId)
+        //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
+        [HttpGet("brand/{name}")]
+        public async Task<ActionResult> GetListStoreByBrand( string name, int pageIndex, int pageSize)
         {
-            return Ok(await _menuRepository.GetListMenuByStoreId(menuId));
+            return Ok(await _storeRepository.GetListStoreInBrand(name, pageIndex, pageSize));
+        } /// <summary>
+        /// Get list all store by brand with pagination
+        /// </summary>
+        //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
+        [HttpGet("store/{name}")]
+        public async Task<ActionResult> GetListStoreByName( string name, int pageIndex, int pageSize)
+        {
+            return Ok(await _storeRepository.GetListStoreByName(name, pageIndex, pageSize));
+        }
+    
+        /// <summary>
+        /// Create a product
+        /// </summary>
+        //POST: api/v1/product
+        [HttpPost]
+        public async Task<ActionResult> CreateProduct(ProductModel product)
+        {
+            try
+            {
+                var result = await _storeRepository.CreatNewProduct(product);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
         }
     }
 }

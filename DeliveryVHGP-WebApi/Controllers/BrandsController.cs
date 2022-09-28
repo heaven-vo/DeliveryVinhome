@@ -44,61 +44,6 @@ namespace DeliveryVHGP_WebApi.Controllers
                 return NotFound();
             return Ok(brand);
         }
-        /// <summary>
-        /// Create a brand
-        /// </summary>
-        //POST: api/v1/brand
-        [HttpPost]
-        public async Task<ActionResult> CreateBrand(BrandModels brand)
-        {
-            try
-            {
-                var result = await _brandRepository.CreateBrand(brand);
-                return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
-        }
-        /// <summary>
-        /// Delete a brand by id
-        /// </summary>
-        //DELETE: api/v1/brand/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteBrand(string id)
-        {
-            try
-            {
-                var result = await _brandRepository.DeleteById(id);
-                return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
-
-        }
-        /// <summary>
-        /// Update Brand with pagination
-        /// </summary>
-        //PUT: api/v1/Brand?id
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateBrand(string id, BrandModels brand)
-        {
-            try
-            {
-                if (id != brand.Id)
-                {
-                    return BadRequest("Brand ID mismatch");
-                }
-                var BrandToUpdate = await _brandRepository.UpdateBrandById(id, brand);
-                return Ok(brand);
-            }
-            catch
-            {
-                return Conflict();
-            }
-        }
+       
     }
 }

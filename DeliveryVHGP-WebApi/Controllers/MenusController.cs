@@ -60,6 +60,7 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await menuRepository.GetListProductInMenu(menuId, page, pageSize));
         }
 
+
         /// <summary>
         /// Get list products in a menu and a store
         /// </summary>
@@ -76,6 +77,6 @@ namespace DeliveryVHGP_WebApi.Controllers
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByCategoryId(string menuId, string categoryId, int page, int pageSize)
         {
             return Ok(await menuRepository.GetListProductInMenuByCategoryId(categoryId, menuId, page, pageSize));
-        }
+        } 
     }
 }

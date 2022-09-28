@@ -47,29 +47,6 @@ namespace DeliveryVHGP_WebApi.Controllers
             {
                 return Conflict();
             }
-            
-
-        }
-        /// <summary>
-        /// Update collection with pagination
-        /// </summary>
-        //PUT: api/v1/collection?id
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCollection(string id, CollectionModel collection)
-        {
-            try
-            {
-                if (id != collection.Id)
-                {
-                    return BadRequest("Collection ID mismatch");
-                }
-                var BrandToUpdate = await _collectionRepository.UpdateCollectionById(id, collection);
-                return Ok(collection);
-            }
-            catch
-            {
-                return Conflict();
-            }
         }
     }
 }

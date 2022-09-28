@@ -10,13 +10,9 @@ namespace DeliveryVHGP_WebApi.Controllers
     public class StoresManagementController : ControllerBase
     {
         private readonly IStoreRepository _storeRepository;
-        private readonly IMenuRepository _menuRepository;
-        public StoresManagementController(IStoreRepository storeRepository, IMenuRepository menuRepository)
-        {
+        public StoresManagementController(IStoreRepository storeRepository) { 
             _storeRepository = storeRepository;
-            _menuRepository = menuRepository;
         }
-
         /// <summary>
         /// Get list all store with pagination
         /// </summary>
@@ -30,10 +26,10 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Get list all store by brand with pagination
         /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
-        [HttpGet("brand/{name}")]
-        public async Task<ActionResult> GetListStoreByBrand( string name, int pageIndex, int pageSize)
+        [HttpGet("store/brand/{brandName}")]
+        public async Task<ActionResult> GetListStoreByBrand(string brandName, int pageIndex, int pageSize)
         {
-            return Ok(await _storeRepository.GetListStoreInBrand(name, pageIndex, pageSize));
+            return Ok(await _storeRepository.GetListStoreInBrand(brandName, pageIndex, pageSize));
         } /// <summary>
         /// Get list all store by brand with pagination
         /// </summary>
@@ -43,7 +39,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeRepository.GetListStoreByName(name, pageIndex, pageSize));
         }
-    
+
         /// <summary>
         /// Create a product
         /// </summary>
