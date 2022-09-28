@@ -40,20 +40,10 @@ namespace DeliveryVHGP_WebApi.Controllers
         [HttpGet("menus")]
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenu(string menuId, int page, int pageSize)
         {
-            var category = await _categoriesRepository.GetById(id);
-            if (category == null)
-                return NotFound();
-            return Ok(category);
+            return Ok( await _categoriesRepository.GetListCategoryByMenuId(menuId, page, pageSize));
+            
         }
 
-        /// <summary>
-        /// Get list menu in category
-        /// </summary>
-        //GET: api/v1/category/{id}/menus
-        [HttpGet("{id}/menus")]
-        public async Task<ActionResult<List<MenuView>>> GetListMenuInCategory(string menuId)
-        {
-            return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
-        }
+     
     }
 }
