@@ -738,11 +738,17 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.OpenTime).HasMaxLength(50);
 
+                entity.Property(e => e.Phone).HasMaxLength(50);
+
                 entity.Property(e => e.Rate)
                     .HasMaxLength(10)
                     .IsFixedLength();
 
                 entity.Property(e => e.Slogan).HasMaxLength(50);
+
+                entity.Property(e => e.Status)
+                    .HasMaxLength(10)
+                    .IsFixedLength();
 
                 entity.Property(e => e.StoreCategoryId).HasMaxLength(50);
 

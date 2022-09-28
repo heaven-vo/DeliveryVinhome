@@ -139,7 +139,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 if (listProduct != null)
                     category.ListProducts = listProduct;
             }
-            listCategory = listCategory.Where(x => x.ListProducts != null).ToList();
+            listCategory = listCategory.Where(x => x.ListProducts.Any()).ToList();
             return listCategory;
         }
         public async Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize)
