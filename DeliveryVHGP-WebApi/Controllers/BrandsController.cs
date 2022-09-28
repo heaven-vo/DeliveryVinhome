@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
@@ -43,5 +44,6 @@ namespace DeliveryVHGP_WebApi.Controllers
                 return NotFound();
             return Ok(brand);
         }
+       
     }
 }

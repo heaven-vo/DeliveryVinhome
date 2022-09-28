@@ -1,6 +1,6 @@
 ﻿namespace DeliveryVHGP_WebApi.ViewModels
 {
-    public class ProductDetailsModel
+    public class ProductModel
     {
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
@@ -12,13 +12,11 @@
         public double? MaximumQuantity { get; set; }
         public double? MinimumQuantity { get; set; }
         public double? MinimumDeIn { get; set; }
-        public string? Description { get; set; }
-        public double? Rate { get; set; }
-        public string? StoreId{ get; set; }
-        public string? StoreName { get; set; }
-        public string? StoreImage { get; set; }
-        public string? Slogan { get; set; }
+        public string? StoreId { get; set; }
         public string? CategoryId { get; set; }
-        public string? ProductCategory { get; set; }
+        public double? Rate { get; set; }
+        public string? Description { get; set; }
+        public string? Status { get; set; }
+        public string? LastUpdate { get; set; }
     }
 }

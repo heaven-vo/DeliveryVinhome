@@ -1,4 +1,5 @@
 ﻿using DeliveryVHGP_WebApi.IRepositories;
+using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,25 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeCategoryRepository.GetAll(pageIndex, pageSize));
         }
+        /// <summary>
+        /// Create a storeCategory
+        /// </summary>
+        //POST: api/v1/storeCategory
+        [HttpPost]
+        public async Task<ActionResult> CreateStoreCategory(StoreCategoryModel storeCate)
+        {
+            try
+            {
+                var result = await _storeCategoryRepository.CreateStoreCategory(storeCate);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
 
+
+        }
 
     }
 }

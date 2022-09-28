@@ -11,13 +11,13 @@ using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/collections")]
+    [Route("api/v1/collectionsmanagerment")]
     [ApiController]
-    public class CollectionsController : ControllerBase
+    public class CollectionsManagermentController : ControllerBase
     {
         private readonly ICollectionRepository _collectionRepository;
 
-        public CollectionsController(ICollectionRepository collectionRepository)
+        public CollectionsManagermentController(ICollectionRepository collectionRepository)
         {
             _collectionRepository = collectionRepository;
         }
@@ -47,7 +47,6 @@ namespace DeliveryVHGP_WebApi.Controllers
             {
                 return Conflict();
             }
-
         }
     }
 }

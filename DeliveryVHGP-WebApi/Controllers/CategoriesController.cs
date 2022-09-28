@@ -35,17 +35,25 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         /// <summary>
-        /// Get a category by id
+        /// Get list Category in a menu
         /// </summary>
-        //GET: api/v1/category/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetById(string id)
+        [HttpGet("menus")]
+        public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenu(string menuId, int page, int pageSize)
         {
             var category = await _categoriesRepository.GetById(id);
             if (category == null)
                 return NotFound();
             return Ok(category);
         }
-     
+
+        /// <summary>
+        /// Get list menu in category
+        /// </summary>
+        //GET: api/v1/category/{id}/menus
+        [HttpGet("{id}/menus")]
+        public async Task<ActionResult<List<MenuView>>> GetListMenuInCategory(string menuId)
+        {
+            return Ok(await _menuRepository.GetListMenuByCategoryId(menuId));
+        }
     }
 }

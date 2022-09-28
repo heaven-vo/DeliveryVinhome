@@ -13,11 +13,12 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             this.context = context;
         }
-        public async Task<IEnumerable<ProductDetailsModel>> GetAll(int pageIndex, int pageSize)
+        public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
         {
             var listproductdetail = await (from p in context.Products
                                            join s in context.Stores on p.StoreId equals s.Id
                                            join c in context.Categories on p.CategoryId equals c.Id
+                                           where s.Id == storeId
                                            select new ProductDetailsModel()
                                            {
                                                Id = p.Id,
@@ -30,6 +31,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                                MaximumQuantity = p.MaximumQuantity,
                                                MinimumQuantity = p.MinimumQuantity,
                                                Description = p.Description,
+                                               MinimumDeIn = p.MinimumDeIn,
                                                Rate = p.Rate,
                                                StoreId = s.Id,
                                                StoreName = s.Name,
@@ -43,44 +45,117 @@ namespace DeliveryVHGP_WebApi.Repositories
             return listproductdetail;
         }
 
-        public async Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product)
+        public async Task<Object> GetById(string proId)
         {
-            if (proId == null)
-            {
-                return null;
-            }
-            var pro = await context.Products.FindAsync(proId);
-            var store = context.Stores.Where(x => x.Name == product.StoreName).Where(x => x.Image == product.StoreImage).Select(x => x.Id).FirstOrDefault();
-            var category = context.Categories.Where(c => c.Name == product.ProductCategory).Select(c => c.Id).FirstOrDefault();
-            if (store == null)
-                return null;
-            if (category == null)
-                return null;
-            pro.Id = product.Id;
-            pro.Name = product.Name;
-            pro.Image = product.Image;
-            pro.Unit = product.Unit;
-            pro.PricePerPack = product.PricePerPack;
-            pro.PackNetWeight = product.PackNetWeight;
-            pro.PackDescription = product.PackDescription;
-            pro.MaximumQuantity = product.MaximumQuantity;
-            pro.MinimumQuantity = product.MinimumQuantity;
-            pro.Description = product.Description;
-            pro.Rate = product.Rate;
-            pro.StoreId = store.ToString();
-            pro.CategoryId = category.ToString();
-            context.Entry(pro).State = EntityState.Modified;
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch
-            {
-                throw;
-            }
+            var product = await (from p in context.Products
+                                 join s in context.Stores on p.StoreId equals s.Id
+                                 join c in context.Categories on p.CategoryId equals c.Id
+                                 where p.Id == proId
+                                 select new ProductDetailsModel()
+                                 {
+                                     Id = p.Id,
+                                     Name = p.Name,
+                                     Image = p.Image,
+                                     Unit = p.Unit,
+                                     PricePerPack = p.PricePerPack,
+                                     PackNetWeight = p.PackNetWeight,
+                                     PackDescription = p.PackDescription,
+                                     MaximumQuantity = p.MaximumQuantity,
+                                     MinimumQuantity = p.MinimumQuantity,
+                                     Description = p.Description,
+                                     Rate = p.Rate,
+                                     StoreId = s.Id,
+                                     StoreName = s.Name,
+                                     StoreImage = s.Image,
+                                     Slogan = s.Slogan,
+                                     CategoryId = c.Id,
+                                     ProductCategory = c.Name
+
+                                 }).ToListAsync();
+
             return product;
         }
-        public async Task<Object> DeleteProductById(string id)
+        public async Task<ProductModel> CreatNewProduct(ProductModel pro)
+        {
+            context.Products.Add(
+                new Product {
+                    Id = pro.Id,
+                    Name = pro.Name,
+                    Image = pro.Image ,
+                    Unit = pro.Unit,
+                    PricePerPack= pro.PricePerPack,
+                    PackDescription= pro.PackDescription,
+                    PackNetWeight= pro.PackNetWeight,
+                    MaximumQuantity= pro.MaximumQuantity,
+                    MinimumQuantity = pro.MinimumQuantity,
+                    MinimumDeIn = pro.MinimumDeIn,
+                    Rate = pro.Rate,
+                    Description = pro.Description,
+                    });
+            await context.SaveChangesAsync();
+            return pro;
+        }
+        public async Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product)
+        {
+                if (proId == null)
+                {
+                    return null;
+                }
+                var pro = await context.Products.FindAsync(proId);
+                var store = context.Stores.Where(x => x.Id == product.StoreId).Select(x => x.Id).FirstOrDefault();
+                var category = context.Categories.Where(c => c.Id == product.CategoryId).Select(c => c.Id).FirstOrDefault();
+                var cateInMenus = context.CategoryInMenus.Where(cm => cm.CategoryId == product.CategoryId).FirstOrDefault();
+                var productInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.ProductId == product.Id);
+
+            //if (productInMenu.ProductId == proId)
+            //{
+            //    if (cateInMenus.CategoryId == null)
+            //    return null;
+            //}
+
+            List<Menu> listM = new List<Menu>();
+            Menu resultMenu = listM.Find(x => x.Id == productInMenu.MenuId);
+            
+            List<CategoryInMenu> listCate = new List<CategoryInMenu>();
+            CategoryInMenu resultCate = listCate.SingleOrDefault(cm => cm.CategoryId == product.CategoryId);
+
+            List<ProductInMenu> listmenu = new List<ProductInMenu>();
+            ProductInMenu result = listmenu.Find(pm => pm.Id == pro.Id);
+
+            if(result != null)
+            {
+                return null;
+            }
+            {
+
+                pro.Id = product.Id;
+                pro.Name = product.Name;
+                pro.Image = product.Image;
+                pro.Unit = product.Unit;
+                pro.PricePerPack = product.PricePerPack;
+                pro.PackNetWeight = product.PackNetWeight;
+                pro.PackDescription = product.PackDescription;
+                pro.MaximumQuantity = product.MaximumQuantity;
+                pro.MinimumQuantity = product.MinimumQuantity;
+                pro.Description = product.Description;
+                pro.Rate = product.Rate;
+                pro.StoreId = store.ToString();
+                pro.CategoryId = category.ToString();
+                context.Entry(pro).State = EntityState.Modified;
+            }
+
+            
+            try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch
+                {
+                    throw;
+                } 
+            return product;
+            }
+        public async Task<Object> DeleteProductById(string id)  
         {
             var product = await context.Products.FindAsync(id);
             if (product == null)

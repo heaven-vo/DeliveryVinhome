@@ -21,50 +21,60 @@ namespace DeliveryVHGP_WebApi.Repositories
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Image = x.Image
                 }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            foreach (CategoryModel category in listCate)
-            {
-                category.ListCateInMenus = await GetCategoryByMenuId(category.Id);
-                category.ListProducts = await GetCategoryByProduct(category.Id);
-            }
-                return listCate;
+            return listCate;
+        }
+        public async Task<CategoryModel> CreateCategory(CategoryModel category)
+        {
+            _context.Categories.Add(new Category { Id = category.Id, Name = category.Name });
+            await _context.SaveChangesAsync();
+            return category;
+
         }
 
-        public async Task<CategoryModel> GetById(string Id)
+        public async Task<Object> DeleteCateInMenuById(string CateInMenuId)
         {
-            var categoryy = await _context.Categories.Where(x => x.Id == Id).Select(x => new CategoryModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Image = x.Image
-            }).FirstOrDefaultAsync();
-            if (categoryy != null)
-            {
-                categoryy.ListCateInMenus = await GetCategoryByMenuId(categoryy.Id);
-                categoryy.ListProducts = await GetCategoryByProduct(categoryy.Id);
-            }
-                return categoryy;
-        }
-        public async Task<List<string>> GetCategoryByMenuId(string menuId)
-        {
-            List<string> ListCategoryInMenus = await (from c in _context.Categories
-                                                      join cm in _context.CategoryInMenus on c.Id equals cm.CategoryId
-                                                      join m in _context.Menus on cm.MenuId equals m.Id
-                                            where  c.Id == menuId
-                                            select m.Name
-                              ).ToListAsync();
-            return ListCategoryInMenus;
-        }
-        public async Task<List<string>> GetCategoryByProduct(string productId)
-        {
-            List<string> ListProduct = await (from c in _context.Categories
-                                                      join p in _context.Products on c.Id equals p.CategoryId
-                                                      where c.Id == productId
-                                                      select p.Name
-                              ).ToListAsync();
-            return ListProduct;
-        }
+            var CateMenu = await _context.CategoryInMenus.FindAsync(CateInMenuId);
+            _context.CategoryInMenus.Remove(CateMenu);
+            await _context.SaveChangesAsync();
 
+            return CateInMenuId;
+
+        }
+        public async Task<Object> UpdateCategoryById(string categoryId, CategoryModel category)
+        {
+            if (categoryId == null)
+            {
+                return null;
+            }
+            var result = await _context.Categories.FindAsync(categoryId);
+            result.Id = category.Id;
+            result.Name = category.Name;
+
+            _context.Entry(result).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return category;
+        }
+        public async Task<List<CategoryModel>> GetListCategoryByMenuId(string id, int page, int pageSize)
+        {
+            var listCategories = await (from c in _context.Categories
+                                      join cm in _context.CategoryInMenus on c.Id equals cm.CategoryId
+                                      join menu in _context.Menus on cm.MenuId equals menu.Id
+                                      where menu.Id == id
+                                        select new CategoryModel
+                                      {
+                                          Id = c.Id,
+                                          Name = c.Name,
+                                          Image = c.Image
+                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listCategories;
+        }
     }
 }

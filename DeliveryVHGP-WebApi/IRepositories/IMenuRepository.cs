@@ -15,5 +15,6 @@ namespace DeliveryVHGP_WebApi.IRepositories
         //Task<List<ProductViewInList>> GetListProductNotMenuByStoreId(string storeId, string menuId, int page, int pageSize);
         Task<MenuDto> CreatNewMenu(MenuDto menu);
         Task<MenuDto> UpdateMenu(string menuId, MenuDto menu);
+
     }
 }
