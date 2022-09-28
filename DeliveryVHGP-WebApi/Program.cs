@@ -7,6 +7,7 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IOrderRepository, OrdersRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
@@ -69,4 +70,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+  app.Run();
