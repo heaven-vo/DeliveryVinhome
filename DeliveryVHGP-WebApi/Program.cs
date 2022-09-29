@@ -39,13 +39,11 @@ builder.Services.AddSwaggerGen(c =>
         }
     }
     );
-   // var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-   // c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-//builder.Services.AddCors(c =>
-//{
-//    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
-//});
+builder.Services.AddCors(c =>
+{
+    c.AddPolicy("alloworigin", options => options.AllowAnyOrigin());
+});
 
 var app = builder.Build();
 
