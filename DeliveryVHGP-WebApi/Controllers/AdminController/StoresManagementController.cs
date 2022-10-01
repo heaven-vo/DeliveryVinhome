@@ -5,7 +5,7 @@ using DeliveryVHGP_WebApi.Models;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/store-management")]
+    [Route("api/v1/store-management/stores")]
     [ApiController]
     public class StoresManagementController : ControllerBase
     {
@@ -26,7 +26,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Get list all store by brand with pagination
         /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
-        [HttpGet("store/brand/{brandName}")]
+        [HttpGet("search-brand")]
         public async Task<ActionResult> GetListStoreByBrand(string brandName, int pageIndex, int pageSize)
         {
             return Ok(await _storeRepository.GetListStoreInBrand(brandName, pageIndex, pageSize));
@@ -34,10 +34,10 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Get list all store by brand with pagination
         /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
-        [HttpGet("store/{name}")]
-        public async Task<ActionResult> GetListStoreByName( string name, int pageIndex, int pageSize)
+        [HttpGet("search-name")]
+        public async Task<ActionResult> GetListStoreByName( string storeName, int pageIndex, int pageSize)
         {
-            return Ok(await _storeRepository.GetListStoreByName(name, pageIndex, pageSize));
+            return Ok(await _storeRepository.GetListStoreByName(storeName, pageIndex, pageSize));
         }
 
         /// <summary>
