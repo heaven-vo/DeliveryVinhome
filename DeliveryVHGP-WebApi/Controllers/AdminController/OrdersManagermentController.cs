@@ -11,7 +11,7 @@ using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/ordersmanagermant")]
+    [Route("api/v1/order-management/orders")]
     [ApiController]
     public class OrdersManagermentController : ControllerBase
     {

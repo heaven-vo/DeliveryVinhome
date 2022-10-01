@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
-    [Route("api/v1/storeCategoriesmanagerment/storeCategories")]
+    [Route("api/v1/storeCategory-management/storeCategories")]
     [ApiController]
     public class StoreCategoryManagermentController : ControllerBase
     {
