@@ -778,8 +778,6 @@ namespace DeliveryVHGP_WebApi.Models
 
             modelBuilder.Entity<StoreInMenu>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("StoreInMenu");
 
                 entity.Property(e => e.Id)
@@ -791,12 +789,12 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.Property(e => e.StoreId).HasMaxLength(50);
 
                 entity.HasOne(d => d.Menu)
-                    .WithMany()
+                    .WithMany(p => p.StoreInMenus)
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_StoreInMenu_Menu");
 
                 entity.HasOne(d => d.Store)
-                    .WithMany()
+                    .WithMany(p => p.StoreInMenus)
                     .HasForeignKey(d => d.StoreId)
                     .HasConstraintName("FK_StoreInMenu_Store");
             });

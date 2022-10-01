@@ -12,7 +12,7 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductInMenuByCategoryId(string categoryId, string menuId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductNotInMenuByCategoryIdAndStoreId(string storeId, string menuId, int page, int pageSize);
-        //Task<List<ProductViewInList>> GetListProductNotMenuByStoreId(string storeId, string menuId, int page, int pageSize);
+        Task<ProductsInMenuModel> AddProductsToMenu(ProductsInMenuModel listProduct);
         Task<MenuDto> CreatNewMenu(MenuDto menu);
         Task<MenuDto> UpdateMenu(string menuId, MenuDto menu);
 

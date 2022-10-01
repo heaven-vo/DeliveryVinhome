@@ -219,6 +219,35 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProduct;
         }
+
+        //Add list product to menu
+        public async Task<ProductsInMenuModel> AddProductsToMenu(ProductsInMenuModel listProduct)
+        {
+            List<ProductInMenu> list = new List<ProductInMenu>();
+            foreach(var product in listProduct.products)
+            {
+                ProductInMenu pro = new ProductInMenu { Id = Guid.NewGuid().ToString(), Price = product.price, MenuId = listProduct.menuId, ProductId = product.id };
+                list.Add(pro);
+            }
+            //Check storeId exist in StoreInMenu table
+            var storeId = await context.Products.Where(x => x.Id == listProduct.products.ElementAt(0).id).Select(x => x.StoreId).FirstOrDefaultAsync();
+            var storeInMenu = await context.StoreInMenus.Where(x => x.StoreId == storeId && x.MenuId == listProduct.menuId).FirstOrDefaultAsync();
+            if( storeInMenu == null)
+            {
+                await context.StoreInMenus.AddAsync(new StoreInMenu { Id = Guid.NewGuid().ToString(), MenuId = listProduct.menuId, StoreId = storeId });
+            }
+            try
+            {
+                await context.ProductInMenus.AddRangeAsync(list);
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return listProduct;
+        }
+
         public async Task<MenuDto> CreatNewMenu(MenuDto menu)
         {
             var id = Guid.NewGuid().ToString();
@@ -239,7 +268,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             }
             try
             {
-                context.Menus.Add(newMenu);
+                await context.Menus.AddAsync(newMenu);
                 await context.SaveChangesAsync();
             }
             catch
@@ -268,7 +297,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             {
                 var cmId = Guid.NewGuid().ToString();
                 CategoryInMenu cate = new CategoryInMenu { Id = cmId, CategoryId = category, MenuId = menuId };
-                context.CategoryInMenus.Add(cate);
+                await context.CategoryInMenus.AddAsync(cate);
             }
 
             context.Entry(menuUpdate).State = EntityState.Modified;

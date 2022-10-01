@@ -102,5 +102,19 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await menuRepository.GetListProductNotInMenuByCategoryIdAndStoreId(storeId, menuId, page, pageSize));
 
         }
+
+        [HttpPost("{menuId}/products/join")]
+        public async Task<ActionResult<ProductsInMenuModel>> AddProductsToMenu(string menuId,ProductsInMenuModel listProduct)
+        {
+            //try
+            //{
+            //    return Ok(await menuRepository.AddProductsToMenu(listProduct));
+            //}
+            //catch
+            //{
+            //    return BadRequest();
+            //}
+            return Ok(await menuRepository.AddProductsToMenu(listProduct));
+        }
     }
 }

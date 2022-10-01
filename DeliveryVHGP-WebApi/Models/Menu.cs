@@ -10,6 +10,7 @@ namespace DeliveryVHGP_WebApi.Models
             CategoryInMenus = new HashSet<CategoryInMenu>();
             Orders = new HashSet<Order>();
             ProductInMenus = new HashSet<ProductInMenu>();
+            StoreInMenus = new HashSet<StoreInMenu>();
         }
 
         public string Id { get; set; } = null!;
@@ -27,5 +28,6 @@ namespace DeliveryVHGP_WebApi.Models
         public virtual ICollection<CategoryInMenu> CategoryInMenus { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<ProductInMenu> ProductInMenus { get; set; }
+        public virtual ICollection<StoreInMenu> StoreInMenus { get; set; }
     }
 }
