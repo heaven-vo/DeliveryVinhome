@@ -39,18 +39,62 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeRepository.GetListStoreByName(storeName, pageIndex, pageSize));
         }
-
+        /// <summary>
+        /// Get store by id with pagination
+        /// </summary>
+        //GET: api/v1/storeById?pageIndex=1&pageSize=3
+        [HttpGet("storeId")]
+        public async Task<ActionResult> GetStoreById(string storeId)
+        {
+            var store = await _storeRepository.GetStoreById(storeId);
+            if (storeId == null)
+                return NotFound();
+            return Ok(store);
+        }
         /// <summary>
         /// Create a product
         /// </summary>
         //POST: api/v1/product
         [HttpPost]
-        public async Task<ActionResult> CreateProduct(ProductModel product)
+        public async Task<ActionResult> CreateNewStore(StoreDto storeId)
         {
             try
             {
-                var result = await _storeRepository.CreatNewProduct(product);
+                var result = await _storeRepository.CreatNewStore(storeId);
                 return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
+        /// <summary>
+        /// Delete for Store
+        /// </summary>
+        //POST: api/v1/store
+        [HttpDelete("{storeId}")]
+        public async Task<IActionResult> DeleteStore(string storeId)
+        {
+            var store = await _storeRepository.DeleteStore(storeId);
+            if (storeId == null)
+                return NotFound();
+            return Ok(store);
+        }
+        /// <summary>
+        /// Update status store  with pagination
+        /// </summary>
+        //PUT: api/v1/store?id
+        [HttpPut("storeId")]
+        public async Task<ActionResult> UpdateProById(string storeId, StoreDto store)
+        {
+            try
+            {
+                if (storeId != store.Id)
+                {
+                    return BadRequest("Store ID mismatch");
+                }
+                var productToUpdate = await _storeRepository.UpdateStore(storeId, store);
+                return Ok(storeId);
             }
             catch
             {

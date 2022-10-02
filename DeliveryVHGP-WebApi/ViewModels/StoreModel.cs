@@ -14,8 +14,5 @@
         public string? StoreCateId { get; set; }
         public string? StoreCateName { get; set; }
         public string? Status { get; set; }
-
-
-
     }
 }

@@ -13,11 +13,11 @@ namespace DeliveryVHGP_WebApi.Controllers
 {
     [Route("api/v1/collection-management/collections")]
     [ApiController]
-    public class CollectionsManagermentController : ControllerBase
+    public class CollectionsManagementController : ControllerBase
     {
         private readonly ICollectionRepository _collectionRepository;
 
-        public CollectionsManagermentController(ICollectionRepository collectionRepository)
+        public CollectionsManagementController(ICollectionRepository collectionRepository)
         {
             _collectionRepository = collectionRepository;
         }

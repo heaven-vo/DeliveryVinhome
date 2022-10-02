@@ -13,12 +13,12 @@ namespace DeliveryVHGP_WebApi.Controllers
 {
     [Route("api/v1/category-management/categories")]
     [ApiController]
-    public class CategoriesManagermentController : ControllerBase
+    public class CategoriesManagementController : ControllerBase
     {
         private readonly ICategoriesRepository _categoriesRepository;
         private readonly IMenuRepository _menuRepository;
 
-        public CategoriesManagermentController(ICategoriesRepository categoriesRepository, IMenuRepository menuRepository)
+        public CategoriesManagementController(ICategoriesRepository categoriesRepository, IMenuRepository menuRepository)
         {
             _categoriesRepository = categoriesRepository;
             _menuRepository = menuRepository;

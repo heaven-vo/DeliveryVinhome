@@ -13,11 +13,11 @@ namespace DeliveryVHGP_WebApi.Controllers
 {
     [Route("api/v1/order-management/orders")]
     [ApiController]
-    public class OrdersManagermentController : ControllerBase
+    public class OrdersManagementController : ControllerBase
     {
         private readonly IOrderRepository _orderRepository;
 
-        public OrdersManagermentController(IOrderRepository orderRepository)
+        public OrdersManagementController(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
