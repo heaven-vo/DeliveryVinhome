@@ -14,14 +14,14 @@ namespace DeliveryVHGP_WebApi.Repositories
             this.context = context;
         }
 
-        public async Task<List<MenuView>> GetListMenuName()
+        public async Task<List<MenuView>> GetListMenuByModeId(string modeId)
         {
-            double time = await GetTime();
-            var listMenu = await context.Menus.Where(x => x.StartHour <= time).Where(x => x.EndHour > time).OrderBy(x => x.ModeId).Select(x => new MenuView
-            {
-                Id = x.Id,
+            var listMenu = await context.Menus.Where(m => m.ModeId == modeId).Select(x => new MenuView { 
+                Id = x.Id, 
                 Image = x.Image,
-                Name = x.Name
+                Name = x.Name,
+                StartTime = x.StartHour,
+                EndTime = x.EndHour            
             }).ToListAsync();
             return listMenu;
         }

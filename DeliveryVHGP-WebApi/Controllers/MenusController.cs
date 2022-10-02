@@ -24,19 +24,20 @@ namespace DeliveryVHGP_WebApi.Controllers
 
         // GET: api/Menus
         /// <summary>
-        /// Get list name of  menus by realtime
+        /// Get all menu by modeId (store, admin web)
         /// </summary>
-        [HttpGet("name")]
-        public async Task<ActionResult<List<MenuView>>> GetMenusName()
+        [HttpGet("byMode")]
+        public async Task<ActionResult<List<MenuView>>> GetMenusByMode(string modeId)
         {
-            return Ok(await menuRepository.GetListMenuName());
+            return Ok(await menuRepository.GetListMenuByModeId(modeId));
         }
 
         /// <summary>
         /// Get list menus in realtime by modeId(customer web)
+        /// *Note: gb = store( group by store), cate(group by catedory)
         /// </summary>
         [HttpGet("filter")]
-        public async Task<ActionResult<MenuView>> GetMenuByModeId(string modeId, string gb, int page, int pageSize)
+        public async Task<ActionResult<MenuView>> GetMenusByModeId(string modeId, string gb, int page, int pageSize)
         {
             MenuView menu = new MenuView();
             try{
