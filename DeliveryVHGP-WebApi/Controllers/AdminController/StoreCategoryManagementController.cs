@@ -7,11 +7,11 @@ namespace DeliveryVHGP_WebApi.Controllers
 {
     [Route("api/v1/storeCategory-management/storeCategories")]
     [ApiController]
-    public class StoreCategoryManagermentController : ControllerBase
+    public class StoreCategoryManagementController : ControllerBase
     {
         private readonly IStoreCategoryRepository _storeCategoryRepository;
 
-        public StoreCategoryManagermentController(IStoreCategoryRepository storeCategoryRepository)
+        public StoreCategoryManagementController(IStoreCategoryRepository storeCategoryRepository)
         {
             _storeCategoryRepository = storeCategoryRepository;
         }

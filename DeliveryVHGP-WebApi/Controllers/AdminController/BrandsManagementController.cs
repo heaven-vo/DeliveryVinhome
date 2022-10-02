@@ -13,11 +13,11 @@ namespace DeliveryVHGP_WebApi.Controllers
 {
     [Route("api/v2/brand-management/brands")]
     [ApiController]
-    public class BrandsManagermentController : ControllerBase
+    public class BrandsManagementController : ControllerBase
     {
         private readonly IBrandRepository _brandRepository;
 
-        public BrandsManagermentController(IBrandRepository brandRepository)
+        public BrandsManagementController(IBrandRepository brandRepository)
         {
             _brandRepository = brandRepository;
         }
