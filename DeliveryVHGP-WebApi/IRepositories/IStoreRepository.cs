@@ -8,6 +8,5 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<IEnumerable<StoreModel>> GetListStore( int pageIndex, int pageSize);
         Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize);
         Task<IEnumerable<StoreModel>> GetListStoreByName(string storeName, int pageIndex, int pageSize);
-        Task<ProductModel> CreatNewProduct(ProductModel pro );
     }
 }

@@ -81,31 +81,6 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStore;
         }
-        public async Task<ProductModel> CreatNewProduct(ProductModel pro)
-        {
-            var store = _context.Stores.FirstOrDefault(x => x.Id == pro.StoreId);
-            var cate = _context.Categories.FirstOrDefault(c => c.Id == pro.CategoryId);
-            _context.Products.Add(
-                new Product()
-                {
-                    Id = pro.Id,
-                    Name = pro.Name,
-                    Image = pro.Image,
-                    Unit = pro.Unit,
-                    PricePerPack = pro.PricePerPack,
-                    PackDescription = pro.PackDescription,
-                    PackNetWeight = pro.PackNetWeight,
-                    MaximumQuantity = pro.MaximumQuantity,
-                    MinimumQuantity = pro.MinimumQuantity,
-                    MinimumDeIn = pro.MinimumDeIn,
-                    Rate = pro.Rate,
-                    Description = pro.Description,
-                    StoreId = store.Id,
-                    CategoryId = cate.Id,
-                });
-            await _context.SaveChangesAsync();
-            return pro;
-        }
 
         public async Task<double> GetTime()
         {

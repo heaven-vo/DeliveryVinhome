@@ -40,22 +40,6 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await _storeRepository.GetListStoreByName(storeName, pageIndex, pageSize));
         }
 
-        /// <summary>
-        /// Create a product
-        /// </summary>
-        //POST: api/v1/product
-        [HttpPost]
-        public async Task<ActionResult> CreateProduct(ProductModel product)
-        {
-            try
-            {
-                var result = await _storeRepository.CreatNewProduct(product);
-                return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
-        }
+        
     }
 }

@@ -79,7 +79,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             context.Products.Add(
                 new Product {
-                    Id = pro.Id,
+                    Id = Guid.NewGuid().ToString(),
                     Name = pro.Name,
                     Image = pro.Image ,
                     Unit = pro.Unit,

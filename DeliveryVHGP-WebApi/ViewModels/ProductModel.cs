@@ -2,7 +2,6 @@
 {
     public class ProductModel
     {
-        public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public string? Image { get; set; }
         public string? Unit { get; set; }
