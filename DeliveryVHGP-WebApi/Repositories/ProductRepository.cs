@@ -89,6 +89,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                     MaximumQuantity= pro.MaximumQuantity,
                     MinimumQuantity = pro.MinimumQuantity,
                     MinimumDeIn = pro.MinimumDeIn,
+                    StoreId = pro.StoreId,
+                    CategoryId = pro.CategoryId,
                     Rate = pro.Rate,
                     Description = pro.Description,
                     });
