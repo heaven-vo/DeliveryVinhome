@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DeliveryVHGP_WebApi.IRepositories;
+﻿using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.ViewModels;
-using DeliveryVHGP_WebApi.Models;
+using Firebase.Auth;
+using Firebase.Storage;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryVHGP_WebApi.Controllers
 {
@@ -10,7 +12,13 @@ namespace DeliveryVHGP_WebApi.Controllers
     public class StoresManagementController : ControllerBase
     {
         private readonly IStoreRepository _storeRepository;
-        public StoresManagementController(IStoreRepository storeRepository) { 
+
+        private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
+        private static string apibucket = "lucky-science-341916.appspot.com";
+        private static string authenEmail = "adminstore2@gmail.com";
+        private static string authenPassword = "store123456";
+        public StoresManagementController(IStoreRepository storeRepository)
+        {
             _storeRepository = storeRepository;
         }
         /// <summary>
@@ -18,9 +26,9 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //GET: api/v1/store?pageIndex=1&pageSize=3
         [HttpGet]
-        public async Task<ActionResult> GetAll( int pageIndex, int pageSize)
+        public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
         {
-            return Ok(await _storeRepository.GetListStore( pageIndex, pageSize));
+            return Ok(await _storeRepository.GetListStore(pageIndex, pageSize));
         }
         /// <summary>
         /// Get list all store by brand with pagination
@@ -31,11 +39,11 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             return Ok(await _storeRepository.GetListStoreInBrand(brandName, pageIndex, pageSize));
         } /// <summary>
-        /// Get list all store by brand with pagination
-        /// </summary>
+          /// Get list all store by brand with pagination
+          /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
         [HttpGet("search-name")]
-        public async Task<ActionResult> GetListStoreByName( string storeName, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetListStoreByName(string storeName, int pageIndex, int pageSize)
         {
             return Ok(await _storeRepository.GetListStoreByName(storeName, pageIndex, pageSize));
         }
@@ -52,9 +60,9 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(store);
         }
         /// <summary>
-        /// Create a product
+        /// Create a new store
         /// </summary>
-        //POST: api/v1/product
+        //POST: api/v1/store
         [HttpPost]
         public async Task<ActionResult> CreateNewStore(StoreDto storeId)
         {
@@ -84,7 +92,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Update status store  with pagination
         /// </summary>
         //PUT: api/v1/store?id
-        [HttpPut("storeId")]
+        [HttpPut("{storeId}")]
         public async Task<ActionResult> UpdateProById(string storeId, StoreDto store)
         {
             try
@@ -99,6 +107,28 @@ namespace DeliveryVHGP_WebApi.Controllers
             catch
             {
                 return Conflict();
+            }
+        }
+        ///// <summary>
+        ///// Create Upload image to Firebase
+        ///// </summary>
+        /////POST: api/v1/store
+        [HttpPost("UploadFile")]
+        public async Task<ActionResult> PostFireBase(IFormFile file)
+        {
+            var fileUpload = file;
+            try
+            {
+                if (fileUpload.Length > 0)
+                {
+                    var upStore = await _storeRepository.PostFireBase(file);
+                    return Ok(new { StatusCode = 200, message = "Upload file succesful!" });
+                }
+                return BadRequest("Upload  fail");
+            }
+            catch (Exception e)
+            {
+                return StatusCode(409, new { StatusCode = 409, message = e.Message });
             }
         }
     }

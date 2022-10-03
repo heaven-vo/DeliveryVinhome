@@ -12,5 +12,6 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<Object> DeleteProductById(string id);
         Task<List<ProductViewInList>> GetListProductInStore(string storeId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductInCategory(string categoryId, int page, int pageSize);
+        Task<Object> PostFireBase(IFormFile file);
     }
 }
