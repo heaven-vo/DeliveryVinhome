@@ -119,7 +119,7 @@ namespace DeliveryVHGP_WebApi.Controllers
             {
                 if (fileUpload.Length > 0)
                 {
-                    var upStore = await _productRepository.PostFireBase(file);
+                    var upProduct = await _productRepository.PostFireBase(file);
                     return Ok(new { StatusCode = 200, message = "Upload file succesful!" });
                 }
                 return BadRequest("Upload  fail");

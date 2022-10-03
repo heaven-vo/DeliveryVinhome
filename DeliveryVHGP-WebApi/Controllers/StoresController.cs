@@ -44,4 +44,5 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await _storeRepository.GetListStoreByName(storeName, pageIndex, pageSize));
         }
     }
+
 }

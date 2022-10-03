@@ -9,6 +9,7 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<CategoryModel> CreateCategory(CategoryModel category);
         Task<Object> DeleteCateInMenuById(string CateInMenuId);
         Task<Object> UpdateCategoryById(string categoryId, CategoryModel category);
+        Task<Object> PostFireBase(IFormFile file);
 
     }
 }

@@ -104,54 +104,38 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product)
         {
-                if (proId == null)
-                {
-                    return null;
-                }
-                var pro = await context.Products.FindAsync(proId);
-                var store = context.Stores.Where(x => x.Id == product.StoreId).Select(x => x.Id).FirstOrDefault();
-                var category = context.Categories.Where(c => c.Id == product.CategoryId).Select(c => c.Id).FirstOrDefault();
-                var cateInMenus = context.CategoryInMenus.Where(cm => cm.CategoryId == product.CategoryId).FirstOrDefault();
-                var productInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.ProductId == product.Id);
-
-            //if (productInMenu.ProductId == proId)
-            //{
-            //    if (cateInMenus.CategoryId == null)
-            //    return null;
-            //}
-
-            List<Menu> listM = new List<Menu>();
-            Menu resultMenu = listM.Find(x => x.Id == productInMenu.MenuId);
-            
-            List<CategoryInMenu> listCate = new List<CategoryInMenu>();
-            CategoryInMenu resultCate = listCate.SingleOrDefault(cm => cm.CategoryId == product.CategoryId);
-
-            List<ProductInMenu> listmenu = new List<ProductInMenu>();
-            ProductInMenu result = listmenu.Find(pm => pm.Id == pro.Id);
-
-            if(result != null)
+            if (proId == null)
             {
                 return null;
             }
+            var pro = await context.Products.FindAsync(proId);
+            var store = context.Stores.FirstOrDefault(s => s.Id == product.StoreId);
+            var category = context.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
+            pro.Id = product.Id;
+            pro.Name = product.Name;
+            pro.Image = product.Image;
+            pro.Unit = product.Unit;
+            pro.PricePerPack = product.PricePerPack;
+            pro.PackNetWeight = product.PackNetWeight;
+            pro.PackDescription = product.PackDescription;
+            pro.MaximumQuantity = product.MaximumQuantity;
+            pro.MinimumQuantity = product.MinimumQuantity;
+            pro.Description = product.Description;
+            pro.Rate = product.Rate;
+            pro.StoreId = product.StoreId;
+            pro.CategoryId = product.CategoryId;
+
+            var listProInMenu = await context.ProductInMenus.Where(pm => pm.ProductId == proId).ToListAsync();
+            var listCateInMenu = await context.CategoryInMenus.Where(pm => pm.CategoryId == product.CategoryId).ToListAsync();
+            if (listProInMenu.Any())
             {
-
-                pro.Id = product.Id;
-                pro.Name = product.Name;
-                pro.Image = product.Image;
-                pro.Unit = product.Unit;
-                pro.PricePerPack = product.PricePerPack;
-                pro.PackNetWeight = product.PackNetWeight;
-                pro.PackDescription = product.PackDescription;
-                pro.MaximumQuantity = product.MaximumQuantity;
-                pro.MinimumQuantity = product.MinimumQuantity;
-                pro.Description = product.Description;
-                pro.Rate = product.Rate;
-                pro.StoreId = store.ToString();
-                pro.CategoryId = category.ToString();
-                context.Entry(pro).State = EntityState.Modified;
+                if (listCateInMenu.Any()) { 
+                context.CategoryInMenus.RemoveRange(listCateInMenu);
+                context.ProductInMenus.RemoveRange(listProInMenu);
             }
+            } 
 
-            
+            context.Entry(pro).State = EntityState.Modified; 
             try
                 {
                     await context.SaveChangesAsync();
