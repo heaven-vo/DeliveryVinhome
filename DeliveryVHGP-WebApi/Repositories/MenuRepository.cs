@@ -180,7 +180,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
-        // Get products in menu of store filter by category (load list product in menu for a store)
+        // Get products in menu of store, filter by category (load list product in menu for a store)
         public async Task<List<ProductViewInList>> GetListProductInMenuByCategoryIdAndStoreId(string storeId, string categoryId, string menuId, int page, int pageSize)
         {
             var listProducts = await (from product in context.Products

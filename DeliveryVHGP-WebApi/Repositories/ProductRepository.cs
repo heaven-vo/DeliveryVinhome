@@ -45,7 +45,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             return listproductdetail;
         }
 
-        public async Task<Object> GetById(string proId)
+        public async Task<ProductDetailsModel> GetById(string proId)
         {
             var product = await (from p in context.Products
                                  join s in context.Stores on p.StoreId equals s.Id
@@ -71,7 +71,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      CategoryId = c.Id,
                                      ProductCategory = c.Name
 
-                                 }).ToListAsync();
+                                 }).FirstOrDefaultAsync();
 
             return product;
         }

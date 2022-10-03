@@ -38,7 +38,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //GET: api/v1/productbyId?pageIndex=1&pageSize=3
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetProductDetail(string id)
+        public async Task<ActionResult<ProductDetailsModel>> GetProductDetail(string id)
         {
             var pro = await _productRepository.GetById(id);
             if (pro == null)
