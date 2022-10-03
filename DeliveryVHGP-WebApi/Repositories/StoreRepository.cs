@@ -100,7 +100,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    StoreCateId = sc.Id,
                                    StoreCateName = sc.Name,
                                    Status = s.Status
-                               }).ToListAsync();
+                               }).FirstOrDefaultAsync();
             return store;
         }
         //public async Task<ProductModel> CreatNewProduct(ProductModel pro)

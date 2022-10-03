@@ -71,7 +71,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      CategoryId = c.Id,
                                      ProductCategory = c.Name
 
-                                 }).ToListAsync();
+                                 }).FirstOrDefaultAsync();
 
             return product;
         }
