@@ -2,6 +2,7 @@
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace DeliveryVHGP_WebApi.Repositories
 {
@@ -23,6 +24,10 @@ namespace DeliveryVHGP_WebApi.Repositories
                 StartTime = x.StartHour,
                 EndTime = x.EndHour            
             }).ToListAsync();
+            //if (!listMenu.Any())
+            //{
+            //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Contact {0} not found.", modeId)));
+            //}
             return listMenu;
         }
         public async Task<MenuDto> GetMenuDetail(string menuId)
@@ -142,6 +147,49 @@ namespace DeliveryVHGP_WebApi.Repositories
             listCategory = listCategory.Where(x => x.ListProducts.Any()).ToList();
             return listCategory;
         }
+
+        //Get all product when click see all product in menu group by store (customer web)
+        public async Task<CategoryStoreInMenu> GetAllProductInMenuByStoreId(string storeId,string menuId, int page, int pageSize)
+        {
+            var storeView = await context.Stores.Where(x => x.Id == storeId).Select( x => new CategoryStoreInMenu
+                               {
+                                   Id = x.Id,
+                                   Name = x.Name,
+                                   Image = x.Image
+
+                               }).FirstOrDefaultAsync();
+            storeView.ListProducts = await GetListProductInMenuByStoreId(storeId, menuId, page, pageSize);
+            return storeView;
+        }
+
+        //Get all product when click see all product in menu group by category (customer web)
+        public async Task<CategoryStoreInMenu> GetAllProductInMenuByCategoryId(string categoryId, string menuId, int page, int pageSize)
+        {
+            var cateView = await context.Categories.Where(x => x.Id == categoryId).Select( x => new CategoryStoreInMenu
+                                   {
+                                       Id = x.Id,
+                                       Name = x.Name,
+                                       Image = x.Image
+                                   }).FirstOrDefaultAsync();
+            cateView.ListProducts = await GetListProductInMenuByCategoryId(categoryId, menuId, page, pageSize);
+            return cateView;
+        }
+
+        //Get all product when click see all product in menu group by category (store web)
+        public async Task<CategoryStoreInMenu> GetAllProductInMenuByCategoryIdAndStoreId(string storeId, string categoryId, string menuId, int page, int pageSize)
+        {
+            var cateView = await context.Categories.Where(x => x.Id == categoryId).Select(x => new CategoryStoreInMenu
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image
+            }).FirstOrDefaultAsync();
+            cateView.ListProducts = await GetListProductInMenuByCategoryIdAndStoreId(storeId, categoryId, menuId, page, pageSize);
+            return cateView;
+        }
+
+        //Product-----------------------------------------------------------------------------------------------------------
+
         public async Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize)
         {
             var listProducts = await (from product in context.Products
@@ -156,7 +204,9 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Name = product.Name,
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
-                                          StoreName = store.Name
+                                          StoreName = store.Name,
+                                          Unit = product.Unit,
+                                          MinimumDeIn = product.MinimumDeIn
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -176,7 +226,9 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Name = product.Name,
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
-                                          StoreName = store.Name
+                                          StoreName = store.Name,
+                                          Unit = product.Unit,
+                                          MinimumDeIn = product.MinimumDeIn
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -205,20 +257,23 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<List<ProductViewInList>> GetListProductNotInMenuByCategoryIdAndStoreId(string storeId, string menuId, int page, int pageSize)
         {
             var listProduct = await (from product in context.Products
+                                     join cate in context.Categories on product.CategoryId equals cate.Id
+                                     join cm in context.CategoryInMenus on cate.Id equals cm.CategoryId
                                      join store in context.Stores on product.StoreId equals store.Id
                                      join pm in context.ProductInMenus on product.Id equals pm.ProductId into nx
                                      from x in nx.DefaultIfEmpty()
-                                     where store.Id == storeId && x.MenuId != menuId
+                                     where store.Id == storeId && x.MenuId != menuId && cm.MenuId == menuId
                                      select new ProductViewInList
                                      {
                                          Id = product.Id,
                                          Image = product.Image,
                                          Name = product.Name,
                                          PricePerPack = product.PricePerPack,
-                                         PackDes = product.PackDescription,
+                                         PackDes = product.PackDescription
                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProduct;
         }
+
 
         //Add list product to menu
         public async Task<ProductsInMenuModel> AddProductsToMenu(ProductsInMenuModel listProduct)

@@ -33,7 +33,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         /// <summary>
-        /// Get list menus in realtime by modeId(customer web)
+        /// Get list menus in realtime by modeId(when click a mode in customer web)
         /// *Note: gb = store( group by store), cate(group by catedory)
         /// </summary>
         [HttpGet("filter")]
@@ -58,7 +58,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         /// <summary>
-        /// Get list category in include products in menu by store id(store web)
+        /// Get list category in include products in menu by store id(when click a menu in store web)
         /// </summary>
         [HttpGet("{menuId}/filter")]
         public async Task<ActionResult<MenuView>> GetMenuByStoreId(string menuId, string storeId, int page, int pageSize)
@@ -77,25 +77,34 @@ namespace DeliveryVHGP_WebApi.Controllers
 
 
         /// <summary>
-        /// Get list products in a menu and a store(customer web)
+        /// Get list products in a menu and a store(when click see all in customer web)
         /// </summary>
         [HttpGet("{menuId}/products/byStoreId")]
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByStoreId(string menuId, string storeId, int page, int pageSize)
         {
-            return Ok(await menuRepository.GetListProductInMenuByStoreId(storeId, menuId, page, pageSize));
+            return Ok(await menuRepository.GetAllProductInMenuByStoreId(storeId, menuId, page, pageSize));
         }
 
         /// <summary>
-        /// Get list products in a menu and a category(customer web)
+        /// Get list products in a menu and a category(when click see all in customer web)
         /// </summary>
         [HttpGet("{menuId}/products/byCategoryId")]
         public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByCategoryId(string menuId, string categoryId, int page, int pageSize)
         {
-            return Ok(await menuRepository.GetListProductInMenuByCategoryId(categoryId, menuId, page, pageSize));
+            return Ok(await menuRepository.GetAllProductInMenuByCategoryId(categoryId, menuId, page, pageSize));
         }
 
         /// <summary>
-        /// Get list products in store and not in a menu (store web)
+        /// Get list products in a menu and a category(when click see all in store web)
+        /// </summary>
+        [HttpGet("{menuId}/products/byStoreAndCategory")]
+        public async Task<ActionResult<CategoryStoreInMenu>> GetAllProductInMenuByCategoryIdAndStoreId(string storeId, string categoryId, string menuId, int page, int pageSize)
+        {
+            return Ok(await menuRepository.GetAllProductInMenuByCategoryIdAndStoreId(storeId, categoryId, menuId, page, pageSize));
+        }
+
+        /// <summary>
+        /// Get list products in store and not in a menu (when click add product to menu in store web)
         /// </summary>
         [HttpGet("{menuId}/not-products/filter")]
         public async Task<ActionResult<List<ProductViewInList>>> GetListProductNotInMenuByCategoryIdAndStoreId(string menuId,string storeId, int page, int pageSize)
@@ -103,7 +112,9 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await menuRepository.GetListProductNotInMenuByCategoryIdAndStoreId(storeId, menuId, page, pageSize));
 
         }
-
+        /// <summary>
+        /// Add a list product into menu
+        /// </summary>
         [HttpPost("{menuId}/products/join")]
         public async Task<ActionResult<ProductsInMenuModel>> AddProductsToMenu(string menuId,ProductsInMenuModel listProduct)
         {

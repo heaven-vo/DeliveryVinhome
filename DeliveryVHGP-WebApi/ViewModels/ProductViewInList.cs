@@ -8,6 +8,8 @@
         public String StoreName { get; set; }
         public double? PricePerPack { get; set; }
         public String PackDes { get; set; }
+        public String Unit { get; set; }
+        public double? MinimumDeIn { get; set; }
 
     }
 }
