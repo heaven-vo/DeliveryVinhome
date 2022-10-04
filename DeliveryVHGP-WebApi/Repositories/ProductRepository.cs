@@ -68,6 +68,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      MaximumQuantity = p.MaximumQuantity,
                                      MinimumQuantity = p.MinimumQuantity,
                                      Description = p.Description,
+                                     MinimumDeIn = p.MinimumDeIn,
                                      Rate = p.Rate,
                                      StoreId = s.Id,
                                      StoreName = s.Name,
@@ -126,15 +127,13 @@ namespace DeliveryVHGP_WebApi.Repositories
             pro.CategoryId = product.CategoryId;
 
             var listProInMenu = await context.ProductInMenus.Where(pm => pm.ProductId == proId).ToListAsync();
-            var listCateInMenu = await context.CategoryInMenus.Where(pm => pm.CategoryId == product.CategoryId).ToListAsync();
+            var listCateInMenu = await context.CategoryInMenus.Where(cm => cm.CategoryId == product.CategoryId).ToListAsync();
             if (listProInMenu.Any())
             {
-                if (listCateInMenu.Any()) { 
-                context.CategoryInMenus.RemoveRange(listCateInMenu);
-                context.ProductInMenus.RemoveRange(listProInMenu);
-            }
-            } 
+                if (listCateInMenu.Any()) 
 
+                context.CategoryInMenus.RemoveRange(listCateInMenu);
+            }
             context.Entry(pro).State = EntityState.Modified; 
             try
                 {
