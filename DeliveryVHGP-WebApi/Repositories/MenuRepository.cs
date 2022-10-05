@@ -106,7 +106,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             var listCategory = await (from menu in context.Menus
                                   join cm in context.CategoryInMenus on menu.Id equals cm.MenuId
                                   join category in context.Categories on cm.CategoryId equals category.Id
-                                  where menu.Id == menu.Id
+                                  where menu.Id == menuView.Id
                                   select new CategoryStoreInMenu
                                   {
                                       Id = category.Id,
@@ -346,7 +346,8 @@ namespace DeliveryVHGP_WebApi.Repositories
             };
             //remove old category in menu
             var listCateInMenu = await context.CategoryInMenus.Where(x => x.MenuId == menuId).ToListAsync();
-            context.CategoryInMenus.RemoveRange(listCateInMenu);
+            if(listCateInMenu.Any())
+                context.CategoryInMenus.RemoveRange(listCateInMenu);
             //add new category in menu
             foreach (var category in menu.listCategory)
             {

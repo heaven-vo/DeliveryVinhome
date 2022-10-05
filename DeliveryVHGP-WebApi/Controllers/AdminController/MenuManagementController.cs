@@ -16,10 +16,14 @@ namespace DeliveryVHGP_WebApi.Controllers.AdminController
             this.menuRepository = menuRepository;
         }
         [HttpGet("menuId")]
-        public async Task<ActionResult<MenuDto>> GetMenuDetail(string menuId)
+        public async Task<ActionResult> GetMenuDetail(string menuId)
         {
             try
             {
+                //List<int> listA = new List<int>() { 1, 2, 3, 4 };
+                //List<int> listB = new List<int>() {3 ,4 , 8, 9 };
+                //var listFinal = listA.Intersect(listB);
+                //var list = listB);
                 var detail = await menuRepository.GetMenuDetail(menuId);
                 return Ok(detail);
             }
