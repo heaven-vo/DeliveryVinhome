@@ -144,7 +144,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 if (listProduct != null)
                     category.ListProducts = listProduct;
             }
-            listCategory = listCategory.Where(x => x.ListProducts.Any()).ToList();
+            listCategory = listCategory.Where(x => x.ListProducts != null).ToList();
             return listCategory;
         }
 
@@ -256,6 +256,8 @@ namespace DeliveryVHGP_WebApi.Repositories
         //Get list product in store not in menu (when add product to menu in store web)
         public async Task<List<ProductViewInList>> GetListProductNotInMenuByCategoryIdAndStoreId(string storeId, string menuId, int page, int pageSize)
         {
+            var listInMenu = await context.ProductInMenus.Where(x => x.MenuId == menuId).Select(x => x.ProductId).ToListAsync();
+            //list not in product bi trung khi product o 2 menu
             var listProduct = await (from product in context.Products
                                      join cate in context.Categories on product.CategoryId equals cate.Id
                                      join cm in context.CategoryInMenus on cate.Id equals cm.CategoryId
@@ -271,6 +273,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                          PricePerPack = product.PricePerPack,
                                          PackDes = product.PackDescription
                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            // Remove duplicate
+            foreach(var product in listInMenu)
+            {
+                listProduct.RemoveAll(x => x.Id == product);
+            }
             return listProduct;
         }
 
