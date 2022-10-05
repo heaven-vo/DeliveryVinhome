@@ -278,7 +278,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             {
                 listProduct.RemoveAll(x => x.Id == product);
             }
-            return listProduct;
+            return listProduct.GroupBy(x => x.Id).Select(x => x.First()).ToList();
         }
 
 
