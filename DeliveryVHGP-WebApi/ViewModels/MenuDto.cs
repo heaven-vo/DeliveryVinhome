@@ -12,6 +12,6 @@
         public double? StartHour { get; set; }
         public double? EndHour { get; set; }
         public string? ModeId { get; set; }
-        public List<string> listCategory { get; set; }
+        public List<string>? listCategory { get; set; }
     }
 }

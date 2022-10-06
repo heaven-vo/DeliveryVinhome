@@ -6,7 +6,7 @@
         public string? ProductInMenuId { get; set; }
         public string? OrderId { get; set; }
         public string? Quantity { get; set; }
-        public string? OTotal { get; set; }
+        public double? OTotal { get; set; }
         public string? OType { get; set; }
         public String proId { get; set; }
         public String proImage { get; set; }

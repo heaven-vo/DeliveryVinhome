@@ -2,6 +2,7 @@
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Net;
 
 namespace DeliveryVHGP_WebApi.Repositories
@@ -351,9 +352,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                 EndHour = menu.EndHour,
                 ModeId = menu.ModeId
             };
+            List<String> listCate = (List<String>)await context.CategoryInMenus.Where(x => x.MenuId == menuId).Select(x => x.CategoryId).ToListAsync();
+            List<String> listNewCate = (List<String>)menu.listCategory;
             //remove old category in menu
-            var listCateInMenu = await context.CategoryInMenus.Where(x => x.MenuId == menuId).ToListAsync();
-            if(listCateInMenu.Any())
+            var listCateInMenu = await context.CategoryInMenus.Where(x => x.MenuId == menuId).ToListAsync();           
+            if (listCateInMenu.Any())
                 context.CategoryInMenus.RemoveRange(listCateInMenu);
             //add new category in menu
             foreach (var category in menu.listCategory)
@@ -362,7 +365,26 @@ namespace DeliveryVHGP_WebApi.Repositories
                 CategoryInMenu cate = new CategoryInMenu { Id = cmId, CategoryId = category, MenuId = menuId };
                 await context.CategoryInMenus.AddAsync(cate);
             }
-
+            
+            var listIntersection = listNewCate.Intersect(listCate);
+            var listRemove = listCate.Except(listIntersection);
+            //if (listCateInMenu.Any() && listNewCate != null)
+            //{
+            //    // get list intersection(giao) beewent old and new list category
+            //    //listIntersection = (List<string>)listNewCate.Intersect(listCate);
+            //    //listRemove = (List<String>)listCate.Except(listIntersection);
+            //}
+            if (listRemove.Any())
+            {
+                foreach (var cate in listRemove)
+                {
+                    var product = await (from pro in context.Products 
+                                         join pm in context.ProductInMenus on pro.Id equals pm.ProductId
+                                         where pro.CategoryId == cate 
+                                         select pm).ToListAsync();
+                    context.ProductInMenus.RemoveRange(product);
+                }
+            }
             context.Entry(menuUpdate).State = EntityState.Modified;
             try
             {
@@ -375,6 +397,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             return menu;
 
         }
+
         public async Task<double> GetTime()
         {
             DateTime utcDateTime = DateTime.UtcNow;

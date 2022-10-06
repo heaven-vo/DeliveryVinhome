@@ -5,7 +5,7 @@
         public string Id { get; set; } = null!;
         public string? CustomerId { get; set; }
         public string? CustomerName { get; set; }
-        public string? Total { get; set; }
+        public double? Total { get; set; }
         public string? Type { get; set; }
         public string? StoreId { get; set; }
         public string? StoreName { get; set; }

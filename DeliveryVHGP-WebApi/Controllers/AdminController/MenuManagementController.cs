@@ -20,10 +20,10 @@ namespace DeliveryVHGP_WebApi.Controllers.AdminController
         {
             try
             {
-                //List<int> listA = new List<int>() { 1, 2, 3, 4 };
-                //List<int> listB = new List<int>() {3 ,4 , 8, 9 };
+                //List<string> listA = new List<string>() {"1", "3", "4"};
+                //List<string> listB = new List<string>() { "3", "4", "8", "9" };
                 //var listFinal = listA.Intersect(listB);
-                //var list = listB);
+                //var list = listB.Except(listFinal);
                 var detail = await menuRepository.GetMenuDetail(menuId);
                 return Ok(detail);
             }
@@ -57,9 +57,9 @@ namespace DeliveryVHGP_WebApi.Controllers.AdminController
             {
                 await menuRepository.UpdateMenu(menuId, menu);
             }
-            catch
+            catch (Exception ex)
             {
-                return Conflict();
+                return Conflict(ex.Message);
             }
             return Ok(menu);
         }
