@@ -18,8 +18,8 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
-                                  join od in context.OrderDetails on order.Id equals od.OrderId
-                                  join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
+                                  //join od in context.OrderDetails on order.Id equals od.OrderId
+                                  //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                   select new OrderModels()
                                   {
                                       Id = order.Id,
@@ -30,7 +30,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       DurationId = order.DurationId,
                                   }
                                   ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
+           
             return lstOrder;
         }
         public async Task<Object> GetOrdersById(string orderId)
@@ -72,15 +72,17 @@ namespace DeliveryVHGP_WebApi.Repositories
                 FullName = order.FullName,
                 PhoneNumber = order.PhoneNumber,
                 ShipCost = order.ShipCost,
-                DurationId = order.DurationId,
+                DurationId = order.DurationId
             };
                 await context.Orders.AddAsync(od);
 
             foreach (var ord in order.OrderDetail)
             {
+                var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
                 var odd = new OrderDetail{ Id = Guid.NewGuid().ToString(),
                                            ProductInMenuId = ord.ProductInMenuId,
                                            Quantity = ord.Quantity,
+                                           Price = proInMenu.Price,
                                            OrderId = od.Id
                 };
                 await context.OrderDetails.AddAsync(odd);

@@ -7,7 +7,7 @@ namespace DeliveryVHGP_WebApi.Models
     {
         public Customer()
         {
-            Addresses = new HashSet<Address>();
+            Buildings = new HashSet<Building>();
             Orders = new HashSet<Order>();
         }
 
@@ -17,7 +17,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? Email { get; set; }
         public string? Image { get; set; }
 
-        public virtual ICollection<Address> Addresses { get; set; }
+        public virtual ICollection<Building> Buildings { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

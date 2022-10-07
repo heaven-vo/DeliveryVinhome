@@ -9,6 +9,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? ProductInMenuId { get; set; }
         public string? OrderId { get; set; }
         public string? Quantity { get; set; }
+        public double? Price { get; set; }
 
         public virtual Order? Order { get; set; }
         public virtual ProductInMenu? ProductInMenu { get; set; }

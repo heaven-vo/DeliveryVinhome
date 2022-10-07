@@ -27,6 +27,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? Status { get; set; }
 
         public virtual Brand? Brand { get; set; }
+        public virtual Building? Building { get; set; }
         public virtual StoreCategory? StoreCategory { get; set; }
         public virtual ICollection<Collection> Collections { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
