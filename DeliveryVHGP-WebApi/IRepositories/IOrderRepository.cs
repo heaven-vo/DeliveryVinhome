@@ -7,8 +7,10 @@ namespace DeliveryVHGP_WebApi.IRepositories
 {
     public interface IOrderRepository
     {
-        Task<IEnumerable<OrderModels>> GetOrders(int pageIndex, int pageSize);
+        Task<List<OrderModels>> GetListOrders(int pageIndex, int pageSize);
 
         Task<Object> GetOrdersById(string orderId);
+
+        Task<OrderDto> CreatNewOrder(OrderDto order);
     }
 }
