@@ -377,9 +377,7 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(50);
 
-                entity.Property(e => e.Status)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.StatusId).HasMaxLength(50);
 
                 entity.Property(e => e.StoreId).HasMaxLength(50);
 
@@ -409,6 +407,11 @@ namespace DeliveryVHGP_WebApi.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_Order_Menu");
+
+                entity.HasOne(d => d.Status)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.StatusId)
+                    .HasConstraintName("FK_Order_OrderStatus");
 
                 entity.HasOne(d => d.Store)
                     .WithMany(p => p.Orders)
@@ -806,6 +809,11 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.Property(e => e.StatusId).HasMaxLength(50);
 
                 entity.Property(e => e.Time).HasMaxLength(50);
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.TimeOfOrderStages)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_TimeOfOrderStage_Order");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.TimeOfOrderStages)

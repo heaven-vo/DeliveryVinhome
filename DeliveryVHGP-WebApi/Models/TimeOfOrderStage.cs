@@ -10,6 +10,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? OrderId { get; set; }
         public string? StatusId { get; set; }
 
+        public virtual Order? Order { get; set; }
         public virtual OrderStatus? Status { get; set; }
     }
 }
