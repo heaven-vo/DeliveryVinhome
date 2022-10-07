@@ -420,17 +420,13 @@ namespace DeliveryVHGP_WebApi.Models
             {
                 entity.ToTable("OrderDetail");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Id).HasMaxLength(50);
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 
                 entity.Property(e => e.ProductInMenuId).HasMaxLength(50);
 
-                entity.Property(e => e.Quantity)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Quantity).HasMaxLength(50);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderDetails)
@@ -483,13 +479,9 @@ namespace DeliveryVHGP_WebApi.Models
             {
                 entity.ToTable("Payment");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Id).HasMaxLength(100);
 
-                entity.Property(e => e.Amount)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Amount).HasMaxLength(50);
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 
@@ -497,9 +489,7 @@ namespace DeliveryVHGP_WebApi.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.Property(e => e.Type)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Type).HasMaxLength(50);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Payments)
