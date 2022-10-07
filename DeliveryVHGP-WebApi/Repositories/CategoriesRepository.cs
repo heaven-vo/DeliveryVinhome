@@ -1,6 +1,8 @@
 ﻿using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.ViewModels;
+using Firebase.Auth;
+using Firebase.Storage;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryVHGP_WebApi.Repositories
@@ -8,7 +10,10 @@ namespace DeliveryVHGP_WebApi.Repositories
     public class CategoriesRepository : ICategoriesRepository
     {
         private readonly DeliveryVHGP_DBContext _context;
-
+        private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
+        private static string apibucket = "lucky-science-341916.appspot.com";
+        private static string authenEmail = "adminstore2@gmail.com";
+        private static string authenPassword = "store123456";
         public CategoriesRepository(DeliveryVHGP_DBContext context)
         {
             _context = context;
@@ -75,6 +80,52 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Image = c.Image
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listCategories;
+        }
+        public async Task<Object> PostFireBase(IFormFile file)
+        {
+            var fileUpload = file;
+            FileStream fs = null;
+            if (fileUpload.Length > 0)
+            {
+                {
+                    string folderName = "ImagesCategories";
+                    string path = Path.Combine($"Image/{folderName}");
+                    if (Directory.Exists(path))
+                    {
+                        using (fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Create))
+                        {
+                            await fileUpload.CopyToAsync(fs);
+                        }
+                        fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Open);
+                    }
+                    else
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                }
+                var authen = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+                var a = await authen.SignInWithEmailAndPasswordAsync(authenEmail, authenPassword);
+                var cancel = new CancellationTokenSource();
+                var upload = new FirebaseStorage(
+                    apibucket,
+                    new FirebaseStorageOptions
+                    {
+                        AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                        ThrowOnCancel = true
+                    }
+                    ).Child("ImageCategories").Child(fileUpload.FileName).PutAsync(fs, cancel.Token);
+                try
+                {
+                    string Link = await upload;
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+            }
+            return file;
         }
     }
 }

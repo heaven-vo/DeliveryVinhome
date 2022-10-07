@@ -21,26 +21,22 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             _orderRepository = orderRepository;
         }
-
+        /// <summary>
+        /// Get list orders
+        /// </summary>
         // GET: api/Orders
         [HttpGet]
         public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
         {
-            try
-            {
-                var result = Ok(await _orderRepository.GetOrders(pageIndex, pageSize));
+
+                var result = Ok(await _orderRepository.GetListOrders(pageIndex, pageSize));
             
                 return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
         }
         /// <summary>
-        /// Get product by id with pagination
+        /// Get order by id with pagination
         /// </summary>
-        //GET: api/v1/productbyId?pageIndex=1&pageSize=3
+        //GET: api/v1/orderById?pageIndex=1&pageSize=3
         [HttpGet("{id}")]
         public async Task<ActionResult> GetOrderDetail(string id)
         {
@@ -48,6 +44,23 @@ namespace DeliveryVHGP_WebApi.Controllers
             if (pro == null)
                 return NotFound();
             return Ok(pro);
+        }
+        /// <summary>
+        /// Create a order (customer web)
+        /// </summary>
+        //POST: api/v1/order
+        [HttpPost]
+        public async Task<ActionResult> CreatNewOrder(OrderDto order)
+        {
+            try
+            {
+                var result = await _orderRepository.CreatNewOrder(order);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
         }
     }
 }

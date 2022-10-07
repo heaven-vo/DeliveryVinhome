@@ -15,7 +15,6 @@
         public string? CategoryId { get; set; }
         public double? Rate { get; set; }
         public string? Description { get; set; }
-        public string? Status { get; set; }
-        public string? LastUpdate { get; set; }
+
     }
 }
