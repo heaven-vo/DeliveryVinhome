@@ -94,8 +94,6 @@ namespace DeliveryVHGP_WebApi.Repositories
                     PackNetWeight= pro.PackNetWeight,
                     MaximumQuantity= pro.MaximumQuantity,
                     MinimumQuantity = pro.MinimumQuantity,
-                    CategoryId = pro.CategoryId,
-                    StoreId = pro.StoreId,
                     MinimumDeIn = pro.MinimumDeIn,
                     StoreId = pro.StoreId,
                     CategoryId = pro.CategoryId,

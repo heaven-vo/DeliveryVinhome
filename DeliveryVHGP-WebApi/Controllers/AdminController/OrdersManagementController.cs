@@ -28,7 +28,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             try
             {
-                var result = Ok(await _orderRepository.GetOrders(pageIndex, pageSize));
+                var result = Ok(await _orderRepository.GetListOrders(pageIndex, pageSize));
             
                 return Ok(result);
             }
