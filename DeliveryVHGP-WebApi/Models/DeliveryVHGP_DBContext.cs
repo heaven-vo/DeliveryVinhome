@@ -124,14 +124,7 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.AreaId).HasMaxLength(50);
 
-                entity.Property(e => e.CustomerId).HasMaxLength(50);
-
                 entity.Property(e => e.Name).HasMaxLength(100);
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Buildings)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Building_Customer");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -187,6 +180,8 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.ToTable("Customer");
 
                 entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.BuildingId).HasMaxLength(50);
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
