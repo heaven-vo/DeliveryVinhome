@@ -25,13 +25,13 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Get list orders (customer web)
         /// </summary>
         // GET: api/Orders
-        [HttpGet("{CusId}/Customer")]
-        public async Task<ActionResult> GetOrder(string CusId, int pageIndex, int pageSize)
+        [HttpGet("{cusId}/customers")]
+        public async Task<ActionResult> GetOrder(string cusId, int pageIndex, int pageSize)
         {
-
-                var result = Ok(await _orderRepository.GetListOrders(CusId,pageIndex, pageSize));
-            
-                return Ok(result);
+            var listOder = await _orderRepository.GetListOrders(cusId, pageIndex, pageSize);
+            if (cusId == null)
+                return NotFound();
+            return Ok(listOder);
         }
         /// <summary>
         /// Get order by id with pagination
