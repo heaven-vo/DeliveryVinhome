@@ -42,7 +42,6 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<Object> GetOrdersById(string orderId)
         {
-
             var order = await (from o in context.Orders
                                join odd in context.OrderDetails on o.Id equals odd.OrderId
                                //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
@@ -52,21 +51,27 @@ namespace DeliveryVHGP_WebApi.Repositories
                                select new OrderDetailModel()
                                {
                                    Id = o.Id,
+                                   Total = o.Total,
                                    Time = t.Time,
                                    PaymentId = p.Id,
                                    PaymentName = p.Type,
+                                   StoreId= o.StoreId,
+                                   BuildingId= o.BuildingId,
+                                   Note = o.Note,
+                                   ShipCost = o.ShipCost,
                                }
                                 ).FirstOrDefaultAsync();
-            foreach (var item in order.ListOrderDetail)
-            {
-                var proInMenu = await context.OrderDetails.Select(o => new OrderDetailDto()
-                {
-                    ProductInMenuId = item.ProductInMenuId,
-                    Quantity = item.Quantity,
-                }).ToListAsync();
-            }
-           
+            var listPro = await (from o in context.Orders
+                                 join odd in context.OrderDetails on o.Id equals odd.OrderId
+                                 join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
+                                 where o.Id == order.Id
+                                 select new OrderDetailDto
+                                 {
+                                     ProductInMenuId = pm.Id,
+                                     Quantity = odd.Quantity
 
+                                 }).ToListAsync();
+            order.ListProInMenu = listPro;
             return order;
         }
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
@@ -128,6 +133,16 @@ namespace DeliveryVHGP_WebApi.Repositories
             await context.SaveChangesAsync();
 
             return order;
+        }
+        public async Task<List<string>> GetListProInMenu(string orderDetailId)
+        {
+            List<string> listpro = await (from od in context.OrderDetails
+                                          join o in context.Orders on od.OrderId equals o.Id
+
+                                          where o.Id == orderDetailId
+                                          select od.ProductInMenuId
+                                                ).ToListAsync();
+            return listpro;
         }
         public async Task<string> GetTime()
         {
