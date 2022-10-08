@@ -14,13 +14,15 @@ namespace DeliveryVHGP_WebApi.Repositories
             this.context = context;
         }
 
-        public async Task<List<OrderModels>> GetListOrders(int pageIndex, int pageSize)
+        public async Task<List<OrderModels>> GetListOrders(string CusId,int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
+                                  join c in context.Customers on order.CustomerId equals c.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  where c.Id == CusId
                                   select new OrderModels()
                                   {
                                       Id = order.Id,
