@@ -156,57 +156,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             await context.SaveChangesAsync();
 
             return product;
-        }
-        // du GetListProductInStore va GetListProductInCategory
-        public async Task<List<ProductViewInList>> GetListProductInStore(string storeId, int page, int pageSize) 
-        {
-            double time = await GetTime();
-            var listProducts = await ( from product in context.Products
-                                       join store in context.Stores on product.StoreId equals store.Id
-                                       join pm in context.ProductInMenus on product.Id equals pm.ProductId
-                                       join menu in context.Menus on pm.MenuId equals menu.Id
-                                       where store.Id == storeId && menu.StartHour <= time && menu.EndHour > time
-                                       select new ProductViewInList
-                                       {
-                                           Id = product.Id,
-                                           Image = product.Image,
-                                           Name = product.Name,
-                                           PricePerPack = pm.Price,
-                                           PackDes = product.PackDescription,
-                                           StoreName = store.Name
-                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            return listProducts;
-        }
-
-        public async Task<List<ProductViewInList>> GetListProductInCategory(string categoryId, int page, int pageSize)
-        {
-            double time = await GetTime();
-            var listProducts = await (from product in context.Products
-                                      join store in context.Stores on product.StoreId equals store.Id
-                                      join category in context.Categories on product.CategoryId equals category.Id
-                                      join pm in context.ProductInMenus on product.Id equals pm.ProductId
-                                      join menu in context.Menus on pm.MenuId equals menu.Id
-                                      where category.Id == categoryId && menu.StartHour <= time && menu.EndHour > time
-                                      select new ProductViewInList
-                                      {
-                                          Id = product.Id,
-                                          Image = product.Image,
-                                          Name = product.Name,
-                                          PricePerPack = pm.Price,
-                                          PackDes = product.PackDescription,
-                                          StoreName = store.Name
-                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            return listProducts;
-        }
-        public async Task<double> GetTime()
-        {
-            DateTime utcDateTime = DateTime.UtcNow;
-            string vnTimeZoneKey = "SE Asia Standard Time";
-            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("HH.mm");
-            var time2 = Double.Parse(time);
-            return time2;
-        }
+        }        
         public async Task<Object> PostFireBase(IFormFile file)
         {
             var fileUpload = file;

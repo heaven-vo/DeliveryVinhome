@@ -205,6 +205,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Name = product.Name,
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
+                                          StoreId = storeId,
                                           StoreName = store.Name,
                                           Unit = product.Unit,
                                           MinimumDeIn = product.MinimumDeIn
@@ -227,6 +228,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Name = product.Name,
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
+                                          StoreId= store.Id,
                                           StoreName = store.Name,
                                           Unit = product.Unit,
                                           MinimumDeIn = product.MinimumDeIn
@@ -249,6 +251,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           Name = product.Name,
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
+                                          StoreId = store.Id,
                                           StoreName = store.Name
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
