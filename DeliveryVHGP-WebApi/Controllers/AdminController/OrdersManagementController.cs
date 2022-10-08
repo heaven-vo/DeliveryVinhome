@@ -29,14 +29,14 @@ namespace DeliveryVHGP_WebApi.Controllers
             try
             {
                 var result = Ok(await _orderRepository.GetListOrders(CusId,pageIndex, pageSize));
-            
-        //        return Ok(result);
-        //    }
-        //    catch
-        //    {
-        //        return Conflict();
-        //    }
-        //}
+
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
         /// <summary>
         /// Get product by id with pagination
         /// </summary>
