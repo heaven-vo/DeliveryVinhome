@@ -208,7 +208,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           StoreId = storeId,
                                           StoreName = store.Name,
                                           Unit = product.Unit,
-                                          MinimumDeIn = product.MinimumDeIn
+                                          MinimumDeIn = product.MinimumDeIn,
+                                          productMenuId = pm.Id
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -231,7 +232,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           StoreId= store.Id,
                                           StoreName = store.Name,
                                           Unit = product.Unit,
-                                          MinimumDeIn = product.MinimumDeIn
+                                          MinimumDeIn = product.MinimumDeIn,
+                                          productMenuId = pm.Id
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -252,7 +254,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                                           PricePerPack = pm.Price,
                                           PackDes = product.PackDescription,
                                           StoreId = store.Id,
-                                          StoreName = store.Name
+                                          StoreName = store.Name,
+                                          productMenuId = pm.Id
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }

@@ -11,6 +11,7 @@
         public String PackDes { get; set; }
         public String Unit { get; set; }
         public double? MinimumDeIn { get; set; }
+        public String productMenuId { get; set; }
 
     }
 }
