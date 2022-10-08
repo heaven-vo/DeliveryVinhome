@@ -9,6 +9,7 @@ namespace DeliveryVHGP_WebApi.Models
         {
             OrderDetails = new HashSet<OrderDetail>();
             Payments = new HashSet<Payment>();
+            TimeOfOrderStages = new HashSet<TimeOfOrderStage>();
         }
 
         public string Id { get; set; } = null!;
@@ -22,7 +23,7 @@ namespace DeliveryVHGP_WebApi.Models
         public string? Note { get; set; }
         public string? FullName { get; set; }
         public string? PhoneNumber { get; set; }
-        public string? Status { get; set; }
+        public string? StatusId { get; set; }
         public double? ShipCost { get; set; }
         public string? DurationId { get; set; }
 
@@ -31,8 +32,10 @@ namespace DeliveryVHGP_WebApi.Models
         public virtual TimeDuration? Duration { get; set; }
         public virtual Hub? Hub { get; set; }
         public virtual Menu? Menu { get; set; }
+        public virtual OrderStatus? Status { get; set; }
         public virtual Store? Store { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
+        public virtual ICollection<TimeOfOrderStage> TimeOfOrderStages { get; set; }
     }
 }

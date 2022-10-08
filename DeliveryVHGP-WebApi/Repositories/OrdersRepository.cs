@@ -18,8 +18,9 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
-                                  //join od in context.OrderDetails on order.Id equals od.OrderId
-                                  //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
+                                  join t in context.TimeOfOrderStages on order.Id equals t.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   select new OrderModels()
                                   {
                                       Id = order.Id,
@@ -27,7 +28,10 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       StoreId = s.Id,
                                       StoreName = s.Name,
                                       BuildingId = order.BuildingId,
-                                      DurationId = order.DurationId,
+                                      BuildingName = b.Name,
+                                      StatusId = order.StatusId,
+                                      StatusName = sta.Name,
+                                      Time = t.Time
                                   }
                                   ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
            
@@ -35,28 +39,31 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<Object> GetOrdersById(string orderId)
         {
-            var order = await (from od in context.OrderDetails
-                               join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
-                               join p in context.Products on pm.ProductId equals p.Id
-                               join s in context.Stores on p.StoreId equals s.Id
-                               join o in context.Orders on od.OrderId equals o.Id
+
+            var order = await (from o in context.Orders
+                               join odd in context.OrderDetails on o.Id equals odd.OrderId
+                               //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
+                               join t in context.TimeOfOrderStages on o.Id equals t.OrderId
+                               join p in context.Payments on o.Id equals p.OrderId
                                where (o.Id == orderId)
                                select new OrderDetailModel()
                                {
-                                   Id = od.Id,
-                                   OrderId = o.Id,
-                                   OTotal = o.Total,
-                                   OType = o.Type,
-                                   Quantity = od.Quantity,
-                                   ProductInMenuId = pm.Id,
-                                   proId = p.Id,
-                                   proImage = p.Image,
-                                   proName = p.Name,
-                                   proPackDes = p.PackDescription,
-                                   proPricePerPack = p.PricePerPack,
-                                   StoreName = s.Name,
+                                   Id = o.Id,
+                                   Time = t.Time,
+                                   PaymentId = p.Id,
+                                   PaymentName = p.Type,
                                }
-                                ).ToListAsync();
+                                ).FirstOrDefaultAsync();
+            foreach (var item in order.ListOrderDetail)
+            {
+                var proInMenu = await context.OrderDetails.Select(o => new OrderDetailDto()
+                {
+                    ProductInMenuId = item.ProductInMenuId,
+                    Quantity = item.Quantity,
+                }).ToListAsync();
+            }
+           
+
             return order;
         }
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
@@ -99,7 +106,27 @@ namespace DeliveryVHGP_WebApi.Repositories
             }
             await context.SaveChangesAsync();
 
+            string time = await GetTime();
+
+            var timeOfOrder = new TimeOfOrderStage()
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = od.Id,
+                StatusId = "1" ,
+                Time = time
+            };
+            await context.TimeOfOrderStages.AddAsync(timeOfOrder);
+            await context.SaveChangesAsync();
+
             return order;
+        }
+        public async Task<string> GetTime()
+        {
+            DateTime utcDateTime = DateTime.UtcNow;
+            string vnTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("MM/dd/yyyy HH:mm");
+            return time;
         }
 
     }
