@@ -13,10 +13,7 @@ namespace DeliveryVHGP_WebApi.Controllers
     {
         private readonly IStoreRepository _storeRepository;
 
-        private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
-        private static string apibucket = "lucky-science-341916.appspot.com";
-        private static string authenEmail = "adminstore2@gmail.com";
-        private static string authenPassword = "store123456";
+  
         public StoresManagementController(IStoreRepository storeRepository)
         {
             _storeRepository = storeRepository;
@@ -109,29 +106,5 @@ namespace DeliveryVHGP_WebApi.Controllers
                 return Conflict();
             }
         }
-        ///// <summary>
-        ///// Create Upload image to Firebase
-        ///// </summary>
-        /////POST: api/v1/store
-        [HttpPost("UploadFile")]
-        public async Task<ActionResult> PostFireBase(IFormFile file)
-        {
-            var fileUpload = file;
-            try
-            {
-                if (fileUpload.Length > 0)
-                {
-                    var upStore = await _storeRepository.PostFireBase(file);
-                    return Ok(new { StatusCode = 200, message = "Upload file succesful!" });
-                }
-                return BadRequest("Upload  fail");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(409, new { StatusCode = 409, message = e.Message });
-            }
-        }
-
-        
     }
 }
