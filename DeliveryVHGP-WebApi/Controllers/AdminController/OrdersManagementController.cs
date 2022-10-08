@@ -23,12 +23,12 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
+        [HttpGet("{CusId}/Customer")]
+        public async Task<ActionResult> GetOrder(string CusId,int pageIndex, int pageSize)
         {
             try
             {
-                var result = Ok(await _orderRepository.GetOrders(pageIndex, pageSize));
+                var result = Ok(await _orderRepository.GetListOrders(CusId,pageIndex, pageSize));
             
                 return Ok(result);
             }
