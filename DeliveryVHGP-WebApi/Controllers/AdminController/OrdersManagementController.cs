@@ -23,20 +23,20 @@ namespace DeliveryVHGP_WebApi.Controllers
         }
 
         // GET: api/Orders
-        [HttpGet]
-        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
-        {
-            try
-            {
-                var result = Ok(await _orderRepository.GetListOrders(pageIndex, pageSize));
+        //[HttpGet]
+        //public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
+        //{
+        //    try
+        //    {
+        //        var result = Ok(await _orderRepository.GetListOrders(pageIndex, pageSize));
             
-                return Ok(result);
-            }
-            catch
-            {
-                return Conflict();
-            }
-        }
+        //        return Ok(result);
+        //    }
+        //    catch
+        //    {
+        //        return Conflict();
+        //    }
+        //}
         /// <summary>
         /// Get product by id with pagination
         /// </summary>
