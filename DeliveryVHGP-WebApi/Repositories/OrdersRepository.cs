@@ -14,7 +14,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             this.context = context;
         }
 
-        public async Task<List<OrderModels>> GetListOrders(string CusId,int pageIndex, int pageSize)
+        public async Task<List<OrderModels>> GetListOrders(string CusId ,int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -22,17 +22,18 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
-                                  where c.Id == CusId
+                                  where c.Id == CusId 
                                   select new OrderModels()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
+                                      CustomerId = c.Id,
                                       StoreId = s.Id,
-                                      StoreName = s.Name,
-                                      BuildingId = order.BuildingId,
-                                      BuildingName = b.Name,
-                                      StatusId = order.StatusId,
-                                      StatusName = sta.Name,
+                                      storeName = s.Name,
+                                      statusName = sta.Name,
+                                      BuildingId = b.Id,
+                                      buildingName = b.Name,
+                                      statusId = sta.Id,
                                       Time = t.Time
                                   }
                                   ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -77,11 +78,13 @@ namespace DeliveryVHGP_WebApi.Repositories
                 Total = order.Total,
                 Type = order.Type,
                 StoreId = order.StoreId,
+                BuildingId = order.BuildingId,
                 Note = order.Note,
                 FullName = order.FullName,
                 PhoneNumber = order.PhoneNumber,
                 ShipCost = order.ShipCost,
-                DurationId = order.DurationId
+                DurationId = order.DurationId,
+                StatusId = "1"
             };
                 await context.Orders.AddAsync(od);
 

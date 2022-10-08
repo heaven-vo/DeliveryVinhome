@@ -29,13 +29,14 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<CustomerModels> CreateCustomer(CustomerModels cus)
         {
-              var customer = new Customer {
+            _context.Customers.Add(
+                new Customer {
                 Id = Guid.NewGuid().ToString(),
                 FullName = cus.FullName,
                 Image = cus.Image,
                 Phone = cus.Phone,
-                BuildingId = cus.BuildingId,
-            };
+                BuildingId = cus.BuildingId
+            });
             await _context.SaveChangesAsync();
             return cus;
 
