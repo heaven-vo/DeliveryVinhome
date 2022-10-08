@@ -88,24 +88,28 @@ namespace DeliveryVHGP_WebApi.Repositories
             foreach (var ord in order.OrderDetail)
             {
                 var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
-                var odd = new OrderDetail{ Id = Guid.NewGuid().ToString(),
-                                           ProductInMenuId = ord.ProductInMenuId,
-                                           Quantity = ord.Quantity,
-                                           Price = proInMenu.Price,
-                                           OrderId = od.Id
+                var odd = new OrderDetail
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ProductInMenuId = ord.ProductInMenuId,
+                    Quantity = ord.Quantity,
+                    Price = proInMenu.Price,
+                    OrderId = od.Id
                 };
                 await context.OrderDetails.AddAsync(odd);
             }
 
             foreach (var pay in order.Payments)
             {
-                var payment = new Payment{ Id = Guid.NewGuid().ToString(),
-                                           Type = pay.Type,
-                                           OrderId = od.Id
+                var payment = new Payment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Type = pay.Type,
+                    OrderId = od.Id
                 };
 
                 await context.Payments.AddAsync(payment);
-            }
+            }   
             await context.SaveChangesAsync();
 
             string time = await GetTime();
