@@ -37,7 +37,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       statusId = sta.Id,
                                       Time = t.Time
                                   }
-                                  ).OrderBy(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
            
             return lstOrder;
         }
