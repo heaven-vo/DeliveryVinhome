@@ -69,11 +69,14 @@ namespace DeliveryVHGP_WebApi.Repositories
             var listPro = await (from o in context.Orders
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
                                  join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
+                                 join p in context.Products on pm.ProductId equals p.Id
                                  where o.Id == order.Id
                                  select new OrderDetailDto
                                  {
                                      ProductInMenuId = pm.Id,
-                                     Quantity = odd.Quantity
+                                     Price = pm.Price,
+                                     Quantity = odd.Quantity,
+                                     ProductName = p.Name,
 
                                  }).ToListAsync();
             order.ListProInMenu = listPro;
