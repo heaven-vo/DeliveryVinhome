@@ -62,5 +62,26 @@ namespace DeliveryVHGP_WebApi.Controllers
                 return Conflict();
             }
         }
+        /// <summary>
+        /// Update a order (customer web)
+        /// </summary>
+        //POST: api/v1/order
+        [HttpPut("{orderId}")]
+        public async Task<ActionResult<OrderDto>> UpdateOrder(string orderId, OrderDto order)
+        {
+            if (orderId == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                await _orderRepository.OrderUpdate(orderId, order);
+            }
+            catch (Exception ex)
+            {
+                return Conflict(ex.Message);
+            }
+            return Ok(order);
+        }
     }
 }

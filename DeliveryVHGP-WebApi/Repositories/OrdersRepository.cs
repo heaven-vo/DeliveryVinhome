@@ -2,6 +2,7 @@
 using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DeliveryVHGP_WebApi.Repositories
 {
@@ -36,7 +37,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       statusId = sta.Id,
                                       Time = t.Time
                                   }
-                                  ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                  ).OrderBy(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
            
             return lstOrder;
         }
@@ -44,6 +45,8 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var order = await (from o in context.Orders
                                join odd in context.OrderDetails on o.Id equals odd.OrderId
+                               join b in context.Buildings on o.BuildingId equals b.Id
+                               join s in context.Stores on o.StoreId equals s.Id
                                //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                join t in context.TimeOfOrderStages on o.Id equals t.OrderId
                                join p in context.Payments on o.Id equals p.OrderId
@@ -53,10 +56,12 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    Id = o.Id,
                                    Total = o.Total,
                                    Time = t.Time,
-                                   PaymentId = p.Id,
+                                   //PaymentId = p.Id,
                                    PaymentName = p.Type,
-                                   StoreId= o.StoreId,
-                                   BuildingId= o.BuildingId,
+                                   //StoreId= o.StoreId,
+                                   StoreName = s.Name,
+                                   //BuildingId= o.BuildingId,
+                                   BuildingName = b.Name,
                                    Note = o.Note,
                                    ShipCost = o.ShipCost,
                                }
@@ -72,6 +77,19 @@ namespace DeliveryVHGP_WebApi.Repositories
 
                                  }).ToListAsync();
             order.ListProInMenu = listPro;
+
+            var listStatus = await (from o in context.Orders
+                                    join t in context.TimeOfOrderStages on o.Id equals t.OrderId
+                                    join s in context.OrderStatuses on t.StatusId equals s.Id
+                                    where t.OrderId == order.Id
+                                    select new ListStatusOrder
+                                    {
+                                        Name = s.Name,
+                                        Time = t.Time,
+                                    }
+                                    ).ToListAsync();
+            order.ListStatusOrder = listStatus;
+
             return order;
         }
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
@@ -132,6 +150,61 @@ namespace DeliveryVHGP_WebApi.Repositories
             await context.TimeOfOrderStages.AddAsync(timeOfOrder);
             await context.SaveChangesAsync();
 
+            return order;
+        }
+        public async Task<OrderDto> OrderUpdate(string orderId, OrderDto order)
+        {
+            var orderUpdate = new Order
+            {
+                Id = orderId,
+                FullName = order.FullName,
+                Note = order.Note,
+                PhoneNumber = order.PhoneNumber,
+                BuildingId = order.BuildingId,
+                Type = order.Type,
+                Total = order.Total,
+                ShipCost = order.ShipCost,
+                CustomerId = order.CustomerId,
+                StoreId = order.StoreId,
+                DurationId = order.DurationId,
+                StatusId = order.StatusId
+            };
+            context.Entry(orderUpdate).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            string time = await GetTime();
+
+            var timeOfOrder = new TimeOfOrderStage()
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = orderId,
+                StatusId = order.StatusId,
+                Time = time
+            };
+            await context.TimeOfOrderStages.AddAsync(timeOfOrder);
+            await context.SaveChangesAsync();
+
+            List<String> listPro = (List<String>)await context.OrderDetails.Where(odd => odd.OrderId == orderId).Select(odd => odd.ProductInMenuId).ToListAsync();
+            var listProInOrder = await context.OrderDetails.Where(odd => odd.OrderId == orderId).ToListAsync();
+            if (listProInOrder.Any())   //remove product In Order
+            {
+                context.OrderDetails.RemoveRange(listProInOrder);
+            }
+
+            foreach(var pro in order.OrderDetail)
+            {
+                var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == pro.ProductInMenuId);
+                var cmId = Guid.NewGuid().ToString();
+                OrderDetail proInOrder = new OrderDetail
+                {
+                    Id = cmId,
+                    ProductInMenuId = pro.ProductInMenuId,
+                    Quantity = pro.Quantity,
+                    Price = proInMenu.Price,
+                    OrderId = orderId
+                };
+                await context.OrderDetails.AddAsync(proInOrder);
+            }
+            await context.SaveChangesAsync();
             return order;
         }
         public async Task<List<string>> GetListProInMenu(string orderDetailId)
