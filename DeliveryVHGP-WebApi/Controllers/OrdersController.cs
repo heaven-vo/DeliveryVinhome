@@ -63,19 +63,23 @@ namespace DeliveryVHGP_WebApi.Controllers
             }
         }
         /// <summary>
-        /// Update a order (customer web)
+        /// Update a status order (customer web)
         /// </summary>
         //POST: api/v1/order
         [HttpPut("{orderId}")]
-        public async Task<ActionResult<OrderDto>> UpdateOrder(string orderId, OrderDto order)
+        public async Task<ActionResult<OrderDto>> UpdateOrder(string orderId, OrderStatusModel order)
         {
-            if (orderId == null)
+            if (orderId != order.OrderId)
             {
-                return BadRequest();
+                return BadRequest("Order ID mismatch");
+            }
+            if (order.OrderId == null)
+            {
+                return BadRequest("OrderID does not exist");
             }
             try
             {
-                await _orderRepository.OrderUpdate(orderId, order);
+                await _orderRepository.OrderUpdateStatus(orderId, order);
             }
             catch (Exception ex)
             {

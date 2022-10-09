@@ -12,6 +12,6 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<Object> GetOrdersById(string orderId);
 
         Task<OrderDto> CreatNewOrder(OrderDto order);
-        Task<OrderDto> OrderUpdate(string orderId, OrderDto order);
+        Task<OrderStatusModel> OrderUpdateStatus(string orderId, OrderStatusModel order);
     }
 }

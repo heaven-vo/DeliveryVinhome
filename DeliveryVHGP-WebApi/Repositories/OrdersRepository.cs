@@ -87,7 +87,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                         Name = s.Name,
                                         Time = t.Time,
                                     }
-                                    ).ToListAsync();
+                                    ).OrderBy(t => t.Time).ToListAsync();
             order.ListStatusOrder = listStatus;
 
             return order;
@@ -152,27 +152,15 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return order;
         }
-        public async Task<OrderDto> OrderUpdate(string orderId, OrderDto order)
+        public async Task<OrderStatusModel> OrderUpdateStatus(string orderId, OrderStatusModel order)
         {
-            var orderUpdate = new Order
-            {
-                Id = orderId,
-                FullName = order.FullName,
-                Note = order.Note,
-                PhoneNumber = order.PhoneNumber,
-                BuildingId = order.BuildingId,
-                Type = order.Type,
-                Total = order.Total,
-                ShipCost = order.ShipCost,
-                CustomerId = order.CustomerId,
-                StoreId = order.StoreId,
-                DurationId = order.DurationId,
-                StatusId = order.StatusId
-            };
+            var orderUpdate = await context.Orders.FindAsync(orderId);
+            orderUpdate.Id = orderUpdate.Id;
+            orderUpdate.StatusId = order.StatusId;
             context.Entry(orderUpdate).State = EntityState.Modified;
             await context.SaveChangesAsync();
-            string time = await GetTime();
 
+            string time = await GetTime();
             var timeOfOrder = new TimeOfOrderStage()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -183,28 +171,6 @@ namespace DeliveryVHGP_WebApi.Repositories
             await context.TimeOfOrderStages.AddAsync(timeOfOrder);
             await context.SaveChangesAsync();
 
-            List<String> listPro = (List<String>)await context.OrderDetails.Where(odd => odd.OrderId == orderId).Select(odd => odd.ProductInMenuId).ToListAsync();
-            var listProInOrder = await context.OrderDetails.Where(odd => odd.OrderId == orderId).ToListAsync();
-            if (listProInOrder.Any())   //remove product In Order
-            {
-                context.OrderDetails.RemoveRange(listProInOrder);
-            }
-
-            foreach(var pro in order.OrderDetail)
-            {
-                var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == pro.ProductInMenuId);
-                var cmId = Guid.NewGuid().ToString();
-                OrderDetail proInOrder = new OrderDetail
-                {
-                    Id = cmId,
-                    ProductInMenuId = pro.ProductInMenuId,
-                    Quantity = pro.Quantity,
-                    Price = proInMenu.Price,
-                    OrderId = orderId
-                };
-                await context.OrderDetails.AddAsync(proInOrder);
-            }
-            await context.SaveChangesAsync();
             return order;
         }
         public async Task<List<string>> GetListProInMenu(string orderDetailId)
@@ -222,7 +188,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             DateTime utcDateTime = DateTime.UtcNow;
             string vnTimeZoneKey = "SE Asia Standard Time";
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("MM/dd/yyyy HH:mm");
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
             return time;
         }
 
