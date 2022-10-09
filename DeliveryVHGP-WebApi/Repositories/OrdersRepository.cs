@@ -23,7 +23,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
-                                  where c.Id == CusId 
+                                  where c.Id == CusId && t.StatusId == order.StatusId
                                   select new OrderModels()
                                   {
                                       Id = order.Id,
