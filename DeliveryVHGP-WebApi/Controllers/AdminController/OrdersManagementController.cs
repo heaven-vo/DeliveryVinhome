@@ -21,14 +21,16 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             _orderRepository = orderRepository;
         }
-
+        /// <summary>
+        /// Get List Order (Admin Web)
+        /// </summary>
         // GET: api/Orders
-        [HttpGet("{CusId}/Customer")]
-        public async Task<ActionResult> GetOrder(string CusId,int pageIndex, int pageSize)
+        [HttpGet]
+        public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
         {
             try
             {
-                var result = Ok(await _orderRepository.GetListOrders(CusId,pageIndex, pageSize));
+                var result = Ok(await _orderRepository.GetAll(pageIndex, pageSize));
             
                 return Ok(result);
             }

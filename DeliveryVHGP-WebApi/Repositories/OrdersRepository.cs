@@ -14,7 +14,45 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             this.context = context;
         }
-
+        public async Task<List<OrderAdminDto>> GetAll( int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  join c in context.Customers on order.CustomerId equals c.Id
+                                  join t in context.TimeOfOrderStages on order.Id equals t.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  where t.StatusId == order.StatusId
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      StoreName = s.Name,
+                                      BuildingName = b.Name,
+                                      CustomerName = c.FullName,
+                                      Phone = order.PhoneNumber,
+                                      Total = order.Total,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      PaymentName = p.Type,
+                                      StatusName = sta.Name
+                                  }
+                                  ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach(var order in lstOrder)
+            {
+                var timeCreate = await (from o in context.Orders
+                                        join tc in context.TimeOfOrderStages on o.Id equals tc.OrderId
+                                        join st in context.OrderStatuses on tc.StatusId equals st.Id
+                                        where tc.StatusId == "1" && tc.OrderId == order.Id
+                                        select new TimeCreateOrder
+                                        {
+                                            TimeCreate = tc.Time,
+                                        }
+                                        ).FirstOrDefaultAsync();
+                //order.TimeCreate = timeCreate;
+            }
+            return lstOrder;
+        }
         public async Task<List<OrderModels>> GetListOrders(string CusId ,int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
@@ -38,7 +76,36 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       Time = t.Time
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-           
+
+            return lstOrder;
+        }
+        public async Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  join c in context.Customers on order.CustomerId equals c.Id
+                                  join t in context.TimeOfOrderStages on order.Id equals t.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  where s.Id == StoreId && t.StatusId == order.StatusId
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      StatusName = sta.Name,
+                                      CustomerName = c.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      Time = t.Time,
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
             return lstOrder;
         }
         public async Task<Object> GetOrdersById(string orderId)
@@ -70,7 +137,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
                                  join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
                                  join p in context.Products on pm.ProductId equals p.Id
-                                 where o.Id == order.Id
+                                 where o.Id == order.Id 
                                  select new OrderDetailDto
                                  {
                                      ProductInMenuId = pm.Id,
