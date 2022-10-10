@@ -60,7 +60,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       Note = order.Note,
                                       ShipCost = order.ShipCost,
                                       StatusName = sta.Name,
-                                      CustomerName = c.FullName,
+                                      CustomerName = order.FullName,
                                       PaymentName = p.Type,
                                       BuildingName = b.Name,
                                       Time = t.Time,

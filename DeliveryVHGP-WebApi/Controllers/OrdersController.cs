@@ -37,7 +37,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// Get list orders by store (customer web)
         /// </summary>
         // GET: api/Orders
-        [HttpGet("{storeId}/stores")]
+        [HttpGet("stores/byStoreId")]
         public async Task<ActionResult> GetOrderByStore(string storeId, int pageIndex, int pageSize)
         {
             var listOder = await _orderRepository.GetListOrdersByStore(storeId, pageIndex, pageSize);
