@@ -34,6 +34,18 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(listOder);
         }
         /// <summary>
+        /// Get list orders by store (customer web)
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("{storeId}/stores")]
+        public async Task<ActionResult> GetOrderByStore(string storeId, int pageIndex, int pageSize)
+        {
+            var listOder = await _orderRepository.GetListOrdersByStore(storeId, pageIndex, pageSize);
+            if (storeId == null)
+                return NotFound();
+            return Ok(listOder);
+        }
+        /// <summary>
         /// Get order by id with pagination
         /// </summary>
         //GET: api/v1/orderById?pageIndex=1&pageSize=3

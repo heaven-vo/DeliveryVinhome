@@ -41,6 +41,35 @@ namespace DeliveryVHGP_WebApi.Repositories
            
             return lstOrder;
         }
+        public async Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  join c in context.Customers on order.CustomerId equals c.Id
+                                  join t in context.TimeOfOrderStages on order.Id equals t.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  where s.Id == StoreId && t.StatusId == order.StatusId
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      StatusName = sta.Name,
+                                      CustomerName = c.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      Time = t.Time,
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
         public async Task<Object> GetOrdersById(string orderId)
         {
             var order = await (from o in context.Orders
