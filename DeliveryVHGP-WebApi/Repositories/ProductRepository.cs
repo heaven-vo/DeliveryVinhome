@@ -9,14 +9,12 @@ namespace DeliveryVHGP_WebApi.Repositories
 {
     public class ProductRepository : IProductRepository
     {
+        private readonly IFileService _fileService;
         private readonly DeliveryVHGP_DBContext context;
-        private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
-        private static string apibucket = "lucky-science-341916.appspot.com";
-        private static string authenEmail = "adminstore2@gmail.com";
-        private static string authenPassword = "store123456";
-        public ProductRepository(DeliveryVHGP_DBContext context)
+        public ProductRepository(IFileService fileService, DeliveryVHGP_DBContext context)
         {
             this.context = context;
+            _fileService = fileService;
         }
         public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
         {
@@ -83,11 +81,12 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<ProductModel> CreatNewProduct(ProductModel pro)
         {
+            string fileImg = "ImagesProducts";
             context.Products.Add(
                 new Product {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(), 
                     Name = pro.Name,
-                    Image = pro.Image ,
+                    Image = await _fileService.UploadFile(fileImg,pro.Image),
                     Unit = pro.Unit,
                     PricePerPack= pro.PricePerPack,
                     PackDescription= pro.PackDescription,
@@ -157,51 +156,5 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return product;
         }        
-        public async Task<Object> PostFireBase(IFormFile file)
-        {
-            var fileUpload = file;
-            FileStream fs = null;
-            if (fileUpload.Length > 0)
-            {
-                {
-                    string folderName = "ImagesProducts";
-                    string path = Path.Combine($"Image/{folderName}");
-                    if (Directory.Exists(path))
-                    {
-                        using (fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Create))
-                        {
-                            await fileUpload.CopyToAsync(fs);
-                        }
-                        fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Open);
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                }
-                var authen = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-                var a = await authen.SignInWithEmailAndPasswordAsync(authenEmail, authenPassword);
-                var cancel = new CancellationTokenSource();
-                var upload = new FirebaseStorage(
-                    apibucket,
-                    new FirebaseStorageOptions
-                    {
-                        AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                        ThrowOnCancel = true
-                    }
-                    ).Child("ImageProduct").Child(fileUpload.FileName).PutAsync(fs, cancel.Token);
-                try
-                {
-                    string Link = await upload;
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-            return file;
-        }
     }
 }
