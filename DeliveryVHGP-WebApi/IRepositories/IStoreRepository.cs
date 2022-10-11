@@ -13,6 +13,5 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<StoreDto> CreatNewStore(StoreDto store);
         Task<Object> DeleteStore(string storeId);
         Task<StoreDto> UpdateStore(string storeId, StoreDto store);
-        Task<Object> PostFireBase(IFormFile file);
         }
 }

@@ -10,6 +10,5 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<ProductModel> CreatNewProduct(ProductModel pro);
         Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product);
         Task<Object> DeleteProductById(string id);
-        Task<Object> PostFireBase(IFormFile file);
     }
 }
