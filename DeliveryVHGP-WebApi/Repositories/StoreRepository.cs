@@ -10,9 +10,11 @@ namespace DeliveryVHGP_WebApi.Repositories
     public class StoreRepository : IStoreRepository
     {
         private readonly DeliveryVHGP_DBContext _context;
-        public StoreRepository(DeliveryVHGP_DBContext context)
+        private readonly IFileService _fileService;
+        public StoreRepository(IFileService fileService, DeliveryVHGP_DBContext context)
         {
             _context = context;
+            _fileService = fileService;
         }
         private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
         private static string apibucket = "lucky-science-341916.appspot.com";
@@ -120,7 +122,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                     Name = store.Name,
                     Phone = store.Phone,
                     Slogan = store.Slogan,
-                    Image = store.Image,
+                    Image = await _fileService.UploadFile(store.Image),
                     Rate = store.Rate,
                     OpenTime = store.OpenTime,
                     CloseTime = store.CloseTime,
@@ -171,7 +173,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             }
             return store;
         }
-        public async Task<Object> PostFireBase(IFormFile file)
+        public async Task<string> PostFireBase(IFormFile file)
         {
                 var fileUpload = file;
                 FileStream fs = null;
@@ -215,7 +217,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                         throw;
                     }
                 }
-            return file;
+            return null;
         }
     }
 }

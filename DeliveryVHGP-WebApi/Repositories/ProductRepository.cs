@@ -9,14 +9,16 @@ namespace DeliveryVHGP_WebApi.Repositories
 {
     public class ProductRepository : IProductRepository
     {
+        private readonly IFileService _fileService;
         private readonly DeliveryVHGP_DBContext context;
         private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
         private static string apibucket = "lucky-science-341916.appspot.com";
         private static string authenEmail = "adminstore2@gmail.com";
         private static string authenPassword = "store123456";
-        public ProductRepository(DeliveryVHGP_DBContext context)
+        public ProductRepository(IFileService fileService, DeliveryVHGP_DBContext context)
         {
             this.context = context;
+            _fileService = fileService;
         }
         public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
         {
@@ -87,7 +89,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 new Product {
                     Id = Guid.NewGuid().ToString(),
                     Name = pro.Name,
-                    Image = pro.Image ,
+                    Image = await _fileService.UploadFile(pro.Image),
                     Unit = pro.Unit,
                     PricePerPack= pro.PricePerPack,
                     PackDescription= pro.PackDescription,
