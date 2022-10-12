@@ -33,6 +33,18 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await _categoriesRepository.GetAll(pageIndex, pageSize));
         }
         /// <summary>
+        /// Get Category by id with pagination
+        /// </summary>
+        //GET: api/v1/Category?pageIndex=1&pageSize=3
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CategoryModel>> GetCategoryById(string id)
+        {
+            var cate = await _categoriesRepository.GetCategoryById(id);
+            if (cate == null)
+                return NotFound();
+            return Ok(cate);
+        }
+        /// <summary>
         /// Get list Category in a menu
         /// </summary>
         [HttpGet("menus")]
@@ -45,7 +57,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //POST: api/v1/category
         [HttpPost]
-        public async Task<ActionResult> CreateCategory(CategoryModel category)
+        public async Task<ActionResult> CreateCategory(CategoryDto category)
         {
             try
             {
@@ -69,9 +81,13 @@ namespace DeliveryVHGP_WebApi.Controllers
                 var result = await _categoriesRepository.DeleteCateInMenuById(id);
                 return Ok(result);
             }
-            catch
+            catch (Exception)
             {
-                return Conflict();
+                return Ok(new
+                {
+                    message = "Hiện tại danh mục đang có trong menu !!" +
+                                              "Vui lòng xóa danh mục khỏi menu và thử lại "
+                });
             }
 
         }
@@ -80,42 +96,16 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //PUT: api/v1/Category?id
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCategory(string id, CategoryModel category)
+        public async Task<ActionResult> UpdateCategory(string id, CategoryDto category)
         {
             try
             {
-                if (id != category.Id)
-                {
-                    return BadRequest("Category ID mismatch");
-                }
                 var CategoryToUpdate = await _categoriesRepository.UpdateCategoryById(id, category);
                 return Ok(category);
             }
             catch
             {
                 return Conflict();
-            }
-        }
-        ///// <summary>
-        ///// Create Upload image to Firebase
-        ///// </summary>
-        /////POST: api/v1/category
-        [HttpPost("UploadFile")]
-        public async Task<ActionResult> PostFireBase(IFormFile file)
-        {
-            var fileUpload = file;
-            try
-            {
-                if (fileUpload.Length > 0)
-                {
-                    var upCategory = await _categoriesRepository.PostFireBase(file);
-                    return Ok(new { StatusCode = 200, message = "Upload file succesful!" });
-                }
-                return BadRequest("Upload  fail");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(409, new { StatusCode = 409, message = e.Message });
             }
         }
     }
