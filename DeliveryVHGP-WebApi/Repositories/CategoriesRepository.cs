@@ -10,13 +10,11 @@ namespace DeliveryVHGP_WebApi.Repositories
     public class CategoriesRepository : ICategoriesRepository
     {
         private readonly DeliveryVHGP_DBContext _context;
-        private static string apiKey = "AIzaSyAauR7Lp1qtRLPIOkONgrLyPYLrdjN_qKw";
-        private static string apibucket = "lucky-science-341916.appspot.com";
-        private static string authenEmail = "adminstore2@gmail.com";
-        private static string authenPassword = "store123456";
-        public CategoriesRepository(DeliveryVHGP_DBContext context)
+        private readonly IFileService _fileService;
+        public CategoriesRepository(IFileService fileService, DeliveryVHGP_DBContext context)
         {
             _context = context;
+            _fileService = fileService;
         }
 
         public async Task<IEnumerable<CategoryModel>> GetAll(int pageIndex, int pageSize)
@@ -26,15 +24,38 @@ namespace DeliveryVHGP_WebApi.Repositories
                 {
                     Id = x.Id,
                     Name = x.Name,
-                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                    Image = x.Image,
+                    CreateAt = x.CreateAt,
+                    UpdateAt = x.UpdateAt,
+                }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listCate;
         }
-        public async Task<CategoryModel> CreateCategory(CategoryModel category)
+        public async Task<Object> GetCategoryById(string cateId)
         {
-            _context.Categories.Add(new Category { Id = category.Id, Name = category.Name });
+            var cate = await _context.Categories.Where(x => x.Id == cateId)
+                                     .Select(x => new CategoryModel
+                              {
+                                   Id = x.Id,
+                                   Name = x.Name,
+                                   Image = x.Image,
+                                   CreateAt = x.CreateAt,
+                                   UpdateAt = x.UpdateAt,
+                               }).FirstOrDefaultAsync();
+            return cate;
+        }
+        public async Task<CategoryDto> CreateCategory(CategoryDto category)
+        {
+            string fileImg = "ImagesCategorys"; 
+            string time = await GetTime();
+            _context.Categories.Add(
+                new Category {
+                Id = Guid.NewGuid().ToString(),
+                Name = category.Name,
+                Image = await _fileService.UploadFile(fileImg , category.Image),
+                CreateAt = time
+            });
             await _context.SaveChangesAsync();
             return category;
-
         }
 
         public async Task<Object> DeleteCateInMenuById(string CateInMenuId)
@@ -46,16 +67,14 @@ namespace DeliveryVHGP_WebApi.Repositories
             return CateInMenuId;
 
         }
-        public async Task<Object> UpdateCategoryById(string categoryId, CategoryModel category)
+        public async Task<Object> UpdateCategoryById(string categoryId, CategoryDto category)
         {
-            if (categoryId == null)
-            {
-                return null;
-            }
+            string fileImg = "ImagesCategorys";
+            string time = await GetTime();
             var result = await _context.Categories.FindAsync(categoryId);
-            result.Id = category.Id;
             result.Name = category.Name;
-
+            result.Image = await _fileService.UploadFile(fileImg, category.Image);
+            result.UpdateAt = time;
             _context.Entry(result).State = EntityState.Modified;
             try
             {
@@ -74,58 +93,22 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       join menu in _context.Menus on cm.MenuId equals menu.Id
                                       where menu.Id == id
                                         select new CategoryModel
-                                      {
+                                        {
                                           Id = c.Id,
                                           Name = c.Name,
-                                          Image = c.Image
-                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                                          Image = c.Image,
+                                          CreateAt = c.CreateAt,
+                                          UpdateAt = c.UpdateAt
+                                      }).OrderByDescending(t => t.CreateAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listCategories;
         }
-        public async Task<Object> PostFireBase(IFormFile file)
+        public async Task<string> GetTime()
         {
-            var fileUpload = file;
-            FileStream fs = null;
-            if (fileUpload.Length > 0)
-            {
-                {
-                    string folderName = "ImagesCategories";
-                    string path = Path.Combine($"Image/{folderName}");
-                    if (Directory.Exists(path))
-                    {
-                        using (fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Create))
-                        {
-                            await fileUpload.CopyToAsync(fs);
-                        }
-                        fs = new FileStream(Path.Combine(path, fileUpload.FileName), FileMode.Open);
-                    }
-                    else
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                }
-                var authen = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-                var a = await authen.SignInWithEmailAndPasswordAsync(authenEmail, authenPassword);
-                var cancel = new CancellationTokenSource();
-                var upload = new FirebaseStorage(
-                    apibucket,
-                    new FirebaseStorageOptions
-                    {
-                        AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                        ThrowOnCancel = true
-                    }
-                    ).Child("ImageCategories").Child(fileUpload.FileName).PutAsync(fs, cancel.Token);
-                try
-                {
-                    string Link = await upload;
-                }
-                catch (Exception)
-                {
-
-                    throw;
-                }
-            }
-            return file;
+            DateTime utcDateTime = DateTime.UtcNow;
+            string vnTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
+            return time;
         }
     }
 }

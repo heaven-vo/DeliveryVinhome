@@ -81,6 +81,7 @@ namespace DeliveryVHGP_WebApi.Controllers
             catch (Exception)
             {
                 return Ok(new { message = "Category currently in the Menu !!" });
+
             }
         }
         /// <summary>
@@ -103,8 +104,8 @@ namespace DeliveryVHGP_WebApi.Controllers
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Products currently in the Menu ");
+                return Ok(new { message = "Hiện tại sản phẩm đang có trong menu !!" +
+                                              "Vui lòng xóa sản phẩm khỏi menu và thử lại " });
             }
         }
     }
