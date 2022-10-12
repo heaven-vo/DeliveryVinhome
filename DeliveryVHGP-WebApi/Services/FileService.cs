@@ -53,6 +53,10 @@ namespace DeliveryVHGP_WebApi.Repositories
         //}
         public async Task<string> UploadFile(string fileimg ,string base64String)
         {
+            if (string.IsNullOrWhiteSpace(base64String))
+            {
+                return null;
+            }
             Stream stream = ConvertBase64ToStream(base64String);
             var filename = Guid.NewGuid();
             return await Upload(fileimg,filename, stream);
@@ -66,6 +70,10 @@ namespace DeliveryVHGP_WebApi.Repositories
 
         private Stream ConvertBase64ToStream(string base64)
         {
+            //if (string.IsNullOrWhiteSpace(base64))
+            //{
+            //    return null;
+            //}
             base64 = base64.Trim();
             if ((base64.Length % 4 != 0) || !Regex.IsMatch(base64, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None)) throw new ArgumentException("Invalid image");
             byte[] bytes = Convert.FromBase64String(base64);
