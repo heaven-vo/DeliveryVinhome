@@ -33,9 +33,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        BuildingStore = building.Name,
                                        StoreCateId = sc.Id,
                                        StoreCateName = sc.Name,
-                                       Status = store.Status
+                                       Status = store.Status,
+                                       CreateAt = store.CreateAt,
+                                       UpdateAt = store.UpdateAt
 
-                                   }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                   }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStore;
         }
         public async Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize)
@@ -56,9 +58,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        BuildingStore = building.Name,
                                        StoreCateId = sc.Id,
                                        StoreCateName = sc.Name,
-                                       Status = store.Status
+                                       Status = store.Status,
+                                       CreateAt= store.CreateAt,
+                                       UpdateAt= store.UpdateAt
 
-                                   }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                   }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStore;
         }
         public async Task<IEnumerable<StoreModel>> GetListStoreByName(string storeName, int pageIndex, int pageSize)
@@ -78,9 +82,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        BuildingStore = building.Name,
                                        StoreCateId = sc.Id,
                                        StoreCateName = sc.Name,
-                                       Status = store.Status
+                                       Status = store.Status,
+                                       CreateAt = store.CreateAt,
+                                       UpdateAt = store.UpdateAt
 
-                                   }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                   }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStore;
         }
         public async Task<Object> GetStoreById(string storeId)
@@ -90,7 +96,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                join sc in _context.StoreCategories on s.StoreCategoryId equals sc.Id
                                join bs in _context.Buildings on s.BuildingId equals bs.Id
                                where s.Id == storeId
-                               select new StoreDto()
+                               select new ViewListStoreModel()
                                {
                                    Id = s.Id,
                                    Name = s.Name,
@@ -102,13 +108,16 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    BrandId = b.Id,
                                    BuildingId = bs.Id,
                                    StoreCategoryId = sc.Id,
-                                   Status = s.Status
+                                   Status = s.Status,
+                                   CreateAt = s.CreateAt,
+                                   UpdateAt = s.UpdateAt
                                }).FirstOrDefaultAsync();
             return store;
         }
         public async Task<StoreDto> CreatNewStore(StoreDto store)
         {
             string fileImg = "ImagesStores";
+            string time = await GetTime();
             var categoryStore = _context.StoreCategories.FirstOrDefault(sc => sc.Id == store.StoreCategoryId);
             var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
             var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
@@ -125,7 +134,8 @@ namespace DeliveryVHGP_WebApi.Repositories
                     CloseTime = store.CloseTime,
                     StoreCategoryId = categoryStore.Id,
                     BrandId = brand.Id,
-                    BuildingId = building.Id
+                    BuildingId = building.Id,
+                    CreateAt = time
                 });
 
             await _context.SaveChangesAsync();
@@ -143,7 +153,8 @@ namespace DeliveryVHGP_WebApi.Repositories
 
         public async Task<StoreDto> UpdateStore(string storeId, StoreDto store)
         {
-
+            string fileImg = "ImagesStores";
+            string time = await GetTime();
             var result = await _context.Stores.FindAsync(storeId);
             var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
             var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
@@ -154,12 +165,13 @@ namespace DeliveryVHGP_WebApi.Repositories
             result.BrandId = store.BrandId;
             result.BuildingId = store.BuildingId;
             result.StoreCategoryId = store.StoreCategoryId;
-            result.Image = store.Image;
+            result.Image = await _fileService.UploadFile(fileImg, store.Image);
             result.OpenTime = store.OpenTime;
             result.CloseTime = store.CloseTime;
             result.Phone = store.Phone;
             result.Slogan = store.Slogan;
             result.Status = store.Status;
+            result.UpdateAt = time;
             try
             {
                 await _context.SaveChangesAsync();
@@ -169,6 +181,14 @@ namespace DeliveryVHGP_WebApi.Repositories
                 throw;
             }
             return store;
+        }
+        public async Task<string> GetTime()
+        {
+            DateTime utcDateTime = DateTime.UtcNow;
+            string vnTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
+            return time;
         }
     }
 }

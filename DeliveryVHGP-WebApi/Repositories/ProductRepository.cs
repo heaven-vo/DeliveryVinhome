@@ -4,6 +4,7 @@ using DeliveryVHGP_WebApi.ViewModels;
 using Firebase.Auth;
 using Firebase.Storage;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DeliveryVHGP_WebApi.Repositories
 {
@@ -41,9 +42,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                                StoreImage = s.Image,
                                                Slogan = s.Slogan,
                                                CategoryId = c.Id,
-                                               ProductCategory = c.Name
+                                               ProductCategory = c.Name,
+                                               CreateAt = p.CreateAt,
+                                               UpdateAt = p.UpdateAt
                                            }
-                                     ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                     ).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return listproductdetail;
         }
@@ -73,8 +76,9 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      StoreImage = s.Image,
                                      Slogan = s.Slogan,
                                      CategoryId = c.Id,
-                                     ProductCategory = c.Name
-
+                                     ProductCategory = c.Name,
+                                     CreateAt = p.CreateAt,
+                                     UpdateAt = p.UpdateAt
                                  }).FirstOrDefaultAsync();
 
             return product;
@@ -82,6 +86,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<ProductModel> CreatNewProduct(ProductModel pro)
         {
             string fileImg = "ImagesProducts";
+            string time = await GetTime();
             context.Products.Add(
                 new Product {
                     Id = Guid.NewGuid().ToString(), 
@@ -98,22 +103,21 @@ namespace DeliveryVHGP_WebApi.Repositories
                     CategoryId = pro.CategoryId,
                     Rate = pro.Rate,
                     Description = pro.Description,
+                    CreateAt = time
                     });
             await context.SaveChangesAsync();
             return pro;
         }
-        public async Task<Object> UpdateProductDetailById(string proId, ProductDetailsModel product)
+        public async Task<Object> UpdateProductById(string proId, ProductDto product)
         {
-            if (proId == null)
-            {
-                return null;
-            }
+           
+            string fileImg = "ImagesProducts";
+            string time = await GetTime();
             var pro = await context.Products.FindAsync(proId);
             var store = context.Stores.FirstOrDefault(s => s.Id == product.StoreId);
             var category = context.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
-            pro.Id = product.Id;
             pro.Name = product.Name;
-            pro.Image = product.Image;
+            pro.Image = await _fileService.UploadFile(fileImg, product.Image);
             pro.Unit = product.Unit;
             pro.PricePerPack = product.PricePerPack;
             pro.PackNetWeight = product.PackNetWeight;
@@ -124,14 +128,15 @@ namespace DeliveryVHGP_WebApi.Repositories
             pro.Rate = product.Rate;
             pro.StoreId = product.StoreId;
             pro.CategoryId = product.CategoryId;
+            pro.UpdateAt = time;
 
+            var menu = new Menu();
             var listProInMenu = await context.ProductInMenus.Where(pm => pm.ProductId == proId).ToListAsync();
             var listCateInMenu = await context.CategoryInMenus.Where(cm => cm.CategoryId == product.CategoryId).ToListAsync();
             if (listProInMenu.Any())
             {
-                if (listCateInMenu.Any()) 
-
-                context.CategoryInMenus.RemoveRange(listCateInMenu);
+                if (listCateInMenu.Any()) throw new Exception("Category currently in the Menu");
+                //context.CategoryInMenus.RemoveRange(listCateInMenu);
             }
             context.Entry(pro).State = EntityState.Modified; 
             try
@@ -155,6 +160,14 @@ namespace DeliveryVHGP_WebApi.Repositories
             await context.SaveChangesAsync();
 
             return product;
-        }        
+        }
+        public async Task<string> GetTime()
+        {
+            DateTime utcDateTime = DateTime.UtcNow;
+            string vnTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
+            return time;
+        }
     }
 }

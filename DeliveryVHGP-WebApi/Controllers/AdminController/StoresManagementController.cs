@@ -94,10 +94,6 @@ namespace DeliveryVHGP_WebApi.Controllers
         {
             try
             {
-                if (storeId != store.Id)
-                {
-                    return BadRequest("Store ID mismatch");
-                }
                 var productToUpdate = await _storeRepository.UpdateStore(storeId, store);
                 return Ok(storeId);
             }

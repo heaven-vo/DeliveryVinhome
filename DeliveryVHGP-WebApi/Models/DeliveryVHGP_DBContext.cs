@@ -422,7 +422,11 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 
+                entity.Property(e => e.ProductId).HasMaxLength(50);
+
                 entity.Property(e => e.ProductInMenuId).HasMaxLength(50);
+
+                entity.Property(e => e.ProductName).HasMaxLength(100);
 
                 entity.Property(e => e.Quantity).HasMaxLength(50);
 
@@ -430,6 +434,11 @@ namespace DeliveryVHGP_WebApi.Models
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("FK_OrderDetail_Order");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_OrderDetail_Product");
 
                 entity.HasOne(d => d.ProductInMenu)
                     .WithMany(p => p.OrderDetails)
@@ -503,11 +512,11 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.CategoryId).HasMaxLength(50);
 
+                entity.Property(e => e.CreateAt).HasMaxLength(50);
+
                 entity.Property(e => e.Description).HasMaxLength(500);
 
                 entity.Property(e => e.Image).HasMaxLength(250);
-
-                entity.Property(e => e.LastUpdate).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
 
@@ -518,6 +527,8 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.Property(e => e.StoreId).HasMaxLength(50);
 
                 entity.Property(e => e.Unit).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateAt).HasMaxLength(50);
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -701,6 +712,8 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.CloseTime).HasMaxLength(50);
 
+                entity.Property(e => e.CreateAt).HasMaxLength(50);
+
                 entity.Property(e => e.Image).HasMaxLength(250);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
@@ -718,6 +731,8 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.Property(e => e.StoreCategoryId).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateAt).HasMaxLength(50);
 
                 entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Stores)

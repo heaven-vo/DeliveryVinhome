@@ -67,7 +67,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //PUT: api/v1/productDetail?id
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProById(string id, ProductDetailsModel product)
+        public async Task<ActionResult> UpdateProById(string id, ProductDto product)
         {
             try
             {
@@ -75,12 +75,12 @@ namespace DeliveryVHGP_WebApi.Controllers
                 {
                     return BadRequest("Product ID mismatch");
                 }
-                    var productToUpdate = await _productRepository.UpdateProductDetailById(id, product);
+                    var productToUpdate = await _productRepository.UpdateProductById(id, product);
                     return Ok(product);
             }
-            catch
+            catch (Exception)
             {
-                return Conflict();
+                return Ok(new { message = "Category currently in the Menu !!" });
             }
         }
         /// <summary>
@@ -98,13 +98,13 @@ namespace DeliveryVHGP_WebApi.Controllers
                 {
                     return NotFound($"Product with Id = {id} not found");
                 }
-
-                return await _productRepository.DeleteProductById(id);
+                 await _productRepository.DeleteProductById(id);
+                return Ok(new {message = "Deleted products sucessfull !!" });
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error deleting data");
+                    "Products currently in the Menu ");
             }
         }
     }

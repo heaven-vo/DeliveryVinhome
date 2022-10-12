@@ -10,9 +10,12 @@ namespace DeliveryVHGP_WebApi.Repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly DeliveryVHGP_DBContext _context;
-        public CustomerRepository(DeliveryVHGP_DBContext context)
+        private readonly IFileService _fileService;
+
+        public CustomerRepository(IFileService fileService, DeliveryVHGP_DBContext context)
         {
             _context = context;
+            _fileService = fileService;
         }
         public async Task<IEnumerable<ViewListCustomer>> GetAll(int pageIndex, int pageSize)
         {
@@ -29,11 +32,12 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<CustomerModels> CreateCustomer(CustomerModels cus)
         {
+            string fileImg = "ImagesCustomers";
             _context.Customers.Add(
                 new Customer {
                 Id = Guid.NewGuid().ToString(),
                 FullName = cus.FullName,
-                Image = cus.Image,
+                Image = await _fileService.UploadFile(fileImg, cus.Image),
                 Phone = cus.Phone,
                 BuildingId = cus.BuildingId
             });

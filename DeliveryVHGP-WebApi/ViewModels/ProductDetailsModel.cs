@@ -20,5 +20,7 @@
         public string? Slogan { get; set; }
         public string? CategoryId { get; set; }
         public string? ProductCategory { get; set; }
+        public string? CreateAt { get; set; }
+        public string? UpdateAt { get; set; }
     }
 }
