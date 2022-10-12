@@ -1,7 +1,8 @@
 ﻿namespace DeliveryVHGP_WebApi.ViewModels
 {
-    public class ProductModel
+    public class ProductDto
     {
+        public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public string? Image { get; set; }
         public string? Unit { get; set; }
@@ -15,8 +16,5 @@
         public string? CategoryId { get; set; }
         public double? Rate { get; set; }
         public string? Description { get; set; }
-        //public string? CreateAt { get; set; }
-        //public string? UpdateAt { get; set; }
-
     }
 }

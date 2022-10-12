@@ -1,8 +1,8 @@
 ﻿namespace DeliveryVHGP_WebApi.ViewModels
 {
-    public class StoreDto
+    public class ViewListStoreModel
     {
-        //public string Id { get; set; } = null!;
+        public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string? BuildingId { get; set; }
         public string? BrandId { get; set; }
@@ -14,5 +14,7 @@
         public string? Slogan { get; set; }
         public string? Phone { get; set; }
         public string? Status { get; set; }
+        public string? CreateAt { get; set; }
+        public string? UpdateAt { get; set; }
     }
 }

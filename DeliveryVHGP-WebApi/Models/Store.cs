@@ -24,6 +24,8 @@ namespace DeliveryVHGP_WebApi.Models
         public string? StoreCategoryId { get; set; }
         public string? Slogan { get; set; }
         public string? Phone { get; set; }
+        public string? CreateAt { get; set; }
+        public string? UpdateAt { get; set; }
         public string? Status { get; set; }
 
         public virtual Brand? Brand { get; set; }
