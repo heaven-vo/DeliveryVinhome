@@ -104,8 +104,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                      ProductInMenuId = pm.Id,
                                      Price = odd.Price,
                                      Quantity = odd.Quantity,
-                                     ProductName = odd.ProductName
-
+                                     ProductName = odd.ProductName,
                                  }).ToListAsync();
             order.ListProInMenu = listPro;
 
@@ -150,8 +149,10 @@ namespace DeliveryVHGP_WebApi.Repositories
                     Id = Guid.NewGuid().ToString(),
                     ProductInMenuId = ord.ProductInMenuId,
                     Quantity = ord.Quantity,
-                    Price = proInMenu.Price,
-                    OrderId = od.Id
+                    Price = ord.Price,
+                    OrderId = od.Id,
+                    ProductName = ord.ProductName,
+                    ProductId = proInMenu.ProductId,
                 };
                 await context.OrderDetails.AddAsync(odd);
             }
