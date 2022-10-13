@@ -1,5 +1,6 @@
 ﻿using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.Models;
+using DeliveryVHGP_WebApi.Services;
 using DeliveryVHGP_WebApi.ViewModels;
 using Firebase.Auth;
 using Firebase.Storage;
@@ -12,10 +13,12 @@ namespace DeliveryVHGP_WebApi.Repositories
     {
         private readonly IFileService _fileService;
         private readonly DeliveryVHGP_DBContext context;
-        public ProductRepository(IFileService fileService, DeliveryVHGP_DBContext context)
+        private readonly ITimeStageService _timeStageService;
+        public ProductRepository(ITimeStageService timeStageService,IFileService fileService, DeliveryVHGP_DBContext context)
         {
             this.context = context;
             _fileService = fileService;
+            _timeStageService = timeStageService;
         }
         public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
         {
@@ -86,7 +89,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<ProductModel> CreatNewProduct(ProductModel pro)
         {
             string fileImg = "ImagesProducts";
-            string time = await GetTime();
+            string time = await _timeStageService.GetTime();
             context.Products.Add(
                 new Product {
                     Id = Guid.NewGuid().ToString(), 
@@ -112,7 +115,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
            
             string fileImg = "ImagesProducts";
-            string time = await GetTime();
+            string time = await _timeStageService.GetTime();
             var pro = await context.Products.FindAsync(proId);
             var store = context.Stores.FirstOrDefault(s => s.Id == product.StoreId);
             var category = context.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
@@ -161,13 +164,13 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return product;
         }
-        public async Task<string> GetTime()
-        {
-            DateTime utcDateTime = DateTime.UtcNow;
-            string vnTimeZoneKey = "SE Asia Standard Time";
-            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
-            return time;
-        }
+        //public async Task<string> GetTime()
+        //{
+        //    DateTime utcDateTime = DateTime.UtcNow;
+        //    string vnTimeZoneKey = "SE Asia Standard Time";
+        //    TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+        //    string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
+        //    return time;
+        //}
     }
 }

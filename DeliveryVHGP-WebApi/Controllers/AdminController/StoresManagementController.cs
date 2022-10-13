@@ -80,10 +80,19 @@ namespace DeliveryVHGP_WebApi.Controllers
         [HttpDelete("{storeId}")]
         public async Task<IActionResult> DeleteStore(string storeId)
         {
-            var store = await _storeRepository.DeleteStore(storeId);
-            if (storeId == null)
-                return NotFound();
-            return Ok(store);
+            try
+            {
+                var store = await _storeRepository.DeleteStore(storeId);
+                return Ok(store);
+            }
+            catch (Exception)
+            {
+                return Ok(new
+                {
+                    message = "Hiện tại cửa hàng đang có trong menu !!" +
+                                              "Vui lòng xóa cửa hàng khỏi menu và thử lại "
+                });
+            }
         }
         /// <summary>
         /// Update status store  with pagination

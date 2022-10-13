@@ -1,5 +1,6 @@
 ﻿using DeliveryVHGP_WebApi.IRepositories;
 using DeliveryVHGP_WebApi.Models;
+using DeliveryVHGP_WebApi.Services;
 using DeliveryVHGP_WebApi.ViewModels;
 using Firebase.Auth;
 using Firebase.Storage;
@@ -11,10 +12,12 @@ namespace DeliveryVHGP_WebApi.Repositories
     {
         private readonly DeliveryVHGP_DBContext _context;
         private readonly IFileService _fileService;
-        public StoreRepository(IFileService fileService, DeliveryVHGP_DBContext context)
+        private readonly ITimeStageService _timeStageService ;
+        public StoreRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context)
         {
             _context = context;
             _fileService = fileService;
+            _timeStageService = timeStageService;
         }
         public async Task<IEnumerable<StoreModel>> GetListStore(int pageIndex, int pageSize)
         {
@@ -117,7 +120,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<StoreDto> CreatNewStore(StoreDto store)
         {
             string fileImg = "ImagesStores";
-            string time = await GetTime();
+            string time = await _timeStageService.GetTime();
             var categoryStore = _context.StoreCategories.FirstOrDefault(sc => sc.Id == store.StoreCategoryId);
             var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
             var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
@@ -154,7 +157,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<StoreDto> UpdateStore(string storeId, StoreDto store)
         {
             string fileImg = "ImagesStores";
-            string time = await GetTime();
+            string time = await _timeStageService.GetTime();
             var result = await _context.Stores.FindAsync(storeId);
             var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
             var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
@@ -182,13 +185,13 @@ namespace DeliveryVHGP_WebApi.Repositories
             }
             return store;
         }
-        public async Task<string> GetTime()
-        {
-            DateTime utcDateTime = DateTime.UtcNow;
-            string vnTimeZoneKey = "SE Asia Standard Time";
-            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
-            return time;
-        }
+        //public async Task<string> GetTime()
+        //{
+        //    DateTime utcDateTime = DateTime.UtcNow;
+        //    string vnTimeZoneKey = "SE Asia Standard Time";
+        //    TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+        //    string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
+        //    return time;
+        //}
     }
 }

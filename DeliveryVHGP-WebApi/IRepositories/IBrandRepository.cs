@@ -9,6 +9,5 @@ namespace DeliveryVHGP_WebApi.IRepositories
         Task<BrandModels> CreateBrand(BrandModels brand);
         Task<Object> DeleteById(string proId);
         Task<Object> UpdateBrandById(string brandId, BrandModels brand);
-        Task<Object> PostFireBase(IFormFile file);
     }
 }
