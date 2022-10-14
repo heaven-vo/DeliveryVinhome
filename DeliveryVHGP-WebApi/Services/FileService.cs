@@ -55,7 +55,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             if (string.IsNullOrWhiteSpace(base64String))
             {
-                return null;
+                return "";
             }
             Stream stream = ConvertBase64ToStream(base64String);
             var filename = Guid.NewGuid();
