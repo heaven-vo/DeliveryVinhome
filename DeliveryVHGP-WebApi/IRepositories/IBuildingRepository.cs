@@ -6,5 +6,6 @@ namespace DeliveryVHGP_WebApi.IRepositories
     {
         Task<List<ViewListBuilding>> GetAll(int pageIndex, int pageSize);
         Task<BuildingModel> CreateBuilding(BuildingModel building);
+        //Task<Object> GetBuildingByArea(string areaId);
     }
 }
