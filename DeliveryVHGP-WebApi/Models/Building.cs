@@ -14,8 +14,9 @@ namespace DeliveryVHGP_WebApi.Models
 
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
-        public string? AreaId { get; set; }
+        public string? ClusterId { get; set; }
 
+        public virtual Cluster? Cluster { get; set; }
         public virtual ICollection<Hub> Hubs { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Store> Stores { get; set; }

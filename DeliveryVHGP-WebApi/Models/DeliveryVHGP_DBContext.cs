@@ -22,6 +22,7 @@ namespace DeliveryVHGP_WebApi.Models
         public virtual DbSet<Building> Buildings { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<CategoryInMenu> CategoryInMenus { get; set; } = null!;
+        public virtual DbSet<Cluster> Clusters { get; set; } = null!;
         public virtual DbSet<Collection> Collections { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
         public virtual DbSet<DeliveryMode> DeliveryModes { get; set; } = null!;
@@ -65,17 +66,13 @@ namespace DeliveryVHGP_WebApi.Models
             {
                 entity.ToTable("Account");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Name).HasMaxLength(100);
 
-                entity.Property(e => e.RoleId)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Password).HasMaxLength(150);
+
+                entity.Property(e => e.RoleId).HasMaxLength(50);
 
                 entity.Property(e => e.Status)
                     .HasMaxLength(10)
@@ -89,8 +86,6 @@ namespace DeliveryVHGP_WebApi.Models
 
             modelBuilder.Entity<Area>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Area");
 
                 entity.Property(e => e.Id).HasMaxLength(50);
@@ -98,11 +93,6 @@ namespace DeliveryVHGP_WebApi.Models
                 entity.Property(e => e.Name)
                     .HasMaxLength(10)
                     .IsFixedLength();
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithMany()
-                    .HasForeignKey(d => d.Id)
-                    .HasConstraintName("FK_Area_Building");
             });
 
             modelBuilder.Entity<Brand>(entity =>
@@ -122,9 +112,14 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.AreaId).HasMaxLength(50);
+                entity.Property(e => e.ClusterId).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.HasOne(d => d.Cluster)
+                    .WithMany(p => p.Buildings)
+                    .HasForeignKey(d => d.ClusterId)
+                    .HasConstraintName("FK_Building_Cluster");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -135,7 +130,7 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.CreateAt).HasMaxLength(50);
 
-                entity.Property(e => e.Image).HasMaxLength(100);
+                entity.Property(e => e.Image).HasMaxLength(500);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
 
@@ -163,6 +158,22 @@ namespace DeliveryVHGP_WebApi.Models
                     .WithMany(p => p.CategoryInMenus)
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_CategoryInMenu_Menu");
+            });
+
+            modelBuilder.Entity<Cluster>(entity =>
+            {
+                entity.ToTable("Cluster");
+
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.AreaId).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(100);
+
+                entity.HasOne(d => d.Area)
+                    .WithMany(p => p.Clusters)
+                    .HasForeignKey(d => d.AreaId)
+                    .HasConstraintName("FK_Cluster_Area");
             });
 
             modelBuilder.Entity<Collection>(entity =>
@@ -260,9 +271,7 @@ namespace DeliveryVHGP_WebApi.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.Property(e => e.AccountId)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.AccountId).HasMaxLength(50);
 
                 entity.Property(e => e.Token)
                     .HasMaxLength(10)
@@ -346,9 +355,7 @@ namespace DeliveryVHGP_WebApi.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.UserId).HasMaxLength(50);
 
                 entity.HasOne(d => d.User)
                     .WithMany()
@@ -616,9 +623,7 @@ namespace DeliveryVHGP_WebApi.Models
             {
                 entity.ToTable("Role");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Id).HasMaxLength(50);
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(10)
