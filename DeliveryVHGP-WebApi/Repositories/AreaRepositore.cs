@@ -25,11 +25,12 @@ namespace DeliveryVHGP_WebApi.Repositories
         }
         public async Task<Object> GetBuildingByArea(string areaId)
         {
-            var listArea = await _context.Areas.
-                                      Select(x => new ViewListArea
+            var listArea = await (from a in _context.Areas
+                                  where a.Id == areaId
+                                      select new ViewListArea()
                                       {
-                                          Id = areaId,
-                                          Name = x.Name,
+                                          Id = a.Id,
+                                          Name = a.Name,
                                       }).FirstOrDefaultAsync();
             var listcluster = await (from cl in _context.Clusters
                                      join a in _context.Areas on cl.AreaId equals a.Id
@@ -46,17 +47,6 @@ namespace DeliveryVHGP_WebApi.Repositories
                 cluster.ListBuilding = listBuilding;
             }
             listArea.ListCluster = listcluster;
-
-            //var listBuilding = await(from b in _context.Buildings
-            //                         join cl in _context.Clusters on b.ClusterId equals cl.Id
-            //                         where cl.AreaId == areaId
-            //                         select new ViewListBuilding
-            //                         {
-            //                             Id= b.Id,
-            //                             Name= b.Name,
-            //                         }
-            //                         ).ToListAsync();
-            //listArea.ListBuilding = listBuilding;
 
             return listArea;
         }
