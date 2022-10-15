@@ -80,7 +80,11 @@ namespace DeliveryVHGP_WebApi.Controllers
             }
             catch (Exception)
             {
-                return Ok(new { message = "Category currently in the Menu !!" });
+                return Ok(new
+                {
+                    message = "Hiện tại danh mục đang có trong menu !!" +
+                                              "Vui lòng xóa danh mục khỏi menu và thử lại "
+                });
 
             }
         }
