@@ -20,7 +20,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// <summary>
         /// Get list all store with pagination
         /// </summary>
-        //GET: api/v1/store?pageIndex=1&pageSize=3
+        //GET: api/v1/store?pageIndex=1&pageSize=3 
         [HttpGet]
         public async Task<ActionResult> GetAll( int pageIndex, int pageSize)
         {

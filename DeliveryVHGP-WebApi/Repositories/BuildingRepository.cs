@@ -24,7 +24,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             
             return listBuilding;
-        }
+        } 
         public async Task<BuildingModel> CreateBuilding(BuildingModel building)
         {
             _context.Buildings.Add(
@@ -38,7 +38,5 @@ namespace DeliveryVHGP_WebApi.Repositories
             return building;
 
         }
-
-
     }
 }
