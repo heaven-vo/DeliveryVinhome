@@ -118,7 +118,8 @@ namespace DeliveryVHGP_WebApi.Repositories
             string time = await _timeStageService.GetTime();
             var pro = await context.Products.FindAsync(proId);
             var store = context.Stores.FirstOrDefault(s => s.Id == product.StoreId);
-            var category = context.Categories.FirstOrDefault(c => c.Id == product.CategoryId);
+            var category = context.Categories.FirstOrDefault(c => c.Id == pro.CategoryId);
+            var p = new Product();
             pro.Name = product.Name;
             pro.Image = await _fileService.UploadFile(fileImg, product.Image);
             pro.Unit = product.Unit;
@@ -133,14 +134,16 @@ namespace DeliveryVHGP_WebApi.Repositories
             pro.CategoryId = product.CategoryId;
             pro.UpdateAt = time;
 
-            var menu = new Menu();
             var listProInMenu = await context.ProductInMenus.Where(pm => pm.ProductId == proId).ToListAsync();
             var listCateInMenu = await context.CategoryInMenus.Where(cm => cm.CategoryId == product.CategoryId).ToListAsync();
             if (listProInMenu.Any())
             {
-                if (listCateInMenu.Any()) throw new Exception("Category currently in the Menu");
-                //context.CategoryInMenus.RemoveRange(listCateInMenu);
+                if (product.CategoryId != category.Id)
+                    if (listCateInMenu.Any()) throw new Exception("Category currently in the Menu");
             }
+
+            //context.CategoryInMenus.RemoveRange(listCateInMenu);
+
             context.Entry(pro).State = EntityState.Modified; 
             try
                 {
@@ -152,6 +155,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                 } 
             return product;
             }
+        
         public async Task<Object> DeleteProductById(string id)  
         {
             var product = await context.Products.FindAsync(id);
@@ -164,13 +168,5 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return product;
         }
-        //public async Task<string> GetTime()
-        //{
-        //    DateTime utcDateTime = DateTime.UtcNow;
-        //    string vnTimeZoneKey = "SE Asia Standard Time";
-        //    TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-        //    string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
-        //    return time;
-        //}
     }
 }
