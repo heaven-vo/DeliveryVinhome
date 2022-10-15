@@ -113,7 +113,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    StoreCategoryId = sc.Id,
                                    Status = s.Status,
                                    CreateAt = s.CreateAt,
-                                   UpdateAt = s.UpdateAt
+                                   UpdateAt = s.UpdateAt,
                                }).FirstOrDefaultAsync();
             return store;
         }
@@ -127,7 +127,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             _context.Stores.Add(
                 new Store
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = store.Id,
                     Name = store.Name,
                     Phone = store.Phone,
                     Slogan = store.Slogan,
@@ -140,7 +140,15 @@ namespace DeliveryVHGP_WebApi.Repositories
                     BuildingId = building.Id,
                     CreateAt = time
                 });
-
+            _context.Accounts.Add(
+                new Account
+                {
+                    Id = store.Id,
+                    Name = store.Name,
+                    Password = store.Password,
+                    RoleId = "2",
+                    Status = "true"
+                });
             await _context.SaveChangesAsync();
             return store;
 
