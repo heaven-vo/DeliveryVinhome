@@ -23,10 +23,12 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join od in context.OrderDetails on order.Id equals od.OrderId
+                                  join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                   where c.Id == CusId && t.StatusId == order.StatusId
                                   select new OrderModels()
                                   {
-                                      Id = order.Id,
+                                      Id = order.Id,    
                                       Total = order.Total,
                                       CustomerId = c.Id,
                                       StoreId = s.Id,
@@ -35,10 +37,9 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       BuildingId = b.Id,
                                       buildingName = b.Name,
                                       statusId = sta.Id,
-                                      Time = t.Time
+                                      Time = t.Time,
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-           
             return lstOrder;
         }
         public async Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize)
@@ -51,6 +52,35 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   where s.Id == StoreId && t.StatusId == order.StatusId
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      StatusName = sta.Name,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      Time = t.Time,
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
+        public async Task<List<OrderAdminDto>> GetListOrdersByStoreByStatus(string StoreId ,string StatusId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  join c in context.Customers on order.CustomerId equals c.Id
+                                  join t in context.TimeOfOrderStages on order.Id equals t.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  where s.Id == StoreId && order.StatusId == StatusId && t.StatusId == order.StatusId
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
