@@ -90,9 +90,7 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Name)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Name).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Brand>(entity =>
@@ -385,6 +383,8 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(50);
 
+                entity.Property(e => e.ShipperId).HasMaxLength(50);
+
                 entity.Property(e => e.StatusId).HasMaxLength(50);
 
                 entity.Property(e => e.StoreId).HasMaxLength(50);
@@ -415,6 +415,11 @@ namespace DeliveryVHGP_WebApi.Models
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MenuId)
                     .HasConstraintName("FK_Order_Menu");
+
+                entity.HasOne(d => d.Shipper)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.ShipperId)
+                    .HasConstraintName("FK_Order_Shipper");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Orders)
@@ -682,33 +687,23 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Address)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.CreateAt).HasMaxLength(50);
 
-                entity.Property(e => e.Age)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.DeliveryTeam).HasMaxLength(50);
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Email).HasMaxLength(50);
 
-                entity.Property(e => e.FullName)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.FullName).HasMaxLength(100);
 
-                entity.Property(e => e.Image)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Image).HasMaxLength(250);
 
-                entity.Property(e => e.Phone)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Phone).HasMaxLength(50);
 
-                entity.Property(e => e.Sex)
-                    .HasMaxLength(10)
-                    .IsFixedLength();
+                entity.Property(e => e.Status).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateAt).HasMaxLength(50);
+
+                entity.Property(e => e.VehicleType).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Store>(entity =>

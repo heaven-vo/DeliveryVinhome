@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<ITimeStageService,TimeStageService >();
+builder.Services.AddScoped<IShipperRepository, ShipperRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository >();
 builder.Services.AddScoped<IAreaRepository, AreaRepositore >();
 builder.Services.AddScoped<IFileService, FileService>();
