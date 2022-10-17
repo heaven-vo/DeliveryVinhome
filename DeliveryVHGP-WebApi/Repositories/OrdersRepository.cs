@@ -132,7 +132,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
                                  join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
                                  where o.Id == order.Id
-                                 select new OrderDetailDto
+                                 select new ViewListDetail
                                  {
                                      ProductInMenuId = pm.Id,
                                      Price = odd.Price,
@@ -159,8 +159,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var od = new Order
             {
-                Id = Guid.NewGuid().ToString(),
-                CustomerId = order.CustomerId,
+                Id = order.Id = Guid.NewGuid().ToString(),
                 Total = order.Total,
                 Type = order.Type,
                 StoreId = order.StoreId,
@@ -177,6 +176,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             foreach (var ord in order.OrderDetail)
             {
                 var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
+                var pro = context.Products.FirstOrDefault(p => p.Id == proInMenu.ProductId);
                 var odd = new OrderDetail
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -184,7 +184,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                     Quantity = ord.Quantity,
                     Price = ord.Price,
                     OrderId = od.Id,
-                    ProductName = ord.ProductName,
+                    ProductName = pro.Name,
                     ProductId = proInMenu.ProductId,
                 };
                 await context.OrderDetails.AddAsync(odd);

@@ -15,7 +15,7 @@
         public string? Note { get; set; }
 
 
-        public List<OrderDetailDto> ListProInMenu { get; set; }
+        public List<ViewListDetail> ListProInMenu { get; set; }
         public List<ListStatusOrder> ListStatusOrder { get; set; }
 
     }
