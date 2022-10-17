@@ -16,5 +16,6 @@
         public string? Status { get; set; }
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
+        public AccountInRole Password { get; set; }
     }
 }

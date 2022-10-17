@@ -98,7 +98,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                join b in _context.Brands on s.BrandId equals b.Id
                                join sc in _context.StoreCategories on s.StoreCategoryId equals sc.Id
                                join bs in _context.Buildings on s.BuildingId equals bs.Id
-                               where s.Id == storeId
+                               where s.Id == storeId 
                                select new ViewListStoreModel()
                                {
                                    Id = s.Id,
@@ -115,6 +115,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    CreateAt = s.CreateAt,
                                    UpdateAt = s.UpdateAt,
                                }).FirstOrDefaultAsync();
+            store.Password = await GetAccountInStore(storeId);
             return store;
         }
         public async Task<StoreDto> CreatNewStore(StoreDto store)
@@ -161,6 +162,15 @@ namespace DeliveryVHGP_WebApi.Repositories
 
             return deStore;
         }
+        public async Task<AccountInRole> GetAccountInStore(string storeId)
+        {
+            var account = await _context.Accounts.Where(x => x.Id == storeId)
+                                    .Select(x => new AccountInRole
+                                    {
+                                        Password = x.Password,
+                                    }).FirstOrDefaultAsync();
+            return account;
+        }
 
         public async Task<StoreDto> UpdateStore(string storeId, StoreDto store)
         {
@@ -170,7 +180,8 @@ namespace DeliveryVHGP_WebApi.Repositories
             var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
             var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
             var storeCate = _context.StoreCategories.FirstOrDefault(sc => sc.Id == store.StoreCategoryId);
-
+            var account = _context.Accounts.FirstOrDefault(x => x.Id == storeId);
+            result.Id = store.Id;
             result.Name = store.Name;
             result.Rate = store.Rate;
             result.BrandId = store.BrandId;
@@ -183,6 +194,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             result.Slogan = store.Slogan;
             result.Status = store.Status;
             result.UpdateAt = time;
+            account.Password = store.Password;
             try
             {
                 await _context.SaveChangesAsync();
