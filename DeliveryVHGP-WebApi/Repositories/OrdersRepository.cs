@@ -37,7 +37,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       BuildingId = b.Id,
                                       buildingName = b.Name,
                                       statusId = sta.Id,
-                                      Time = t.Time,
+                                      Time = t.Time
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
@@ -51,6 +51,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
+                                  join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && t.StatusId == order.StatusId
                                   select new OrderAdminDto()
                                   {
@@ -64,11 +65,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       CustomerName = order.FullName,
                                       PaymentName = p.Type,
                                       BuildingName = b.Name,
+                                      ShipperName = sp.FullName,
                                       Time = t.Time,
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
             return lstOrder;
         }
         public async Task<List<OrderAdminDto>> GetListOrdersByStoreByStatus(string StoreId ,string StatusId, int pageIndex, int pageSize)
@@ -80,6 +81,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
+                                  join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && order.StatusId == StatusId && t.StatusId == order.StatusId
                                   select new OrderAdminDto()
                                   {
@@ -93,6 +95,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                       CustomerName = order.FullName,
                                       PaymentName = p.Type,
                                       BuildingName = b.Name,
+                                      ShipperName = sp.FullName,
                                       Time = t.Time,
 
                                   }
@@ -129,7 +132,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
                                  join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
                                  where o.Id == order.Id
-                                 select new OrderDetailDto
+                                 select new ViewListDetail
                                  {
                                      ProductInMenuId = pm.Id,
                                      Price = odd.Price,
@@ -156,8 +159,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var od = new Order
             {
-                Id = Guid.NewGuid().ToString(),
-                CustomerId = order.CustomerId,
+                Id = order.Id = Guid.NewGuid().ToString(),
                 Total = order.Total,
                 Type = order.Type,
                 StoreId = order.StoreId,
@@ -174,6 +176,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             foreach (var ord in order.OrderDetail)
             {
                 var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
+                var pro = context.Products.FirstOrDefault(p => p.Id == proInMenu.ProductId);
                 var odd = new OrderDetail
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -181,7 +184,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                     Quantity = ord.Quantity,
                     Price = ord.Price,
                     OrderId = od.Id,
-                    ProductName = ord.ProductName,
+                    ProductName = pro.Name,
                     ProductId = proInMenu.ProductId,
                 };
                 await context.OrderDetails.AddAsync(odd);

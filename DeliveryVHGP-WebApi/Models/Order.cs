@@ -26,12 +26,14 @@ namespace DeliveryVHGP_WebApi.Models
         public string? StatusId { get; set; }
         public double? ShipCost { get; set; }
         public string? DurationId { get; set; }
+        public string? ShipperId { get; set; }
 
         public virtual Building? Building { get; set; }
         public virtual Customer? Customer { get; set; }
         public virtual TimeDuration? Duration { get; set; }
         public virtual Hub? Hub { get; set; }
         public virtual Menu? Menu { get; set; }
+        public virtual Shipper? Shipper { get; set; }
         public virtual OrderStatus? Status { get; set; }
         public virtual Store? Store { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

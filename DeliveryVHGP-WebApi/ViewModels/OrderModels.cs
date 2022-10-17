@@ -12,6 +12,9 @@
         public string? statusId { get; set; }
         public string? statusName { get; set; }
         public string? Time { get; set; }
+        public double? quantity { get; set; }
+        public List<double> productInmenuId { get; set; }
+
 
     }
 }
