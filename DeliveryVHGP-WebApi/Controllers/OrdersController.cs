@@ -41,8 +41,6 @@ namespace DeliveryVHGP_WebApi.Controllers
         public async Task<ActionResult> GetOrderByStore(string storeId, int pageIndex, int pageSize)
         {
             var listOder = await _orderRepository.GetListOrdersByStore(storeId, pageIndex, pageSize);
-            if (storeId == null)
-                return NotFound();
             return Ok(listOder);
         }
         /// <summary>

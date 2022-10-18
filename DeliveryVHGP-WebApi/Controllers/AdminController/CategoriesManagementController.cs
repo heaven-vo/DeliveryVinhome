@@ -53,6 +53,15 @@ namespace DeliveryVHGP_WebApi.Controllers
             return Ok(await _categoriesRepository.GetListCategoryByMenuId(menuId, page, pageSize));
         }
         /// <summary>
+        /// Get list all category by name with pagination
+        /// </summary>
+        //GET: api/v1/cateByName?pageIndex=1&pageSize=3
+        [HttpGet("search-name")]
+        public async Task<ActionResult> GetListStoreByName(string cateName, int pageIndex, int pageSize)
+        {
+            return Ok(await _categoriesRepository.GetListCategoryByName(cateName, pageIndex, pageSize));
+        }
+        /// <summary>
         /// Create a category
         /// </summary>
         //POST: api/v1/category

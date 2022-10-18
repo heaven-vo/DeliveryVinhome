@@ -115,7 +115,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    CreateAt = s.CreateAt,
                                    UpdateAt = s.UpdateAt,
                                }).FirstOrDefaultAsync();
-            store.Password = await GetAccountInStore(storeId);
+            store.Account = await GetAccountInStore(storeId);
             return store;
         }
         public async Task<StoreDto> CreatNewStore(StoreDto store)
