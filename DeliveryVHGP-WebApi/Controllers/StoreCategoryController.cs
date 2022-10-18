@@ -29,7 +29,7 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //POST: api/v1/storeCategory
         [HttpPost]
-        public async Task<ActionResult> CreateStoreCategory(StoreCategoryModel storeCate)
+        public async Task<ActionResult> CreateStoreCategory(StoreCategoryDto storeCate)
         {
             try
             {

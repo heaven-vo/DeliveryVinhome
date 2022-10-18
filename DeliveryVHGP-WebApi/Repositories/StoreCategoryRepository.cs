@@ -26,9 +26,11 @@ namespace DeliveryVHGP_WebApi.Repositories
                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return liststorecate;
         }
-        public async Task<StoreCategoryModel> CreateStoreCategory(StoreCategoryModel storeCate)
+        public async Task<StoreCategoryDto> CreateStoreCategory(StoreCategoryDto storeCate)
         {
-            _context.StoreCategories.Add(new StoreCategory { Id = storeCate.Id, Name = storeCate.Name });
+            _context.StoreCategories.Add(new StoreCategory { 
+                Id = Guid.NewGuid().ToString(),
+                Name = storeCate.Name });
             await _context.SaveChangesAsync();
             return storeCate;
 
@@ -52,7 +54,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             var result = await _context.StoreCategories.FindAsync(storecaId);
             result.Id = storeCate.Id;
             result.Name = storeCate.Name;
-
+            result.Status = storeCate.Status;
             _context.Entry(result).State = EntityState.Modified;
             try
             {

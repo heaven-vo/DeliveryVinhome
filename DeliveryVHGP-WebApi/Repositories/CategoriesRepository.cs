@@ -3,7 +3,10 @@ using DeliveryVHGP_WebApi.Models;
 using DeliveryVHGP_WebApi.ViewModels;
 using Firebase.Auth;
 using Firebase.Storage;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DeliveryVHGP_WebApi.Repositories
 {
@@ -42,6 +45,23 @@ namespace DeliveryVHGP_WebApi.Repositories
                                    UpdateAt = x.UpdateAt,
                                }).FirstOrDefaultAsync();
             return cate;
+        }
+        public async Task<IEnumerable<CategoryModel>> GetListCategoryByName(string cateName, int pageIndex, int pageSize)
+        {
+            //cateName = Regex.Replace(cateName, @"[^\sa-zA-Z]", string.Empty).Trim();
+            //cateName = await ConvertString(cateName);
+            //string param1 = new SqlParameter("@Name", cateName);
+            var listCate = await (from cate in _context.Categories
+                                  .Where( cate => cate.Name.Contains(cateName))
+                                   select new CategoryModel()
+                                   {
+                                       Id = cate.Id,
+                                       Name = cate.Name,
+                                       Image = cate.Image,
+                                       CreateAt = cate.CreateAt,
+                                       UpdateAt = cate.UpdateAt,
+                                   }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listCate;
         }
         public async Task<CategoryDto> CreateCategory(CategoryDto category)
         {
@@ -109,6 +129,17 @@ namespace DeliveryVHGP_WebApi.Repositories
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
             return time;
+        }
+        public async Task<string> ConvertString(string stringInput)
+        {
+            stringInput = stringInput.ToUpper();
+            string convert = "ĂÂÀẰẦÁẮẤẢẲẨÃẴẪẠẶẬỄẼỂẺÉÊÈỀẾẸỆÔÒỒƠỜÓỐỚỎỔỞÕỖỠỌỘỢƯÚÙỨỪỦỬŨỮỤỰÌÍỈĨỊỲÝỶỸỴĐăâàằầáắấảẳẩãẵẫạặậễẽểẻéêèềếẹệôòồơờóốớỏổởõỗỡọộợưúùứừủửũữụựìíỉĩịỳýỷỹỵđ";
+string To = "AAAAAAAAAAAAAAAAAEEEEEEEEEEEOOOOOOOOOOOOOOOOOUUUUUUUUUUUIIIIIYYYYYDaaaaaaaaaaaaaaaaaeeeeeeeeeeeooooooooooooooooouuuuuuuuuuuiiiiiyyyyyd";
+for (int i = 0; i < To.Length; i++)
+            {
+                stringInput = stringInput.Replace(convert[i], To[i]);
+            }
+            return stringInput;
         }
     }
 }
