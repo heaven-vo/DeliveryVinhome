@@ -105,11 +105,11 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //PUT: api/v1/Category?id
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCategory(string id, CategoryDto category)
+        public async Task<ActionResult> UpdateCategory(string id, CategoryDto category, Boolean imgUpdate)
         {
             try
             {
-                var CategoryToUpdate = await _categoriesRepository.UpdateCategoryById(id, category);
+                var CategoryToUpdate = await _categoriesRepository.UpdateCategoryById(id, category, imgUpdate);
                 return Ok(category);
             }
             catch
