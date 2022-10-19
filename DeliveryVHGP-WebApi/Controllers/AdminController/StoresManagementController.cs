@@ -104,7 +104,8 @@ namespace DeliveryVHGP_WebApi.Controllers
             try
             {
                 var productToUpdate = await _storeRepository.UpdateStore(storeId, store, imgUpdate);
-                return Ok(store);
+                var storee = await _storeRepository.GetStoreById(storeId);
+                return Ok(storee);
             }
             catch
             {
