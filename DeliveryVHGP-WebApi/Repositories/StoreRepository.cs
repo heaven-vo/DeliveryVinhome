@@ -159,6 +159,8 @@ namespace DeliveryVHGP_WebApi.Repositories
         {
             var deStore = await _context.Stores.FindAsync(storeId);
             _context.Stores.Remove(deStore);
+            var account = await _context.Accounts.FindAsync(storeId);
+            _context.Accounts.Remove(account);
             await _context.SaveChangesAsync();
 
             return deStore;
