@@ -49,7 +49,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<IEnumerable<CategoryModel>> GetListCategoryByName(string cateName, int pageIndex, int pageSize)
         {
             //cateName = Regex.Replace(cateName, @"[^\sa-zA-Z]", string.Empty).Trim();
-            //cateName = await ConvertString(cateName);
+            cateName = await ConvertString(cateName);
             //string param1 = new SqlParameter("@Name", cateName);
             var listCate = await (from cate in _context.Categories
                                   .Where( cate => cate.Name.Contains(cateName))
@@ -59,7 +59,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        Name = cate.Name,
                                        Image = cate.Image,
                                        CreateAt = cate.CreateAt,
-                                       UpdateAt = cate.UpdateAt,
+                                       UpdateAt = cate.UpdateAt
                                    }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listCate;
         }
@@ -87,13 +87,16 @@ namespace DeliveryVHGP_WebApi.Repositories
             return CateInMenuId;
 
         }
-        public async Task<Object> UpdateCategoryById(string categoryId, CategoryDto category)
+        public async Task<Object> UpdateCategoryById(string categoryId, CategoryDto category, Boolean imgUpdate)
         {
             string fileImg = "ImagesCategorys";
             string time = await GetTime();
             var result = await _context.Categories.FindAsync(categoryId);
             result.Name = category.Name;
-            result.Image = await _fileService.UploadFile(fileImg, category.Image);
+            if (imgUpdate == true)
+            {
+                result.Image = await _fileService.UploadFile(fileImg, category.Image);
+            }
             result.UpdateAt = time;
             _context.Entry(result).State = EntityState.Modified;
             try

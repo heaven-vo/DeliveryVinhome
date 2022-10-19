@@ -172,22 +172,23 @@ namespace DeliveryVHGP_WebApi.Repositories
             return account;
         }
 
-        public async Task<StoreDto> UpdateStore(string storeId, StoreDto store)
+        public async Task<StoreDto> UpdateStore(string storeId, StoreDto store , Boolean imgUpdate)
         {
             string fileImg = "ImagesStores";
             string time = await _timeStageService.GetTime();
             var result = await _context.Stores.FindAsync(storeId);
-            var brand = _context.Brands.FirstOrDefault(b => b.Id == store.BrandId);
-            var building = _context.Buildings.FirstOrDefault(bs => bs.Id == store.BuildingId);
-            var storeCate = _context.StoreCategories.FirstOrDefault(sc => sc.Id == store.StoreCategoryId);
             var account = _context.Accounts.FirstOrDefault(x => x.Id == storeId);
+
             result.Id = store.Id;
             result.Name = store.Name;
             result.Rate = store.Rate;
             result.BrandId = store.BrandId;
             result.BuildingId = store.BuildingId;
             result.StoreCategoryId = store.StoreCategoryId;
-            result.Image = await _fileService.UploadFile(fileImg, store.Image);
+            if (imgUpdate == true)
+            {
+                result.Image = await _fileService.UploadFile(fileImg, store.Image);
+            }
             result.OpenTime = store.OpenTime;
             result.CloseTime = store.CloseTime;
             result.Phone = store.Phone;
@@ -195,6 +196,7 @@ namespace DeliveryVHGP_WebApi.Repositories
             result.Status = store.Status;
             result.UpdateAt = time;
             account.Password = store.Password;
+
             try
             {
                 await _context.SaveChangesAsync();
