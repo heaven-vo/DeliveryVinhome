@@ -41,6 +41,10 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        UpdateAt = store.UpdateAt
 
                                    }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach(var store in listStore)
+            {
+                store.Account = await GetAccountInStore(store.Id);
+            }    
             return listStore;
         }
         public async Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize)
@@ -90,6 +94,10 @@ namespace DeliveryVHGP_WebApi.Repositories
                                        UpdateAt = store.UpdateAt
 
                                    }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var store in listStore)
+            {
+                store.Account = await GetAccountInStore(store.Id);
+            }
             return listStore;
         }
         public async Task<Object> GetStoreById(string storeId)
