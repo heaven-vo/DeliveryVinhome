@@ -49,7 +49,7 @@ namespace DeliveryVHGP_WebApi.Repositories
         public async Task<IEnumerable<CategoryModel>> GetListCategoryByName(string cateName, int pageIndex, int pageSize)
         {
             //cateName = Regex.Replace(cateName, @"[^\sa-zA-Z]", string.Empty).Trim();
-            cateName = await ConvertString(cateName);
+            //cateName = await ConvertString(cateName);
             //string param1 = new SqlParameter("@Name", cateName);
             var listCate = await (from cate in _context.Categories
                                   .Where( cate => cate.Name.Contains(cateName))

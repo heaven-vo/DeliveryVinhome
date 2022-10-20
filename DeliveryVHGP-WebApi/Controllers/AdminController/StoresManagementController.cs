@@ -99,11 +99,29 @@ namespace DeliveryVHGP_WebApi.Controllers
         /// </summary>
         //PUT: api/v1/store?id
         [HttpPut("{storeId}")]
-        public async Task<ActionResult> UpdateProById(string storeId, StoreDto store , Boolean imgUpdate)
+        public async Task<ActionResult> UpdateStoreById(string storeId, StoreDto store , Boolean imgUpdate)
         {
             try
             {
                 var productToUpdate = await _storeRepository.UpdateStore(storeId, store, imgUpdate);
+                var storee = await _storeRepository.GetStoreById(storeId);
+                return Ok(storee);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
+        /// <summary>
+        /// Update status store  with pagination
+        /// </summary>
+        //PUT: api/v1/store?id
+        [HttpPut("status/{storeId}")]
+        public async Task<ActionResult> UpdateStatusStoreById(string storeId, StatusStoreDto store)
+        {
+            try
+            {
+                var productToUpdate = await _storeRepository.UpdateStatusStore(storeId, store);
                 var storee = await _storeRepository.GetStoreById(storeId);
                 return Ok(storee);
             }
