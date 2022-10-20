@@ -218,5 +218,29 @@ namespace DeliveryVHGP_WebApi.Repositories
             }
             return store;
         }
+        public async Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store)
+        {
+            var result = await _context.Stores.FindAsync(storeId);
+            var status =  _context.Orders.FirstOrDefault(x => x.StoreId == storeId);
+            var OrderStatus = _context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
+
+            result.Id = store.Id;
+            if (status.StatusId == "4" || status.StatusId == "5")
+            {
+                result.Status = store.Status;
+            }
+            if (status.StatusId == "1" || status.StatusId == "2" || status.StatusId == "3")
+                throw new Exception("Hiện tại cửa hàng đang có đơn hàng trong menu!!" +
+                                             "Vui lòng kiểm tra lại đơn hàng và thử lại");
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return store;
+        }
     }
 }
