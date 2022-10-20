@@ -139,7 +139,7 @@ namespace DeliveryVHGP_WebApi.Repositories
                     StoreCategoryId = categoryStore.Id,
                     BrandId = brand.Id,
                     BuildingId = building.Id,
-                    Status = store.Status,
+                    Status = true,
                     CreateAt = time
                 });
             _context.Accounts.Add(

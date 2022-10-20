@@ -720,6 +720,8 @@ namespace DeliveryVHGP_WebApi.Models
 
                 entity.Property(e => e.CreateAt).HasMaxLength(50);
 
+                entity.Property(e => e.CreditAccount).HasMaxLength(100);
+
                 entity.Property(e => e.Image).HasMaxLength(250);
 
                 entity.Property(e => e.Name).HasMaxLength(100);
@@ -733,8 +735,6 @@ namespace DeliveryVHGP_WebApi.Models
                     .IsFixedLength();
 
                 entity.Property(e => e.Slogan).HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.Property(e => e.StoreCategoryId).HasMaxLength(50);
 
