@@ -13,7 +13,7 @@
         public string? StoreCategoryId { get; set; }
         public string? Slogan { get; set; }
         public string? Phone { get; set; }
-        public string? Status { get; set; }
+        public bool? Status { get; set; }
         public string? Password { get; set; }
 
 
