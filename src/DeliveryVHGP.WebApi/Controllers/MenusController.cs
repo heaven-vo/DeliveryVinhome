@@ -32,6 +32,26 @@ namespace DeliveryVHGP.WebApi.Controllers
         }
 
         /// <summary>
+        /// Get list category in menu in realtime by modeId(when click a mode 1 in customer web)
+        /// </summary>
+        [HttpGet("now/categoies")]
+        public async Task<ActionResult<MenuNotProductView>> GetMenuByModeWithListCategory(string modeId)
+        {
+            return Ok(await repository.Menu.GetMenuByModeAndShowListCategory(modeId));
+        }
+
+
+        /// <summary>
+        /// Get list stores in menu in realtime by modeId(when click a mode 1 in customer web)
+        /// </summary>
+        [HttpGet("now/stores")]
+        public async Task<ActionResult<StoreInMenuView>> GetMenuByModeWithListStore(string modeId, int page, int pageSize)
+        {
+            return Ok(await repository.Menu.GetListStoreInMenuNow(modeId, page, pageSize));
+        }
+
+
+        /// <summary>
         /// Get list menus in realtime by modeId(when click a mode in customer web)
         /// *Note: gb = store(group by store), cate(group by catedory)
         /// </summary>

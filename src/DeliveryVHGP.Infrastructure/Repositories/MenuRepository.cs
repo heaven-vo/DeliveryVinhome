@@ -55,6 +55,59 @@ namespace DeliveryVHGP.WebApi.Repositories
             return menuDto;
         }
 
+        //Get a menu by mode id and show list category (in customer web) 
+        public async Task<MenuNotProductView> GetMenuByModeAndShowListCategory(string modeId)
+        {
+            double time = await GetTime();
+            var menuView = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuNotProductView
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Image = x.Image,
+                StartTime = x.StartHour,
+                EndTime = x.EndHour
+            }).FirstOrDefaultAsync();
+            if (menuView.Id == null) throw new Exception("Not found menu");
+
+            var listCategory = await (from menu in context.Menus
+                                      join cm in context.CategoryInMenus on menu.Id equals cm.MenuId
+                                      join category in context.Categories on cm.CategoryId equals category.Id
+                                      where menu.Id == menuView.Id
+                                      select new CategoryInMenuView
+                                      {
+                                          Id = category.Id,
+                                          Name = category.Name,
+                                          Image = category.Image
+                                      }).ToListAsync();
+
+            menuView.ListCategoryInMenus = listCategory;
+            return menuView;
+        }
+
+        //Get a menu by mode id and show list store (in customer web) 
+        public async Task<List<StoreInMenuView>> GetListStoreInMenuNow(string modeId, int page, int pageSize)
+        {
+            double time = await GetTime();
+            var menuId = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
+            ).FirstOrDefaultAsync();
+            if (menuId == null) throw new Exception("Not found menu");
+
+            var listStore = await (from menu in context.Menus
+                                   join sm in context.StoreInMenus on menu.Id equals sm.MenuId
+                                   join store in context.Stores on sm.StoreId equals store.Id
+                                   join bu in context.Buildings on store.BuildingId equals bu.Id
+                                   join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                   where menu.Id == menuId && store.Status == true
+                                   select new StoreInMenuView
+                                   {
+                                       Id = store.Id,
+                                       Name = store.Name,
+                                       Image = store.Image,
+                                       Building = bu.Name,
+                                       StoreCategory = sc.Name
+                                   }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listStore;
+        }
         //Get a menu by mode id and group by store (in customer web) 
         public async Task<MenuView> GetMenuByModeAndGroupByStore(string modeId, int page, int pageSize)
         {
@@ -72,7 +125,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var listStore = await (from menu in context.Menus
                                    join sm in context.StoreInMenus on menu.Id equals sm.MenuId
                                    join store in context.Stores on sm.StoreId equals store.Id
-                                   where menu.Id == menuView.Id
+                                   where menu.Id == menuView.Id && store.Status == true
                                    select new CategoryStoreInMenu
                                    {
                                        Id = store.Id,
@@ -147,7 +200,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             listCategory = listCategory.Where(x => x.ListProducts != null).ToList();
             return listCategory;
         }
-
+        //--Product in with filed______________________________________________________________________________________________________
         //Get all product when click see all product in menu group by store (customer web)
         public async Task<CategoryStoreInMenu> GetAllProductInMenuByStoreId(string storeId,string menuId, int page, int pageSize)
         {
@@ -188,7 +241,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             return cateView;
         }
 
-        //Product-----------------------------------------------------------------------------------------------------------
+        //-- Query Product-----------------------------------------------------------------------------------------------------------
 
         public async Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize)
         {
