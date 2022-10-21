@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP.Infrastructure.Services;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -218,9 +219,9 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store)
         {
-            var result = await _context.Stores.FindAsync(storeId);
-            var status =  _context.Orders.FirstOrDefault(x => x.StoreId == storeId);
-            var OrderStatus = _context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
+            var result = await context.Stores.FindAsync(storeId);
+            var status =  context.Orders.FirstOrDefault(x => x.StoreId == storeId);
+            var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
 
             result.Id = store.Id;
             if (status.StatusId == "4" || status.StatusId == "5")
@@ -232,7 +233,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                              "Vui lòng kiểm tra lại đơn hàng và thử lại");
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch
             {

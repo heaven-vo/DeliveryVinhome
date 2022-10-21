@@ -1,5 +1,6 @@
 ﻿using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
+using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryVHGP.WebApi.Controllers
@@ -117,8 +118,8 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                var productToUpdate = await _storeRepository.UpdateStatusStore(storeId, store);
-                var storee = await _storeRepository.GetStoreById(storeId);
+                var productToUpdate = await repository.Store.UpdateStatusStore(storeId, store);
+                var storee = await repository.Store.GetStoreById(storeId);
                 return Ok(storee);
             }
             catch

@@ -1,6 +1,7 @@
 ﻿using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
+using DeliveryVHGP_WebApi.ViewModels;
 
 namespace DeliveryVHGP.Core.Interface.IRepositories
 {
