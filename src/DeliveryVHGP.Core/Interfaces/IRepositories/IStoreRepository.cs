@@ -14,5 +14,6 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<StoreDto> CreatNewStore(StoreDto store);
         Task<Object> DeleteStore(string storeId);
         Task<StoreDto> UpdateStore(string storeId, StoreDto store, Boolean imgUpdate);
+        Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store);
         }
 }
