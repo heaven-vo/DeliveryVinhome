@@ -11,7 +11,7 @@
 	  <NoWarn>$(NoWarn);1591</NoWarn>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>DeliveryVHGP_WebApi</RootNamespace>
+    <RootNamespace>DeliveryVHGP.WebApi</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
