@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryVHGP-WebApi", "DeliveryVHGP-WebApi\DeliveryVHGP-WebApi.csproj", "{0944E907-51F4-407E-A089-B92821465AE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeliveryVHGP.WebApi", "src\DeliveryVHGP.WebApi\DeliveryVHGP.WebApi.csproj", "{0944E907-51F4-407E-A089-B92821465AE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C9F73D99-2B34-4312-B39F-0F32016CC332}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DC6BA3D-3644-4A9F-A7FB-A8B710E22665}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryVHGP.Core", "src\DeliveryVHGP.Core\DeliveryVHGP.Core.csproj", "{EB954DDE-EE78-447F-B33B-A002CA40D809}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeliveryVHGP.Infrastructure", "src\DeliveryVHGP.Infrastructure\DeliveryVHGP.Infrastructure.csproj", "{07FD7C39-6F31-484B-A199-119A186D6450}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +23,22 @@ Global
 		{0944E907-51F4-407E-A089-B92821465AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0944E907-51F4-407E-A089-B92821465AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0944E907-51F4-407E-A089-B92821465AE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB954DDE-EE78-447F-B33B-A002CA40D809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB954DDE-EE78-447F-B33B-A002CA40D809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB954DDE-EE78-447F-B33B-A002CA40D809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB954DDE-EE78-447F-B33B-A002CA40D809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07FD7C39-6F31-484B-A199-119A186D6450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07FD7C39-6F31-484B-A199-119A186D6450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07FD7C39-6F31-484B-A199-119A186D6450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07FD7C39-6F31-484B-A199-119A186D6450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0944E907-51F4-407E-A089-B92821465AE0} = {C9F73D99-2B34-4312-B39F-0F32016CC332}
+		{EB954DDE-EE78-447F-B33B-A002CA40D809} = {C9F73D99-2B34-4312-B39F-0F32016CC332}
+		{07FD7C39-6F31-484B-A199-119A186D6450} = {C9F73D99-2B34-4312-B39F-0F32016CC332}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E16D6449-7C53-4327-9BD9-C8252855FA61}
