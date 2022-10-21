@@ -1,0 +1,359 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DeliveryVHGP.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AccountManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Account with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsManagementController.GetById(System.String)">
+            <summary>
+            Get a brand by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsManagementController.CreateBrand(DeliveryVHGP.Core.Models.BrandModels)">
+            <summary>
+            Create a brand
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsManagementController.DeleteBrand(System.String)">
+            <summary>
+            Delete a brand by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsManagementController.UpdateBrand(System.String,DeliveryVHGP.Core.Models.BrandModels)">
+            <summary>
+            Update Brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all category with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.GetCategoryById(System.String)">
+            <summary>
+            Get Category by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.GetAllProductInMenu(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list Category in a menu
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.GetListStoreByName(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all category by name with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.CreateCategory(DeliveryVHGP.Core.Models.CategoryDto)">
+            <summary>
+            Create a category
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.DeleteStoreCategory(System.String)">
+            <summary>
+            Delete a Category In Menu by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesManagementController.UpdateCategory(System.String,DeliveryVHGP.Core.Models.CategoryDto,System.Boolean)">
+            <summary>
+            Update Category with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CollectionsManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all collection with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CollectionsManagementController.CreateCollection(DeliveryVHGP.Core.Models.CollectionModel)">
+            <summary>
+            Create a collection
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersManagementController.GetOrderDetail(System.String)">
+            <summary>
+            Get product by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all shipper with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.GetCategoryById(System.String)">
+            <summary>
+            Get Shipper by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.CreateShipper(DeliveryVHGP.Core.Models.ShipperDto)">
+            <summary>
+            Create a shipper
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all storeCategory with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryManagementController.CreateStoreCategory(DeliveryVHGP.Core.Models.StoreCategoryDto)">
+            <summary>
+            Create a storeCategory
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryManagementController.DeleteStoreCategory(System.String)">
+            <summary>
+            Delete a storeCategory by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryManagementController.UpdateStoreCategory(System.String,DeliveryVHGP.Core.Models.StoreCategoryModel)">
+            <summary>
+            Update storeCategory with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all store with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetListStoreByBrand(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all store by brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetListStoreByName(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all store by brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetStoreById(System.String)">
+            <summary>
+            Get store by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.CreateNewStore(DeliveryVHGP.Core.Models.StoreDto)">
+            <summary>
+            Create a new store
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.DeleteStore(System.String)">
+            <summary>
+            Delete for Store
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.UpdateStoreById(System.String,DeliveryVHGP.Core.Models.StoreDto,System.Boolean)">
+            <summary>
+            Update status store  with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.UpdateStatusStoreById(System.String,DeliveryVHGP_WebApi.ViewModels.StatusStoreDto)">
+            <summary>
+            Update status store  with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AreaController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Bulding with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AreaController.GetBuildingByAreaId(System.String)">
+            <summary>
+            Get building by Areaid with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AreaController.CreateArea(DeliveryVHGP.Core.Models.AreaModel)">
+            <summary>
+            Create a Area 
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AreaController.DeleteArea(System.String)">
+            <summary>
+            Delete a area by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.AreaController.UpdateArea(System.String,DeliveryVHGP.Core.Models.AreaDto)">
+            <summary>
+            Update Area with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BrandsController.GetById(System.String)">
+            <summary>
+            Get a brand by id
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BuildingController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Bulding with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.BuildingController.CreateBuilding(DeliveryVHGP.Core.Models.BuildingModel)">
+            <summary>
+            Create a Building (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all category with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CategoriesController.GetAllProductInMenu(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list Category in a menu
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CollectionsController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all collection with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CollectionsController.CreateCollection(DeliveryVHGP.Core.Models.CollectionModel)">
+            <summary>
+            Create a collection
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CustomerController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all Customer with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.CustomerController.CreateCustomer(DeliveryVHGP.Core.Models.CustomerModels)">
+            <summary>
+            Create a customer (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenusByMode(System.String)">
+            <summary>
+            Get all menu by modeId (store, admin web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenusByModeId(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list menus in realtime by modeId(when click a mode in customer web)
+            *Note: gb = store(group by store), cate(group by catedory)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuByStoreId(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list category in include products in menu by store id(when click a menu in store web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetAllProductInMenuByStoreId(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list products in a menu and a store(when click see all in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetAllProductInMenuByCategoryId(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list products in a menu and a category(when click see all in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetAllProductInMenuByCategoryIdAndStoreId(System.String,System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list products in a menu and a category(when click see all in store web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetListProductNotInMenuByCategoryIdAndStoreId(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list products in store and not in a menu (when click add product to menu in store web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.AddProductsToMenu(System.String,DeliveryVHGP.Core.Models.ProductsInMenuModel)">
+            <summary>
+            Add a list product into menu
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrder(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrderByStore(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders by store (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrderByStoreByStatus(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders by store (store web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrderDetail(System.String)">
+            <summary>
+            Get order by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.CreatNewOrder(DeliveryVHGP.Core.Models.OrderDto)">
+            <summary>
+            Create a order (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.UpdateOrder(System.String,DeliveryVHGP.Core.Models.OrderStatusModel)">
+            <summary>
+            Update a status order (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.GetProduct(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get product by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.GetProductDetail(System.String)">
+            <summary>
+            Get product by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.CreateProduct(DeliveryVHGP.Core.Models.ProductModel)">
+            <summary>
+            Create a product
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.UpdateProById(System.String,DeliveryVHGP.Core.Models.ProductDto)">
+            <summary>
+            Update product Detail with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.DeleteProductById(System.String)">
+            <summary>
+            Delete product with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all storeCategory with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryController.CreateStoreCategory(DeliveryVHGP.Core.Models.StoreCategoryDto)">
+            <summary>
+            Create a storeCategory
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresController.GetAll(System.Int32,System.Int32)">
+            <summary>
+            Get list all store with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresController.GetListStoreByBrand(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all store by brand with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresController.GetListStoreByName(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all store by brand with pagination
+            </summary>
+        </member>
+    </members>
+</doc>
