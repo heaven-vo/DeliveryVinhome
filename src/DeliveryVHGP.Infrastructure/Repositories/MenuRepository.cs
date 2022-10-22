@@ -256,7 +256,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     Name = store.Name,
                                     Building = bu.Name,
                                     StoreCategory = sc.Name
-                                }).DistinctBy(x => x.Id).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                                }).GroupBy(x => x.Id).Select(x => x.First()).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return stores;
         }
         
