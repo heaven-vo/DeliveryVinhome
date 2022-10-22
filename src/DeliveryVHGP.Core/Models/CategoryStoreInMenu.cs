@@ -22,10 +22,14 @@
         public string? Image { get; set; }
         public string? Name { get; set; }
     }
-    public class StoreCategoryInMenuView
+    public class StoreInProductView
     {
         public string Id { get; set; } = null!;
         public string? Image { get; set; }
         public string? Name { get; set; }
+        public string? CloseTime { get; set; }
+        public string? OpenTime { get; set; }
+        public string? Location { get; set; }
+        public List<ProductViewInList> ListProducts { get; set; }
     }
 }

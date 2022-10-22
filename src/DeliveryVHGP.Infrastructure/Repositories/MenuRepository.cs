@@ -200,17 +200,45 @@ namespace DeliveryVHGP.WebApi.Repositories
             listCategory = listCategory.Where(x => x.ListProducts != null).ToList();
             return listCategory;
         }
+        public async Task<List<StoreInMenuView>> GetListStoreInMenuFilerByCategory(string menuId, string categoryId, int page, int pageSize)
+        {
+            var stores = await (from menu in context.Menus
+                                join pm in context.ProductInMenus on menu.Id equals pm.MenuId
+                                join product in context.Products on pm.ProductId equals product.Id
+                                join cate in context.Categories on product.CategoryId equals cate.Id
+                                join store in context.Stores on product.StoreId equals store.Id
+                                join bu in context.Buildings on store.BuildingId equals bu.Id
+                                join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                where menu.Id == menuId && cate.Id == categoryId
+                                select new StoreInMenuView
+                                {
+                                    Id = store.Id,
+                                    Image = store.Image,
+                                    Name = store.Name,
+                                    Building = bu.Name,
+                                    StoreCategory = sc.Name
+                                }).GroupBy(x => x.Id).Select(x => x.First()).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            return stores;
+        }
         //--Product in with filed______________________________________________________________________________________________________
         //Get all product when click see all product in menu group by store (customer web)
-        public async Task<CategoryStoreInMenu> GetAllProductInMenuByStoreId(string storeId,string menuId, int page, int pageSize)
+        public async Task<StoreInProductView> GetAllProductInMenuByStoreId(string storeId,string menuId, int page, int pageSize)
         {
-            var storeView = await context.Stores.Where(x => x.Id == storeId).Select( x => new CategoryStoreInMenu
-                               {
-                                   Id = x.Id,
-                                   Name = x.Name,
-                                   Image = x.Image
-
-                               }).FirstOrDefaultAsync();
+            var storeView = await (from store in context.Stores
+                                join bu in context.Buildings on store.BuildingId equals bu.Id
+                                join cluster in context.Clusters on bu.ClusterId equals cluster.Id
+                                join area in context.Areas on cluster.AreaId equals area.Id
+                                where store.Id == storeId && store.Status == true
+                                select new StoreInProductView
+                                {
+                                    Id=store.Id,
+                                    Image = store.Image,
+                                    Name = store.Name,
+                                    OpenTime = store.OpenTime,
+                                    CloseTime = store.CloseTime,
+                                    Location = bu.Name + ", " + area.Name + ", Vinhomes Grand Park"
+                                }).FirstOrDefaultAsync();
+            if (storeView == null) throw new Exception("Not found Store Or Store closed");
             storeView.ListProducts = await GetListProductInMenuByStoreId(storeId, menuId, page, pageSize);
             return storeView;
         }
@@ -273,7 +301,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join category in context.Categories on product.CategoryId equals category.Id
                                       join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                       join menu in context.Menus on pm.MenuId equals menu.Id
-                                      where category.Id == categoryId && menu.Id == menuId
+                                      where category.Id == categoryId && menu.Id == menuId && store.Status == true
                                       select new ProductViewInList
                                       {
                                           Id = product.Id,
@@ -332,11 +360,12 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          PricePerPack = product.PricePerPack,
                                          PackDes = product.PackDescription
                                      }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            // Remove duplicate
+            // Remove product in menu
             foreach(var product in listInMenu)
             {
                 listProduct.RemoveAll(x => x.Id == product);
             }
+            // Remove duplicate
             return listProduct.GroupBy(x => x.Id).Select(x => x.First()).ToList();
         }
 

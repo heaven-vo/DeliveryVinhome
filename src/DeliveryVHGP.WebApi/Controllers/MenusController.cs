@@ -95,6 +95,23 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(menu);
         }
 
+        /// <summary>
+        /// Get list stores in menu by cate id(when click a cate in customer web)
+        /// </summary>
+        [HttpGet("{menuId}/stores/filterByCate")]
+        public async Task<ActionResult<List<StoreInMenuView>>> GetListStoreInMenuFilerByCategory(string menuId, string cateId, int page, int pageSize)
+        {
+            List<StoreInMenuView> menu = new List<StoreInMenuView>();
+            try
+            {
+                menu = await repository.Menu.GetListStoreInMenuFilerByCategory(menuId, cateId, page, pageSize);
+            }
+            catch
+            {
+                return NoContent();
+            }
+            return Ok(menu);
+        }
 
         /// <summary>
         /// Get list products in a menu and a store(when click see all in customer web)
