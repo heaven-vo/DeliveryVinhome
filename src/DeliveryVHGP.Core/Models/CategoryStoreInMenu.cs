@@ -32,4 +32,10 @@
         public string? Location { get; set; }
         public List<ProductViewInList> ListProducts { get; set; }
     }
+    public class StoreCategoryInMenuView
+    {
+        public string Id { get; set; }
+        public string? Name { get; set; }
+        public List<StoreInMenuView> ListStores { get; set; }
+    }
 }

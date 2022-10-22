@@ -9,6 +9,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<MenuDto> GetMenuDetail(string menuId);
         Task<List<MenuView>> GetListMenuByModeId(string modeId);
         Task<MenuNotProductView> GetMenuByModeAndShowListCategory(string modeId);
+        Task<List<StoreCategoryInMenuView>> GetListStoreCateInMenuNow(string modeId, int storeCateSize, int storeSize);
         Task<List<StoreInMenuView>> GetListStoreInMenuNow(string modeId, int page, int pageSize);
         Task<MenuView> GetMenuByModeAndGroupByStore(string modeId, int page, int pageSize);
         Task<MenuView> GetMenuByModeAndGroupByCategory(string modeId, int page, int pageSize) ;
