@@ -21,9 +21,8 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                var result = Ok(await repository.Order.GetAll(pageIndex, pageSize));
+                return Ok(await repository.Order.GetAll(pageIndex, pageSize));
 
-                return Ok(result);
             }
             catch
             {
