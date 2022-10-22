@@ -229,7 +229,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 result.Status = store.Status;
             }
             if (status.StatusId == "1" || status.StatusId == "2" || status.StatusId == "3")
-                throw new Exception("Hiện tại cửa hàng đang có đơn hàng trong menu!!" +
+                throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                              "Vui lòng kiểm tra lại đơn hàng và thử lại");
             try
             {

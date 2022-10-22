@@ -106,7 +106,11 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             catch
             {
-                return Conflict();
+               return Ok(new
+                {
+                    message = "Hiện tại cửa hàng đang có trong menu !!" +
+                                              "Vui lòng xóa cửa hàng khỏi menu và thử lại "
+                });
             }
         }
         /// <summary>
@@ -120,11 +124,16 @@ namespace DeliveryVHGP.WebApi.Controllers
             {
                 var productToUpdate = await repository.Store.UpdateStatusStore(storeId, store);
                 var storee = await repository.Store.GetStoreById(storeId);
-                return Ok(storee);
+                return Ok(new {StatusCode = "Successful" , data = storee});
             }
             catch
             {
-                return Conflict();
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = "Hiện tại cửa hàng đang đơn hàng chưa hoàn thành !!" +
+                                              "Vui lòng kiểm tra lại đơn hàng và thử lại "
+                });
             }
         }
     }
