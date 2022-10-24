@@ -8,6 +8,8 @@
         public double? ShipCost { get; set; }
         //public string? PaymentId { get; set; }
         public string? PaymentName { get; set; }
+        public string? ModeId { get; set; }
+
         //public string? BuildingId { get; set; }
         public string? BuildingName { get; set; }
         //public string? StoreId { get; set; }
