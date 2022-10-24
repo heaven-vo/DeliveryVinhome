@@ -22,7 +22,7 @@
     {
         //public int? Count { get; set; }
 
-        public List<ProductInMenuView> Product { get; set; }
-        public List<StoreInMenuVieww> Store { get; set; }
+        public List<ProductViewInList> Product { get; set; }
+        public List<StoreInMenuView> Store { get; set; }
     }
 }
