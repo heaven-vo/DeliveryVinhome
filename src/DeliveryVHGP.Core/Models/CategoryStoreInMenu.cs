@@ -38,4 +38,27 @@
         public string? Name { get; set; }
         public List<StoreInMenuView> ListStores { get; set; }
     }
+    public class Request
+    {
+        public string KeySearch { get; set; } 
+        public string SearchBy { get; set; } 
+    }
+    public class ProductInStoreInMenuVieww
+    {
+        public string Id { get; set; } = null!;
+        public string? Name { get; set; }
+        public string? Image { get; set; }
+        public List<ProductViewInList> ListProducts { get; set; }
+
+    }
+    public class StoreInMenuVieww
+    {
+        public string Id { get; set; } = null!;
+        public string? Name { get; set; }
+    }
+    public class ProductInMenuView
+    {
+        public string Id { get; set; } = null!;
+        public string? Name { get; set; }
+    }
 }

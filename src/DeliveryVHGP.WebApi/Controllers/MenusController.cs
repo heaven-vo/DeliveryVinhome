@@ -30,7 +30,24 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             return Ok(await repository.Menu.GetListMenuByModeId(modeId));
         }
-
+        /// <summary>
+        /// Get list all store by Name with pagination
+        /// </summary>
+        //GET: api/v1/storeByname?pageIndex=1&pageSize=3
+        [HttpGet("ByMenuId/keySearch")]
+        public async Task<ActionResult> GetListStoreByName(string KeySearch, string menuId, int pageIndex, int pageSize)
+        {
+            return Ok(await repository.Menu.Filter(KeySearch, menuId, pageIndex, pageSize));
+        }
+        /// <summary>
+        /// Get list product in store by name with pagination (customer web)
+        /// </summary>
+        //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3
+        [HttpGet("keySearch/store-name")]
+        public async Task<ActionResult> GetListProductInStoreByName(string KeySearch, string menuId, int pageIndex, int pageSize)
+        {
+            return Ok(await repository.Menu.GetListProductInStoreInMenuByName(KeySearch, menuId, pageIndex, pageSize));
+        }
         /// <summary>
         /// Get list category in menu in realtime by modeId(when click a mode 1 in customer web)
         /// </summary>

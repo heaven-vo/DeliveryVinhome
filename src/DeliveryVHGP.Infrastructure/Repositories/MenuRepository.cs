@@ -14,7 +14,6 @@ namespace DeliveryVHGP.WebApi.Repositories
         public MenuRepository(DeliveryVHGP_DBContext context) : base(context)
         {
         }
-
         public async Task<List<MenuView>> GetListMenuByModeId(string modeId)
         {
             var listMenu = await context.Menus.Where(m => m.ModeId == modeId).Select(x => new MenuView { 
@@ -54,7 +53,72 @@ namespace DeliveryVHGP.WebApi.Repositories
             };
             return menuDto;
         }
-
+        //Get list store/product by name (in customer web) 
+        public async Task<MenuViewModel> Filter(string KeySearch ,string menuId,int page, int pageSize)
+        {
+            MenuViewModel Menu = new MenuViewModel();
+            Menu.Store = await (from store in context.Stores.Where(store => store.Name.ToLower().Contains(KeySearch.ToLower()))
+                                join sm in context.StoreInMenus on store.Id equals sm.StoreId
+                                join m in context.Menus on sm.MenuId equals m.Id
+                                where m.Id == menuId
+                                select new StoreInMenuVieww
+                                {
+                                    Id = store.Id,
+                                    Name = store.Name
+                                }
+                                   ).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            Menu.Product = await (from product in context.Products.Where(product => product.Name.ToLower().Contains(KeySearch.ToLower()))
+                                  join store in context.Stores on product.StoreId equals store.Id
+                                  join pm in context.ProductInMenus on product.Id equals pm.ProductId
+                                  join menu in context.Menus on pm.MenuId equals menu.Id
+                                  where menu.Id == menuId
+                                       select new ProductInMenuView
+                                       {
+                                           Id = product.Id,
+                                           Name = product.Name,
+                                       }
+                                       ).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                
+                return Menu;
+        }
+        //Get list store/product by KeyName (in customer web) 
+        public async Task<List<ProductInStoreInMenuVieww>> GetListProductInStoreInMenuByName(string KeySearch ,string menuId,int page, int pageSize)
+        {
+            var lsrStore = await (from store in context.Stores.Where(store => store.Name.ToLower().Contains(KeySearch.ToLower()))
+                                join sm in context.StoreInMenus on store.Id equals sm.StoreId
+                                join m in context.Menus on sm.MenuId equals m.Id
+                                where m.Id == menuId
+                                select new ProductInStoreInMenuVieww
+                                {
+                                    Id = store.Id,
+                                    Name = store.Name,
+                                    Image = store.Image
+                                }
+                                   ).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var store in lsrStore)
+            {
+                var lrsProduct = await (from product in context.Products
+                                        join s in context.Stores on product.StoreId equals s.Id
+                                        join pm in context.ProductInMenus on product.Id equals pm.ProductId
+                                        join menu in context.Menus on pm.MenuId equals menu.Id
+                                        where s.Id == store.Id && menu.Id == menuId
+                                        select new ProductViewInList
+                                        {
+                                            Id = product.Id,
+                                            Image = product.Image,
+                                            Name = product.Name,
+                                            PricePerPack = pm.Price,
+                                            PackDes = product.PackDescription,
+                                            StoreId = store.Id,
+                                            StoreName = store.Name,
+                                            Unit = product.Unit,
+                                            MinimumDeIn = product.MinimumDeIn,
+                                            productMenuId = pm.Id
+                                        }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                store.ListProducts = lrsProduct;
+            }
+                return lsrStore;
+        }
         //Get a menu by mode id and show list category (in customer web) 
         public async Task<MenuNotProductView> GetMenuByModeAndShowListCategory(string modeId)
         {
