@@ -11,7 +11,7 @@
         public string? Note { get; set; }
         public double? ShipCost { get; set; }
         public string? PaymentName { get; set; }
-        //public string? ShipperName { get; set; }
+        public string? ModeId { get; set; }
         public string? StatusName { get; set; }
         public string? Time { get; set; }
         //public TimeCreateOrder TimeCreate{ get; set; }

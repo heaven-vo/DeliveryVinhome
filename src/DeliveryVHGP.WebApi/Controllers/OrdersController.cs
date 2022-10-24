@@ -69,11 +69,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             try
             {
                 var result = await repository.Order.CreatNewOrder(order);
-                return Ok(result);
+                return Ok( new { StatusCode = "Successful" , data = result });
             }
             catch
             {
-                return Conflict();
+                return Ok(new
+                {
+                    StatusCode = "Fail", message = "Hiện tại cửa hàng đã ngưng hoạt động !!" +
+                                              "Vui lòng đặt lại đơn hàng "
+                });
             }
         }
         /// <summary>
@@ -81,7 +85,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //POST: api/v1/order
         [HttpPut("{orderId}")]
-        public async Task<ActionResult<OrderDto>> UpdateOrder(string orderId, OrderStatusModel order)
+        public async Task<ActionResult<OrderStatusModel>> UpdateOrder(string orderId, OrderStatusModel order)
         {
             if (orderId != order.OrderId)
             {
