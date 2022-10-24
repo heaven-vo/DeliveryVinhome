@@ -60,11 +60,16 @@ namespace DeliveryVHGP.WebApi.Repositories
             Menu.Store = await (from store in context.Stores.Where(store => store.Name.ToLower().Contains(KeySearch.ToLower()))
                                 join sm in context.StoreInMenus on store.Id equals sm.StoreId
                                 join m in context.Menus on sm.MenuId equals m.Id
+                                join bu in context.Buildings on store.BuildingId equals bu.Id
+                                join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
                                 where m.Id == menuId
-                                select new StoreInMenuVieww
+                                select new StoreInMenuView
                                 {
                                     Id = store.Id,
-                                    Name = store.Name
+                                    Name = store.Name,
+                                    Image = store.Image,
+                                    Building = bu.Name,
+                                    StoreCategory = sc.Name
                                 }
                                    ).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             Menu.Product = await (from product in context.Products.Where(product => product.Name.ToLower().Contains(KeySearch.ToLower()))
@@ -72,10 +77,18 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                   join menu in context.Menus on pm.MenuId equals menu.Id
                                   where menu.Id == menuId
-                                       select new ProductInMenuView
+                                       select new ProductViewInList
                                        {
                                            Id = product.Id,
+                                           Image = product.Image,
                                            Name = product.Name,
+                                           PricePerPack = pm.Price,
+                                           PackDes = product.PackDescription,
+                                           StoreId = store.Id,
+                                           StoreName = store.Name,
+                                           Unit = product.Unit,
+                                           MinimumDeIn = product.MinimumDeIn,
+                                           productMenuId = pm.Id
                                        }
                                        ).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
                 
@@ -87,7 +100,9 @@ namespace DeliveryVHGP.WebApi.Repositories
             var lsrStore = await (from store in context.Stores.Where(store => store.Name.ToLower().Contains(KeySearch.ToLower()))
                                 join sm in context.StoreInMenus on store.Id equals sm.StoreId
                                 join m in context.Menus on sm.MenuId equals m.Id
-                                where m.Id == menuId
+                                join bu in context.Buildings on store.BuildingId equals bu.Id
+                                join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                  where m.Id == menuId
                                 select new ProductInStoreInMenuVieww
                                 {
                                     Id = store.Id,

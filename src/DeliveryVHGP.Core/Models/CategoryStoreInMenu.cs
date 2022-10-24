@@ -51,14 +51,14 @@
         public List<ProductViewInList> ListProducts { get; set; }
 
     }
-    public class StoreInMenuVieww
-    {
-        public string Id { get; set; } = null!;
-        public string? Name { get; set; }
-    }
-    public class ProductInMenuView
-    {
-        public string Id { get; set; } = null!;
-        public string? Name { get; set; }
-    }
+    //public class StoreInMenuVieww
+    //{
+    //    public string Id { get; set; } = null!;
+    //    public string? Name { get; set; }
+    //}
+    //public class ProductInMenuView
+    //{
+    //    public string Id { get; set; } = null!;
+    //    public string? Name { get; set; }
+    //}
 }
