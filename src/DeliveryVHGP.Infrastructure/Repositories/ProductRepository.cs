@@ -17,7 +17,42 @@ namespace DeliveryVHGP.WebApi.Repositories
             _fileService = fileService;
             _timeStageService = timeStageService;
         }
-        public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
+        public async Task<IEnumerable<ProductDetailsModel>> GetListProduct(string menuId, int pageIndex, int pageSize)
+        {
+            var listproductdetail = await (from p in context.Products
+                                           join s in context.Stores on p.StoreId equals s.Id
+                                           join c in context.Categories on p.CategoryId equals c.Id
+                                           join pm in context.ProductInMenus on p.Id equals pm.ProductId
+                                           join m in context.Menus on pm.MenuId equals m.Id
+                                           where m.Id == menuId
+                                           select new ProductDetailsModel()
+                                           {
+                                               Id = p.Id,
+                                               Name = p.Name,
+                                               Image = p.Image,
+                                               Unit = p.Unit,
+                                               PricePerPack = p.PricePerPack,
+                                               PackNetWeight = p.PackNetWeight,
+                                               PackDescription = p.PackDescription,
+                                               MaximumQuantity = p.MaximumQuantity,
+                                               MinimumQuantity = p.MinimumQuantity,
+                                               Description = p.Description,
+                                               MinimumDeIn = p.MinimumDeIn,
+                                               Rate = p.Rate,
+                                               StoreId = s.Id,
+                                               StoreName = s.Name,
+                                               StoreImage = s.Image,
+                                               Slogan = s.Slogan,
+                                               CategoryId = c.Id,
+                                               ProductCategory = c.Name,
+                                               CreateAt = p.CreateAt,
+                                               UpdateAt = p.UpdateAt
+                                           }
+                                     ).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return listproductdetail;
+        }
+            public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
         {
             var listproductdetail = await (from p in context.Products
                                            join s in context.Stores on p.StoreId equals s.Id
