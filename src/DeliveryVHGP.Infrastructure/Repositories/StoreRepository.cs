@@ -220,17 +220,21 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store)
         {
             var result = await context.Stores.FindAsync(storeId);
-            var status =  context.Orders.FirstOrDefault(x => x.StoreId == storeId);
-            var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
-
-            result.Id = store.Id;
-            if (status.StatusId == "4" || status.StatusId == "5")
+            var status = context.Orders.FirstOrDefault(x => x.StoreId == storeId);
+            if (status != null)
             {
-                result.Status = store.Status;
+                var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
+                if (status.StatusId == "4" || status.StatusId == "5")
+                {
+                    result.Status = store.Status;
+                }
+                if (status.StatusId == "1" || status.StatusId == "2" || status.StatusId == "3")
+                    throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
+                                                 "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            if (status.StatusId == "1" || status.StatusId == "2" || status.StatusId == "3")
-                throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
-                                             "Vui lòng kiểm tra lại đơn hàng và thử lại");
+            result.Id = store.Id;
+            if (status == null)
+            { result.Status = store.Status; }
             try
             {
                 await context.SaveChangesAsync();

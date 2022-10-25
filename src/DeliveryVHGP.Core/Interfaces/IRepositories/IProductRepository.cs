@@ -6,6 +6,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
 {
     public interface IProductRepository : IRepositoryBase<Product>
     {
+        Task<IEnumerable<ProductDetailsModel>> GetListProduct(string menuId, int pageIndex, int pageSize);
         Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize);
         Task<ProductDetailsModel> GetById(string proId);
         Task<ProductModel> CreatNewProduct(ProductModel pro);
