@@ -80,6 +80,10 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
+        /// <remarks>
+        /// Status in body
+        /// CreateOrder = 1, ShipAccept = 2, Shipping = 3, Done = 4, Cancel = 5, ShipCancel = 6, ShipCancelOther = 7, ShopCancel = 8, CustomerCancel = 9, CustomerPayCancel = 10
+        /// </remarks>
         /// <summary>
         /// Update a status order (customer web)
         /// </summary>
