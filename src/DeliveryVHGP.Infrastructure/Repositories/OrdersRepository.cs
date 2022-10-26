@@ -21,8 +21,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
-                                  join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                                  join m in context.Menus on sm.MenuId equals m.Id
+                                  join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where t.StatusId == "1"
                                   select new OrderAdminDto()
@@ -54,7 +53,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                                  join m in context.Menus on sm.MenuId equals m.Id
+                                  join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where t.StatusId == "1" && p.Type.Contains(PayName)
                                   select new OrderAdminDto()
@@ -86,7 +85,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                                  join m in context.Menus on sm.MenuId equals m.Id
+                                  join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where t.StatusId == "1" && sta.Name.Contains(statusName)
                                   select new OrderAdminDto()
@@ -144,16 +143,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
-                                  join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                                  join m in context.Menus on sm.MenuId equals m.Id
-                                  //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && t.StatusId == order.StatusId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  where s.Id == StoreId &&  t.StatusId == "1"
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
                                       StoreName = s.Name,
-                                      Phone = order.PhoneNumber,
+                                      Phone = order.PhoneNumber, 
                                       Note = order.Note,
                                       ShipCost = order.ShipCost,
                                       StatusName = sta.Name,
@@ -178,7 +175,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                                  join m in context.Menus on sm.MenuId equals m.Id
+                                  join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && order.StatusId == StatusId && t.StatusId == order.StatusId
                                   select new OrderAdminDto()
@@ -209,7 +206,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                join b in context.Buildings on o.BuildingId equals b.Id
                                join s in context.Stores on o.StoreId equals s.Id
                                join sm in context.StoreInMenus on s.Id equals sm.StoreId
-                               join m in context.Menus on sm.MenuId equals m.Id
+                               join m in context.Menus on o.MenuId equals m.Id
                                //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                join t in context.TimeOfOrderStages on o.Id equals t.OrderId
                                join p in context.Payments on o.Id equals p.OrderId
@@ -258,17 +255,19 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
         {
+            double timeMenu = await GetTimeMenu();
             var store = context.Stores.FirstOrDefault(s => s.Id == order.StoreId);
             var od = new Order
             {
                 Id = order.Id = Guid.NewGuid().ToString(),
                 Total = order.Total,
-                Type = order.Type,
+                Type = order.Type,  
                 StoreId = store.Id, 
                 BuildingId = order.BuildingId,
                 Note = order.Note,
                 FullName = order.FullName,
                 PhoneNumber = order.PhoneNumber,
+                MenuId = order.MenuId,
                 ShipCost = order.ShipCost,
                 DurationId = order.DurationId,
                 StatusId = "1"
@@ -293,6 +292,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     ProductName = pro.Name,
                     ProductId = proInMenu.ProductId,
                 };
+
                 await context.OrderDetails.AddAsync(odd);
             }
             foreach (var pay in order.Payments)
@@ -367,6 +367,14 @@ namespace DeliveryVHGP.WebApi.Repositories
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
             return time;
         }
-
+        public async Task<double> GetTimeMenu()
+        {
+            DateTime utcDateTime = DateTime.UtcNow;
+            string vnTimeZoneKey = "SE Asia Standard Time";
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
+            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("HH.mm");
+            var time2 = Double.Parse(time);
+            return time2;
+        }
     }
 }
