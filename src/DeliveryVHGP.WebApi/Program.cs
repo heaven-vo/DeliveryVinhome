@@ -1,5 +1,8 @@
+using CorePush.Apple;
+using CorePush.Google;
 using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Core.Models.Noti;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,14 @@ builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 builder.Services.AddControllers();
+
+builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddHttpClient<FcmSender>();
+builder.Services.AddHttpClient<ApnSender>();
+
+// Configure strongly typed settings objects
+var appSettingsSection = builder.Configuration.GetSection("FcmNotification");
+builder.Services.Configure<FcmNotificationSetting>(appSettingsSection);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
