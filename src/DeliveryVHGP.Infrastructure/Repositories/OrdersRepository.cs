@@ -172,7 +172,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
-                                  join sm in context.StoreInMenus on s.Id equals sm.StoreId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && order.StatusId == StatusId && t.StatusId == order.StatusId
