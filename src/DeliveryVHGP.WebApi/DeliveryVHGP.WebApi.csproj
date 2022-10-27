@@ -13,6 +13,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>DeliveryVHGP.WebApi</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Settings\**" />
+    <Content Remove="Settings\**" />
+    <EmbeddedResource Remove="Settings\**" />
+    <None Remove="Settings\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Firebase.Auth" Version="1.0.0" />
@@ -35,7 +41,6 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Settings\" />
   </ItemGroup>
 
   <ItemGroup>

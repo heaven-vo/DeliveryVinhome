@@ -443,8 +443,6 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.ProductId).HasMaxLength(50);
 
-                entity.Property(e => e.ProductInMenuId).HasMaxLength(50);
-
                 entity.Property(e => e.ProductName).HasMaxLength(100);
 
                 entity.Property(e => e.Quantity).HasMaxLength(50);
@@ -458,11 +456,6 @@ namespace DeliveryVHGP.Core.Data
                     .WithMany(p => p.OrderDetails)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_OrderDetail_Product");
-
-                entity.HasOne(d => d.ProductInMenu)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.ProductInMenuId)
-                    .HasConstraintName("FK_OrderDetail_ProductInMenu");
             });
 
             modelBuilder.Entity<OrderStatus>(entity =>

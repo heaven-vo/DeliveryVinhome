@@ -115,7 +115,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join sta in context.OrderStatuses on order.StatusId equals sta.Id
                                   join od in context.OrderDetails on order.Id equals od.OrderId
-                                  join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                   where c.Id == CusId && t.StatusId == order.StatusId
                                   select new OrderModels()
                                   {
@@ -224,11 +223,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).FirstOrDefaultAsync();
             var listPro = await (from o in context.Orders
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
-                                 join pm in context.ProductInMenus on odd.ProductInMenuId equals pm.Id
                                  where o.Id == order.Id
                                  select new ViewListDetail
                                  {
-                                     ProductInMenuId = pm.Id,
                                      Price = odd.Price,
                                      Quantity = odd.Quantity,
                                      ProductName = odd.ProductName,
@@ -281,7 +278,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                 var odd = new OrderDetail
                 {
                     Id = Guid.NewGuid().ToString(),
-                    ProductInMenuId = ord.ProductInMenuId,
                     Quantity = ord.Quantity,
                     Price = ord.Price,
                     OrderId = od.Id,
@@ -351,7 +347,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                           join o in context.Orders on od.OrderId equals o.Id
 
                                           where o.Id == orderDetailId
-                                          select od.ProductInMenuId
+                                          select od.ProductId
                                                 ).ToListAsync();
             return listpro;
         }
