@@ -223,9 +223,11 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).FirstOrDefaultAsync();
             var listPro = await (from o in context.Orders
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
+                                 join pm in context.Products on odd.ProductId equals pm.Id
                                  where o.Id == order.Id
                                  select new ViewListDetail
                                  {
+                                     ProductId = odd.ProductId,
                                      Price = odd.Price,
                                      Quantity = odd.Quantity,
                                      ProductName = odd.ProductName,
@@ -272,8 +274,8 @@ namespace DeliveryVHGP.WebApi.Repositories
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
             {
-                var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
-                var pro = context.Products.FirstOrDefault(p => p.Id == proInMenu.ProductId);
+                //var proInMenu = context.ProductInMenus.FirstOrDefault(pm => pm.Id == ord.ProductInMenuId);
+                var pro = context.Products.FirstOrDefault(p => p.Id == ord.ProductId);
                 var odd = new OrderDetail
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -281,7 +283,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Price = ord.Price,
                     OrderId = od.Id,
                     ProductName = pro.Name,
-                    ProductId = proInMenu.ProductId,
+                    ProductId = ord.ProductId,
                 };
 
                 await context.OrderDetails.AddAsync(odd);
