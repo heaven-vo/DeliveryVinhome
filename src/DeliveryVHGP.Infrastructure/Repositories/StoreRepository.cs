@@ -223,12 +223,12 @@ namespace DeliveryVHGP.WebApi.Repositories
             var status = context.Orders.FirstOrDefault(x => x.StoreId == storeId);
             if (status != null)
             {
-                var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.StatusId);
-                if (status.StatusId == "4" || status.StatusId == "5")
+                var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
+                if (status.Status == "4" || status.Status == "5")
                 {
                     result.Status = store.Status;
                 }
-                if (status.StatusId == "1" || status.StatusId == "2" || status.StatusId == "3")
+                if (status.Status == "1" || status.Status == "2" || status.Status == "3")
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }

@@ -19,7 +19,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join s in context.Stores on order.StoreId equals s.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
@@ -50,7 +50,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join s in context.Stores on order.StoreId equals s.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
@@ -81,7 +81,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join s in context.Stores on order.StoreId equals s.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
@@ -113,9 +113,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join c in context.Customers on order.CustomerId equals c.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join od in context.OrderDetails on order.Id equals od.OrderId
-                                  where c.Id == CusId && t.StatusId == order.StatusId
+                                  where c.Id == CusId && t.StatusId == order.Status
                                   select new OrderModels()
                                   {
                                       Id = order.Id,    
@@ -138,7 +138,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join s in context.Stores on order.StoreId equals s.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   where s.Id == StoreId &&  t.StatusId == "1"
@@ -169,11 +169,11 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   //join c in context.Customers on order.CustomerId equals c.Id
                                   join t in context.TimeOfOrderStages on order.Id equals t.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
-                                  join sta in context.OrderStatuses on order.StatusId equals sta.Id
+                                  join sta in context.OrderStatuses on order.Status equals sta.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && order.StatusId == StatusId && t.StatusId == order.StatusId
+                                  where s.Id == StoreId && order.Status == StatusId && t.StatusId == order.Status
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -254,7 +254,6 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 Id = order.Id = Guid.NewGuid().ToString(),
                 Total = order.Total,
-                Type = order.Type,  
                 StoreId = store.Id, 
                 BuildingId = order.BuildingId,
                 Note = order.Note,
@@ -263,7 +262,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 MenuId = order.MenuId,
                 ShipCost = order.ShipCost,
                 DurationId = order.DurationId,
-                StatusId = "1"
+                Status = "1"
             };
             if (store.Status == false)
             {
@@ -324,7 +323,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             var orderUpdate = await context.Orders.FindAsync(orderId);
             orderUpdate.Id = orderUpdate.Id;
-            orderUpdate.StatusId = order.StatusId;
+            orderUpdate.Status = order.StatusId;
             context.Entry(orderUpdate).State = EntityState.Modified;
             await context.SaveChangesAsync();
 

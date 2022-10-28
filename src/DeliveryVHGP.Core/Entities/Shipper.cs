@@ -8,7 +8,8 @@ namespace DeliveryVHGP.Core.Entities
         public Shipper()
         {
             DeliveryShiftOfShippers = new HashSet<DeliveryShiftOfShipper>();
-            Orders = new HashSet<Order>();
+            SegmentDeliveries = new HashSet<SegmentDelivery>();
+            SegmentTasks = new HashSet<SegmentTask>();
         }
 
         public string Id { get; set; } = null!;
@@ -23,6 +24,7 @@ namespace DeliveryVHGP.Core.Entities
         public string? Email { get; set; }
 
         public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<SegmentDelivery> SegmentDeliveries { get; set; }
+        public virtual ICollection<SegmentTask> SegmentTasks { get; set; }
     }
 }

@@ -7,16 +7,17 @@ namespace DeliveryVHGP.Core.Entities
     {
         public Hub()
         {
+            Buildings = new HashSet<Building>();
             DeliveryShiftOfShippers = new HashSet<DeliveryShiftOfShipper>();
-            Orders = new HashSet<Order>();
+            Segments = new HashSet<Segment>();
         }
 
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
-        public string? BuildId { get; set; }
+        public string? BuildingId { get; set; }
 
-        public virtual Building? Build { get; set; }
+        public virtual ICollection<Building> Buildings { get; set; }
         public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Segment> Segments { get; set; }
     }
 }
