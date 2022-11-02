@@ -250,11 +250,19 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
         {
-            double timeMenu = await GetTimeMenu();
+            string refixOrderCode = "CDCC";
+            var orderCount = context.Orders
+               .Count() + 1;
+            order.Id = refixOrderCode + "-" + orderCount.ToString().PadLeft(6, '0');
+            var odCOde = await context.Orders.Where(o => o.Id == order.Id).ToListAsync();
+            if (odCOde.Any())
+            { 
+                    order.Id = refixOrderCode + "-" + orderCount.ToString().PadLeft(7, '0');
+            }
             var store = context.Stores.FirstOrDefault(s => s.Id == order.StoreId);
             var od = new Order
             {
-                Id = order.Id = Guid.NewGuid().ToString(),
+                Id = order.Id,
                 Total = order.Total,
                 StoreId = store.Id, 
                 BuildingId = order.BuildingId,
@@ -359,15 +367,6 @@ namespace DeliveryVHGP.WebApi.Repositories
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
             return time;
-        }
-        public async Task<double> GetTimeMenu()
-        {
-            DateTime utcDateTime = DateTime.UtcNow;
-            string vnTimeZoneKey = "SE Asia Standard Time";
-            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
-            string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("HH.mm");
-            var time2 = Double.Parse(time);
-            return time2;
         }
     }
 }
