@@ -51,5 +51,27 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return Conflict();
             }
         }
+        /// <summary>
+        /// Update shipper  with pagination
+        /// </summary>
+        //PUT: api/v1/shipper?id
+        [HttpPut("{shipId}")]
+        public async Task<ActionResult> UpdateShipperById(string shipId, ShipperDto shipper, Boolean imgUpdate)
+        {
+            try
+            {
+                var ShipperToUpdate = await repository.Shipper.UpdateShipper(shipId, shipper, imgUpdate);
+                var shipp = await repository.Shipper.GetShipperById(shipId);
+                return Ok(shipp);
+            }
+            catch
+            {
+                return Ok(new
+                {
+                    message = "Hiện tại shipper đang có đơn hàng đi giao !!" +
+                                               "Vui lòng xóa kiểm tra và thử lại "
+                });
+            }
+        }
     }
 }

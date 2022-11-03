@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DeliveryVHGP.Core.Entities
+namespace DeliveryVHGP.WebApi.Models
 {
     public partial class Shipper
     {
