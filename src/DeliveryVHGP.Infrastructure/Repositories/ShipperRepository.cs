@@ -20,8 +20,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<IEnumerable<ShipperModel>> GetListShipper(int pageIndex, int pageSize)
         {
             var listShipper = await (from ship in context.Shippers
-                                   
-                                   select new ShipperModel()
+                                     join acc in context.Accounts on ship.Id equals acc.Id
+                                     select new ShipperModel()
                                    {
                                        Id = ship.Id,
                                        FullName = ship.FullName,
@@ -30,6 +30,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        Email = ship.Email,
                                        VehicleType = ship.VehicleType,
                                        DeliveryTeam = ship.DeliveryTeam,
+                                       LicensePlates = ship.LicensePlates,
+                                       Password = acc.Password,
+                                       Colour = ship.Colour,
                                        Status = ship.Status,
                                        CreateAt = ship.CreateAt,
                                        UpdateAt = ship.UpdateAt,
@@ -39,8 +42,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> GetShipperById(string shipId)
         {
-            var shipper = await context.Shippers.Where(x => x.Id == shipId)
-                                     .Select(ship => new ShipperModel
+            var shipper = await (from ship in context.Shippers.Where(x => x.Id == shipId)
+                                     
+                                 join acc in context.Accounts on ship.Id equals acc.Id
+                                 select new ShipperModel()
                                      {
                                          Id = ship.Id,
                                          FullName = ship.FullName,
@@ -49,7 +54,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          Image = ship.Image,
                                          VehicleType = ship.VehicleType,
                                          DeliveryTeam = ship.DeliveryTeam,
+                                         LicensePlates = ship.LicensePlates,
+                                         Colour = ship.Colour,
                                          Status = ship.Status,
+                                         Password = acc.Password,
                                          CreateAt = ship.CreateAt,
                                          UpdateAt = ship.UpdateAt
 
@@ -70,6 +78,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                     VehicleType=ship.VehicleType,
                     DeliveryTeam=ship.DeliveryTeam,
                     Image = await _fileService.UploadFile(fileImg, ship.Image),
+                    LicensePlates = ship.LicensePlates,
+                    Status = true,
+                    Colour = ship.Colour,
                     CreateAt = time
                 });
             context.Accounts.Add(
@@ -82,6 +93,38 @@ namespace DeliveryVHGP.WebApi.Repositories
                    Status = "true"
                });
             await context.SaveChangesAsync();
+            return ship;
+        }
+        public async Task<ShipperDto> UpdateShipper(string shipId, ShipperDto ship, Boolean imgUpdate)
+        {
+            string fileImg = "ImagesShipper";
+            string time = await _timeStageService.GetTime();
+            var result = await context.Shippers.FindAsync(shipId);
+            var account = context.Accounts.FirstOrDefault(x => x.Id == shipId);
+
+            result.Id = shipId;
+            result.FullName = ship.FullName;
+            result.Phone = ship.Phone;
+            result.Email = ship.Email;
+            result.VehicleType = ship.VehicleType;
+            result.DeliveryTeam = ship.DeliveryTeam;
+            result.Colour = ship.Colour;
+            result.LicensePlates = ship.LicensePlates;
+            if (imgUpdate == true)
+            {
+                result.Image = await _fileService.UploadFile(fileImg, ship.Image);
+            }
+            account.Password = ship.Password;
+            account.Name = ship.FullName;
+            result.UpdateAt = time;
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
             return ship;
         }
     }

@@ -9,5 +9,6 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<IEnumerable<ShipperModel>> GetListShipper(int pageIndex, int pageSize);
         Task<Object> GetShipperById(string shipId);
         Task<ShipperDto> CreateShipper(ShipperDto ship);
+        Task<ShipperDto> UpdateShipper(string shipId, ShipperDto ship, Boolean imgUpdate);
     }
 }
