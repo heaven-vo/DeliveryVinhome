@@ -16,7 +16,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<List<MenuView>> GetListMenuByModeId(string modeId)
         {
-            var listMenu = await context.Menus.Where(m => m.ModeId == modeId).Select(x => new MenuView { 
+            var listMenu = await context.Menus.Where(m => m.SaleMode == modeId).Select(x => new MenuView { 
                 Id = x.Id, 
                 Image = x.Image,
                 Name = x.Name,
@@ -49,7 +49,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
                 listCategory = cateId,
-                ModeId = menu.ModeId
+                ModeId = menu.SaleMode
             };
             return menuDto;
         }
@@ -138,7 +138,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuNotProductView> GetMenuByModeAndShowListCategory(string modeId)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuNotProductView
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuNotProductView
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -166,7 +166,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<List<StoreCategoryInMenuView>> GetListStoreCateInMenuNow(string modeId, int storeCateSize, int storeSize)
         {
             double time = await GetTime();
-            var menuId = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
+            var menuId = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
             ).FirstOrDefaultAsync();
             if (menuId == null) throw new Exception("Not found menu");
 
@@ -206,7 +206,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<List<StoreInMenuView>> GetListStoreInMenuNow(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuId = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
+            var menuId = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
             ).FirstOrDefaultAsync();
             if (menuId == null) throw new Exception("Not found menu");
 
@@ -230,7 +230,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuView> GetMenuByModeAndGroupByStore(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -264,7 +264,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuView> GetMenuByModeAndGroupByCategory(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.ModeId == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -527,7 +527,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Image = menu.Image,
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
-                ModeId = menu.ModeId
+                SaleMode = menu.ModeId
             };
             foreach (var category in menu.listCategory)
             {
@@ -555,8 +555,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Name = menu.Name,
                 Image = menu.Image,
                 StartHour = menu.StartHour,
-                EndHour = menu.EndHour,
-                ModeId = menu.ModeId
+                EndHour = menu.EndHour,                
+                SaleMode = menu.ModeId
             };
             List<String> listCate = (List<String>)await context.CategoryInMenus.Where(x => x.MenuId == menuId).Select(x => x.CategoryId).ToListAsync();
             List<String> listNewCate = (List<String>)menu.listCategory;

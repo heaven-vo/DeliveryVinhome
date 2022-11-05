@@ -17,6 +17,7 @@ namespace DeliveryVHGP.Core.Entities
         public string? Image { get; set; }
         public string? BuildingId { get; set; }
 
+        public virtual Building? Building { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

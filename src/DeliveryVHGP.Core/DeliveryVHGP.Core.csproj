@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Enums\" />
     <Folder Include="Data\" />
     <Folder Include="Interfaces\IServices\" />
     <Folder Include="Entities\" />

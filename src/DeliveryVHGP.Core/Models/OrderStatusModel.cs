@@ -3,6 +3,6 @@
     public class OrderStatusModel
     {
         public string? OrderId { get; set; }
-        public string? StatusId { get; set; }
+        public int? StatusId { get; set; }
     }
 }

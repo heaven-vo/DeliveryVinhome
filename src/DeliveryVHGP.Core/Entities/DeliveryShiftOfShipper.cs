@@ -12,7 +12,6 @@ namespace DeliveryVHGP.Core.Entities
         public string? TaskType { get; set; }
         public string? HubId { get; set; }
 
-        public virtual Hub? Hub { get; set; }
         public virtual Schedule? Schedule { get; set; }
         public virtual Shift? Shift { get; set; }
         public virtual Shipper? Shipper { get; set; }

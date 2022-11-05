@@ -9,8 +9,7 @@
         public string? CustomerId { get; set; }
         public string? StoreId { get; set; }
         public string? storeName { get; set; }
-        public string? statusId { get; set; }
-        public string? statusName { get; set; }
+        public int? status { get; set; }
         public string? Time { get; set; }
         public double? quantity { get; set; }
         public List<double> productInmenuId { get; set; }

@@ -13,6 +13,5 @@ namespace DeliveryVHGP.Core.Entities
         public string? ProductId { get; set; }
 
         public virtual Order? Order { get; set; }
-        public virtual Product? Product { get; set; }
     }
 }

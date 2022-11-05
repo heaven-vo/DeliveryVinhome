@@ -6,6 +6,7 @@ using DeliveryVHGP.Infrastructure.Services;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP_WebApi.ViewModels;
+using DeliveryVHGP.Core.Enums;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -220,23 +221,27 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store)
         {
             var result = await context.Stores.FindAsync(storeId);
-            var status = context.Orders.FirstOrDefault(x => x.StoreId == storeId);
+            var status = context.Orders.OrderByDescending(x => x.Id).FirstOrDefault(x => x.StoreId == storeId);
             if (status != null)
             {
-                var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
-                if (status.Status == "4" || status.Status == "5")
+                //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
+                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed)
                 {
                     result.Status = store.Status;
                 }
-                if (status.Status == "1" || status.Status == "2" || status.Status == "3")
+                if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            result.Id = store.Id;
             if (status == null)
-            { result.Status = store.Status; }
+            { 
+                result.Status = store.Status; 
+            }
+            
             try
             {
+                context.Entry(result).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
             catch

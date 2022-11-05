@@ -40,7 +40,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet("stores/byStoreId/status/ByStatusId")]
-        public async Task<ActionResult> GetOrderByStoreByStatus(string statusId ,string storeId, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrderByStoreByStatus(int statusId ,string storeId, int pageIndex, int pageSize)
         {
             var listOder = await repository.Order.GetListOrdersByStoreByStatus(storeId, statusId, pageIndex, pageSize);
             if (storeId == null)
@@ -93,11 +93,11 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             if (orderId != order.OrderId)
             {
-                return BadRequest("Order ID mismatch");
+                return BadRequest("Order Id mismatch");
             }
             if (order.OrderId == null)
             {
-                return BadRequest("OrderID does not exist");
+                return NotFound("Order Id does not exist");
             }
             try
             {

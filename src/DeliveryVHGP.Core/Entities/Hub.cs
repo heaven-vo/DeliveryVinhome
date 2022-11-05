@@ -8,7 +8,6 @@ namespace DeliveryVHGP.Core.Entities
         public Hub()
         {
             Buildings = new HashSet<Building>();
-            DeliveryShiftOfShippers = new HashSet<DeliveryShiftOfShipper>();
             Segments = new HashSet<Segment>();
         }
 
@@ -17,7 +16,6 @@ namespace DeliveryVHGP.Core.Entities
         public string? BuildingId { get; set; }
 
         public virtual ICollection<Building> Buildings { get; set; }
-        public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
         public virtual ICollection<Segment> Segments { get; set; }
     }
 }

@@ -22,9 +22,10 @@ namespace DeliveryVHGP.Core.Entities
         public string? HourFilter { get; set; }
         public double? StartHour { get; set; }
         public double? EndHour { get; set; }
-        public string? ModeId { get; set; }
+        public string? SaleMode { get; set; }
+        public string? DeliveryTimeId { get; set; }
+        public int? Priority { get; set; }
 
-        public virtual DeliveryMode? Mode { get; set; }
         public virtual ICollection<CategoryInMenu> CategoryInMenus { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<ProductInMenu> ProductInMenus { get; set; }

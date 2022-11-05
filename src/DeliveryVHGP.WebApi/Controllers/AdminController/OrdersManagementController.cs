@@ -19,33 +19,34 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
         {
-            try
-            {
-                return Ok(await repository.Order.GetAll(pageIndex, pageSize));
+            return Ok(await repository.Order.GetAll(pageIndex, pageSize));
+            //try
+            //{
+            //    return Ok(await repository.Order.GetAll(pageIndex, pageSize));
 
-            }
-            catch
-            {
-                return Conflict();
-            }
+            //}
+            //catch
+            //{
+            //    return Conflict();
+            //}
         }
         /// <summary>
         /// Get list all order by payment with pagination
         /// </summary>
         //GET: api/v1/OrderByPayment?pageIndex=1&pageSize=3
         [HttpGet("search-payment")]
-        public async Task<ActionResult> GetListOrderByPayment(string paymentType, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetListOrderByPayment(string PaymentType, int pageIndex, int pageSize)
         {
-            return Ok(await repository.Order.GetOrderByPayment(paymentType, pageIndex, pageSize));
+            return Ok(await repository.Order.GetOrderByPayment(PaymentType, pageIndex, pageSize));
         }
         /// <summary>
         /// Get list all order by status with pagination
         /// </summary>
         //GET: api/v1/orderByStatus?pageIndex=1&pageSize=3
         [HttpGet("search-status")]
-        public async Task<ActionResult> GetListOrderByStatus(string statusName, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetListOrderByStatus(int status, int pageIndex, int pageSize)
         {
-            return Ok(await repository.Order.GetOrderByStatus(statusName, pageIndex, pageSize));
+            return Ok(await repository.Order.GetOrderByStatus(status, pageIndex, pageSize));
         }
         /// <summary>
         /// Get product by id with pagination
