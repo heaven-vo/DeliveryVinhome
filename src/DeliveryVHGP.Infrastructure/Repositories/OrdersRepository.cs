@@ -14,6 +14,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public OrdersRepository(DeliveryVHGP_DBContext context): base(context)
         {
         }
+        //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
@@ -104,6 +105,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
         }
+        //Get list order by Customer(in customer web)
         public async Task<List<OrderModels>> GetListOrders(string CusId ,int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
@@ -128,6 +130,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
         }
+        //Get list order by store(in app store)
         public async Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
@@ -189,6 +192,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return lstOrder;
         }
+        //Get Order Detail by Id (in admin web ,store app, cus web)
         public async Task<Object> GetOrdersById(string orderId)
         {
             var order = await (from o in context.Orders
@@ -241,6 +245,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return order;
         }
+
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
         {
             string refixOrderCode = "CDCC";
