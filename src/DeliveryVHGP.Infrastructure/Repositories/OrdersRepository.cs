@@ -84,7 +84,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  //where t.StatusId == 1 && sta.Name.Contains(statusName)
+                                  where order.Status == status
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -219,6 +219,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    ShipCost = o.ShipCost,
                                }
                                 ).FirstOrDefaultAsync();
+            if(order == null)
+            {
+                throw new KeyNotFoundException();
+            }
             var listPro = await (from o in context.Orders
                                  join odd in context.OrderDetails on o.Id equals odd.OrderId
                                  join pm in context.Products on odd.ProductId equals pm.Id
@@ -319,6 +323,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var actionHistory = new OrderActionHistory()
             {
                 Id = Guid.NewGuid().ToString(),
+                OrderId = od.Id,
                 FromStatus = (int)OrderStatusEnum.New,
                 ToStatus = (int)OrderStatusEnum.New,
                 CreateDate = time,

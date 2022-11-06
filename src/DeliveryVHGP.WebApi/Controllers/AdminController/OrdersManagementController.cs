@@ -54,10 +54,15 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> GetOrderDetail(string id)
         {
-            var pro = await repository.Order.GetOrdersById(id);
-            if (pro == null)
+            try
+            {
+                var pro = await repository.Order.GetOrdersById(id);
+                return Ok(pro);
+            }
+            catch
+            {
                 return NotFound();
-            return Ok(pro);
+            }
         }
     }
 }
