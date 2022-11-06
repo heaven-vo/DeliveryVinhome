@@ -25,12 +25,12 @@ namespace DeliveryVHGP.Core.Entities
         public string? Note { get; set; }
         public double? Total { get; set; }
         public double? ShipCost { get; set; }
-        public string? DurationId { get; set; }
+        public string? DeliveryTimeId { get; set; }
         public int? Status { get; set; }
 
         public virtual Building? Building { get; set; }
         public virtual Customer? Customer { get; set; }
-        public virtual TimeDuration? Duration { get; set; }
+        public virtual DeliveryTimeFrame? DeliveryTime { get; set; }
         public virtual Menu? Menu { get; set; }
         public virtual Service? Service { get; set; }
         public virtual Store? Store { get; set; }

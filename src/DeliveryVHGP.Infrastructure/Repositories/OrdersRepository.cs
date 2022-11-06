@@ -273,7 +273,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 PhoneNumber = order.PhoneNumber,
                 MenuId = order.MenuId,
                 ShipCost = order.ShipCost,
-                DurationId = order.DurationId,
+                DeliveryTimeId = order.DeliveryTimeId,
                 Status = (int)OrderStatusEnum.New
             };
             if (store.Status == false)
@@ -379,6 +379,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<string> GetTime()
         {
             DateTime utcDateTime = DateTime.UtcNow;
+            
             string vnTimeZoneKey = "SE Asia Standard Time";
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");

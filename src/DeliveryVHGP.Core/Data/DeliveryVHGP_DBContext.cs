@@ -55,7 +55,6 @@ namespace DeliveryVHGP.Core.Data
         public virtual DbSet<StoreCategory> StoreCategories { get; set; } = null!;
         public virtual DbSet<StoreInMenu> StoreInMenus { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
-        public virtual DbSet<TimeDuration> TimeDurations { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -282,7 +281,14 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.FromDate).HasColumnType("date");
 
+                entity.Property(e => e.MenuId).HasMaxLength(50);
+
                 entity.Property(e => e.ToDate).HasColumnType("date");
+
+                entity.HasOne(d => d.Menu)
+                    .WithMany(p => p.DeliveryTimeFrames)
+                    .HasForeignKey(d => d.MenuId)
+                    .HasConstraintName("FK_DeliveryTimeFrame_Menu");
             });
 
             modelBuilder.Entity<FcmToken>(entity =>
@@ -323,8 +329,6 @@ namespace DeliveryVHGP.Core.Data
                 entity.Property(e => e.Id).HasMaxLength(50);
 
                 entity.Property(e => e.DayFilter).HasMaxLength(50);
-
-                entity.Property(e => e.DeliveryTimeId).HasMaxLength(50);
 
                 entity.Property(e => e.EndDate).HasMaxLength(20);
 
@@ -387,7 +391,7 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.CustomerId).HasMaxLength(50);
 
-                entity.Property(e => e.DurationId).HasMaxLength(50);
+                entity.Property(e => e.DeliveryTimeId).HasMaxLength(50);
 
                 entity.Property(e => e.FullName).HasMaxLength(50);
 
@@ -411,10 +415,10 @@ namespace DeliveryVHGP.Core.Data
                     .HasForeignKey(d => d.CustomerId)
                     .HasConstraintName("FK_Order_Customer");
 
-                entity.HasOne(d => d.Duration)
+                entity.HasOne(d => d.DeliveryTime)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.DurationId)
-                    .HasConstraintName("FK_Order_TimeDuration");
+                    .HasForeignKey(d => d.DeliveryTimeId)
+                    .HasConstraintName("FK_Order_DeliveryTimeFrame");
 
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.Orders)
@@ -910,17 +914,6 @@ namespace DeliveryVHGP.Core.Data
                 entity.Property(e => e.Image).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
-            });
-
-            modelBuilder.Entity<TimeDuration>(entity =>
-            {
-                entity.ToTable("TimeDuration");
-
-                entity.Property(e => e.Id).HasMaxLength(50);
-
-                entity.Property(e => e.EndTime).HasMaxLength(50);
-
-                entity.Property(e => e.StartTime).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

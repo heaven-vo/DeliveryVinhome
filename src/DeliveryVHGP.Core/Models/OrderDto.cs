@@ -12,7 +12,7 @@
         public string? Note { get; set; }
         public string? FullName { get; set; }
         public double? ShipCost { get; set; }
-        public string? DurationId { get; set; }
+        public string? DeliveryTimeId { get; set; }
 
         public List<OrderDetailDto> OrderDetail { get; set; }
         public List<PaymentDto> Payments { get; set; }
