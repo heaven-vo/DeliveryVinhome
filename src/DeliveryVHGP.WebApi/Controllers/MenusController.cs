@@ -76,6 +76,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(await repository.Menu.GetListStoreInMenuNow(modeId, page, pageSize));
         }
 
+        /// <summary>
+        /// Get list menu in next 7 day(when click a mode 3 in customer web)
+        /// </summary>
+        [HttpGet("now/mode3")]
+        public async Task<ActionResult<StoreInMenuView>> GetMenuMode3(int pageSize)
+        {
+            return Ok(await repository.Menu.GetListMenuInMode3(pageSize));
+        }
+
 
         /// <summary>
         /// Get list menus in realtime by modeId(when click a mode in customer web)

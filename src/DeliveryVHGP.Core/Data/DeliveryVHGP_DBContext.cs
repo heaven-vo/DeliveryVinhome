@@ -328,7 +328,7 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.DayFilter).HasMaxLength(50);
+                entity.Property(e => e.DayFilter).HasColumnType("date");
 
                 entity.Property(e => e.EndDate).HasMaxLength(20);
 
