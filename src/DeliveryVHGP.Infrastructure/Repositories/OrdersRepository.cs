@@ -237,7 +237,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             order.ListProInMenu = listPro;
 
             var listStatus = await (from o in context.Orders
-                                    join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                    join h in context.OrderActionHistories on o.Id equals h.OrderId
                                     where h.OrderId == order.Id
                                     select new ListStatusOrder
                                     {
