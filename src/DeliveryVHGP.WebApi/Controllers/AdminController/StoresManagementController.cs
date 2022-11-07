@@ -54,6 +54,54 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(store);
         }
         /// <summary>
+        /// Get list orders preparing by store ,status:0,1,2,3 (store app) 
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("byStoreId/orders-preparing")]
+        public async Task<ActionResult> GetOrderPreparingByStore( string storeId, int pageIndex, int pageSize)
+        {
+            var listOder = await repository.Store.GetListOrderPreparingsByStore(storeId ,pageIndex, pageSize);
+            if (storeId == null)
+                return NotFound();
+            return Ok(listOder);
+        }
+        /// <summary>
+        /// Get list orders delivering by store ,status:4,7,8 (store app) 
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("byStoreId/orders-delivering")]
+        public async Task<ActionResult> GetOrderDeliveringByStore(string storeId, int pageIndex, int pageSize)
+        {
+            var listOder = await repository.Store.GetListOrderDeliveringByStore(storeId, pageIndex, pageSize);
+            if (storeId == null)
+                return NotFound();
+            return Ok(listOder);
+        }
+        /// <summary>
+        /// Get list orders completed by store ,status:5,6,9,10,11,12 (store app) 
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("byStoreId/orders-completed")]
+        public async Task<ActionResult> GetOrderCompletedByStore(string storeId, int pageIndex, int pageSize)
+        {
+            var listOder = await repository.Store.GetListOrderCompletedByStore(storeId, pageIndex, pageSize);
+            if (storeId == null)
+                return NotFound();
+            return Ok(listOder);
+        }
+        /// <summary>
+        /// Get list orders byMode in store ,status:2,3 (store app) 
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("byStoreId/byModeId/order")]
+        public async Task<ActionResult> GetOrderByStoreByMode(string storeId, string modeId, int pageIndex, int pageSize)
+        {
+            var listOder = await repository.Store.GetListOrderByStoreByModeId(storeId, modeId, pageIndex, pageSize);
+            if (storeId == null)
+                return NotFound();
+            return Ok(listOder);
+        }
+        /// <summary>
         /// Create a new store
         /// </summary>
         //POST: api/v1/store

@@ -14,4 +14,9 @@
         public string? Colour { get; set; }
 
     }
+    public class StatusShipDto
+    {
+        public string Id { get; set; } = null!;
+        public bool? Status { get; set; }
+    }
 }

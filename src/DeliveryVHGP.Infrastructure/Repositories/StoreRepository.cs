@@ -100,6 +100,135 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return listStore;
         }
+        public async Task<List<OrderAdminDto>> GetListOrderDeliveringByStore(string StoreId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  //join c in context.Customers on order.CustomerId equals c.Id
+                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  where s.Id == StoreId && order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      Status = order.Status,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      ModeId = m.SaleMode,
+                                      //ShipperName = sp.FullName,
+                                      Time = h.CreateDate
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
+        public async Task<List<OrderAdminDto>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  //join c in context.Customers on order.CustomerId equals c.Id
+                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  where s.Id == StoreId && order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      Status = order.Status,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      ModeId = m.SaleMode,
+                                      //ShipperName = sp.FullName,
+                                      Time = h.CreateDate
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
+        public async Task<List<OrderAdminDto>> GetListOrderByStoreByModeId(string StoreId,string modeId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  //join c in context.Customers on order.CustomerId equals c.Id
+                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  where s.Id == StoreId && modeId == m.SaleMode 
+                                  where order.Status == 2 || order.Status == 3
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      Status = order.Status,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      ModeId = m.SaleMode,
+                                      //ShipperName = sp.FullName,
+                                      Time = h.CreateDate
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
+        public async Task<List<OrderAdminDto>> GetListOrderPreparingsByStore(string StoreId, int pageIndex, int pageSize)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  //join c in context.Customers on order.CustomerId equals c.Id
+                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  where s.Id == StoreId && order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      Status = order.Status,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      BuildingName = b.Name,
+                                      ModeId = m.SaleMode,
+                                      //ShipperName = sp.FullName,
+                                      Time = h.CreateDate
+
+                                  }
+                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lstOrder;
+        }
         public async Task<Object> GetStoreById(string storeId)
         {
             var store = await (from s in context.Stores
