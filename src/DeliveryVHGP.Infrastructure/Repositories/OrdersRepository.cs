@@ -24,7 +24,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  //where order.Status == 1
+                                  where  h.ToStatus == 0
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -54,7 +54,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where p.Type == PaymentType
+                                  where p.Type == PaymentType && h.ToStatus == 0
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -84,7 +84,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where order.Status == status
+                                  where order.Status == status && h.ToStatus == 0
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -139,7 +139,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
-                                  where s.Id == StoreId 
+                                  where s.Id == StoreId && h.ToStatus == 0
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -170,7 +170,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && order.Status == StatusId
+                                  where s.Id == StoreId && order.Status == StatusId && h.ToStatus == StatusId
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -244,7 +244,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         Status = h.ToStatus,//status
                                         Time = h.CreateDate
                                     }
-                                    ).OrderBy(t => t.Time).ToListAsync();
+                                    ).OrderBy(t => t.Status).ToListAsync();
             order.ListStatusOrder = listStatus;
 
             return order;
@@ -356,6 +356,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var actionHistory = new OrderActionHistory()
             {
                 Id = Guid.NewGuid().ToString(),
+                OrderId = orderId,
                 FromStatus = oldStatus,
                 ToStatus = order.StatusId,
                 CreateDate = time,
@@ -384,6 +385,44 @@ namespace DeliveryVHGP.WebApi.Repositories
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById(vnTimeZoneKey);
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("yyyy/MM/dd HH:mm");
             return time;
+        }
+        public async Task<List<TimeDurationOrder>> GetDurationOrder(string menuId, int pageIndex, int pageSize)
+        {
+            var lsrDuration = await (from d in context.DeliveryTimeFrames
+                                    where d.MenuId == menuId
+                                    select new TimeDurationOrder()
+                                    {
+                                        Id = d.Id,
+                                        MenuId = d.MenuId,
+                                        FromDate = d.FromDate,
+                                        ToDate = d.ToDate,
+                                        ToHour = d.ToHour,
+                                        FromHour = d.FromHour,
+        }
+                                    ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return lsrDuration;
+                                    
+
+        }
+        public async Task<string> ConvertFromDecimalToDDHHMM(decimal dHours)
+        {
+            try
+            {
+                decimal hours = Math.Floor(dHours); //take integral part
+                decimal minutes = (dHours - hours) * 60.0M; //multiply fractional part with 60
+                int D = (int)Math.Floor(dHours / 24);
+                int H = (int)Math.Floor(hours - (D * 24));
+                int M = (int)Math.Floor(minutes);
+                //int S = (int)Math.Floor(seconds);   //add if you want seconds
+                string timeFormat = String.Format("{0:00}:{1:00}:{2:00}", D, H, M);
+
+                return timeFormat;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

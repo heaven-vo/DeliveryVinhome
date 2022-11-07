@@ -114,5 +114,14 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             return Ok(order);
         }
+        ///// <summary>
+        ///// Get list all store with pagination
+        ///// </summary>
+        ////GET: api/v1/store?pageIndex=1&pageSize=3 
+        //[HttpGet]
+        //public async Task<ActionResult> GetTimeDuration(string menuId, int pageIndex, int pageSize)
+        //{
+        //    return Ok(await repository.Store.G(menuId,pageIndex, pageSize));
+        //}
     }
 }
