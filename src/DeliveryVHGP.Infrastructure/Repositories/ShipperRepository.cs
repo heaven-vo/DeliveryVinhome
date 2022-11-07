@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using DeliveryVHGP.Infrastructure.Services;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP.Core.Enums;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -64,7 +65,31 @@ namespace DeliveryVHGP.WebApi.Repositories
                                      }).FirstOrDefaultAsync();
             return shipper;
         }
-        public async Task<ShipperDto> CreateShipper(ShipperDto ship)
+        public async Task<IEnumerable<ShipperModel>> GetListShipperByName(string shipName, int pageIndex, int pageSize)
+        {
+            var listShipper = await (from ship in context.Shippers.Where(ship => ship.FullName.Contains(shipName))
+
+                                     join acc in context.Accounts on ship.Id equals acc.Id
+                                     select new ShipperModel()
+                                     {
+                                         Id = ship.Id,
+                                         FullName = ship.FullName,
+                                         Phone = ship.Phone,
+                                         Image = ship.Image,
+                                         Email = ship.Email,
+                                         VehicleType = ship.VehicleType,
+                                         DeliveryTeam = ship.DeliveryTeam,
+                                         LicensePlates = ship.LicensePlates,
+                                         Password = acc.Password,
+                                         Colour = ship.Colour,
+                                         Status = ship.Status,
+                                         CreateAt = ship.CreateAt,
+                                         UpdateAt = ship.UpdateAt,
+
+                                     }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listShipper;
+        }
+            public async Task<ShipperDto> CreateShipper(ShipperDto ship)
         {
             string fileImg = "ImagesShipper";
             string time = await _timeStageService.GetTime();
@@ -126,6 +151,39 @@ namespace DeliveryVHGP.WebApi.Repositories
                 throw;
             }
             return ship;
+        }
+        public async Task<StatusShipDto> UpdateStatusShipper(string ShipId, StatusShipDto shipper)
+        {
+            var result = await context.Shippers.FindAsync(ShipId);
+            var segmentDeli = context.SegmentDeliveries.FirstOrDefault(sd => sd.ShipperId == ShipId);
+            var status = context.Orders.FirstOrDefault(x => x.Id == segmentDeli.OrderId);
+            if (status == null || segmentDeli == null)
+            {
+                result.Status = shipper.Status;
+            }
+            if (status != null)
+            {
+                //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
+                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed)
+                {
+                    result.Status = shipper.Status;
+                }
+                if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess)
+                    throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
+                                                 "Vui lòng kiểm tra lại đơn hàng và thử lại");
+            }
+
+            try
+            {
+                context.Entry(result).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                throw;
+            }
+            return shipper;
         }
     }
 }
