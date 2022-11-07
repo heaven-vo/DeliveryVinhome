@@ -339,7 +339,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Image = x.Image,
                 Name = x.Name,
                 DayFilter = x.DayFilter.ToString()
-            }).ToListAsync();
+            }).OrderBy(x => x.DayFilter).ToListAsync();
             if (listMenuMode3 == null) throw new Exception("Not found menu");
             foreach (var menu in listMenuMode3) 
             {
