@@ -61,5 +61,7 @@
     {
         public String Id { get; set; }
         public String? Name { get; set; }
+        public String? DayFilter { get; set; }
+        public String? DayOfWeek { get; set; }
     }
 }

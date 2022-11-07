@@ -458,7 +458,9 @@ namespace DeliveryVHGP.WebApi.Repositories
             var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter)).OrderBy(x => x.DayFilter).Select(x => new MenuMode3Model
             {
                 Id = x.Id,
-                Name = x.Name               
+                Name = x.Name,
+                DayFilter = x.DayFilter.ToString(),
+                DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
             }).ToListAsync();
             var listCate = await (from menu in context.Menus
                                   join ct in context.CategoryInMenus on menu.Id equals ct.MenuId
