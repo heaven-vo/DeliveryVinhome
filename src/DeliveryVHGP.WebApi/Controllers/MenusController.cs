@@ -84,6 +84,14 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             return Ok(await repository.Menu.GetListMenuInMode3(pageSize));
         }
+        /// <summary>
+        /// Get list products in a menu and a store(when click see all in customer web)
+        /// </summary>
+        [HttpGet("mode3/{menuId}/products")]
+        public async Task<ActionResult<List<ProductViewInList>>> GetAllProductInMenuByStoreId(string menuId, [FromQuery] PagingRequest request)
+        {
+            return Ok(await repository.Menu.GetListProductInMenuMode3ByMenuId(menuId,request));
+        }
 
 
         /// <summary>

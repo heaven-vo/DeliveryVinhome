@@ -20,6 +20,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<StoreInMenuView>> GetListStoreInMenuFilerByCategory(string menuId, string categoryId, int page, int pageSize);
         Task<StoreInProductView> GetAllProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize);
         Task<CategoryStoreInMenu> GetAllProductInMenuByCategoryId(string categoryId, string menuId, int page, int pageSize);
+        Task<ProductInMenuViewMode3> GetListProductInMenuMode3ByMenuId(String menuId, PagingRequest request);
         Task<CategoryStoreInMenu> GetAllProductInMenuByCategoryIdAndStoreId(string storeId, string categoryId, string menuId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductInMenuByCategoryId(string categoryId, string menuId, int page, int pageSize);

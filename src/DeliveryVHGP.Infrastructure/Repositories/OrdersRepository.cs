@@ -266,7 +266,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 Id = order.Id,
                 Total = order.Total,
-                StoreId = store.Id, 
+                StoreId = store.Id,
                 BuildingId = order.BuildingId,
                 Note = order.Note,
                 FullName = order.FullName,
@@ -356,6 +356,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var actionHistory = new OrderActionHistory()
             {
                 Id = Guid.NewGuid().ToString(),
+                OrderId = orderId,
                 FromStatus = oldStatus,
                 ToStatus = order.StatusId,
                 CreateDate = time,
