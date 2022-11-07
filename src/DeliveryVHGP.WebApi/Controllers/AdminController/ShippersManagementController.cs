@@ -35,6 +35,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(ship);
         }
         /// <summary>
+        /// Get list all shipper by name with pagination
+        /// </summary>
+        //GET: api/v1/ShipperByName?pageIndex=1&pageSize=3
+        [HttpGet("search-name")]
+        public async Task<ActionResult> GetListShipperByName(string shipName, int pageIndex, int pageSize)
+        {
+            return Ok(await repository.Shipper.GetListShipperByName(shipName, pageIndex, pageSize));
+        }
+        /// <summary>
         /// Create a shipper
         /// </summary>
         //POST: api/v1/shipper
@@ -70,6 +79,29 @@ namespace DeliveryVHGP.WebApi.Controllers
                 {
                     message = "Hiện tại shipper đang có đơn hàng đi giao !!" +
                                                "Vui lòng xóa kiểm tra và thử lại "
+                });
+            }
+        }
+        /// <summary>
+        /// Update status shipper  with pagination
+        /// </summary>
+        //PUT: api/v1/shipper?id
+        [HttpPut("status/{shipId}")]
+        public async Task<ActionResult> UpdateStatusStoreById(string shipId, StatusShipDto store)
+        {
+            try
+            {
+                var shipperToUpdate = await repository.Shipper.UpdateStatusShipper(shipId, store);
+                var shipper = await repository.Shipper.GetShipperById(shipId);
+                return Ok(new { StatusCode = "Successful", data = shipper });
+            }
+            catch
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = "Hiện tại đang có đơn hàng chưa hoàn thành !!" +
+                                              "Vui lòng kiểm tra lại đơn hàng và thử lại "
                 });
             }
         }

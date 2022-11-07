@@ -19,13 +19,14 @@ namespace DeliveryVHGP.Core.Enums
     public enum InProcessStatus
     {
         HubDelivery = 7,
-        CustomerDelivery = 8
+        AtHub = 8,
+        CustomerDelivery = 9
     }
     public enum FailStatus
     {
-        OutTime = 12,
-        StoreFail = 9,
-        ShipperFail = 10,
-        CustomerFail = 11
+        OutTime = 10,
+        StoreFail = 11,
+        ShipperFail = 12,
+        CustomerFail = 13
     }
 }
