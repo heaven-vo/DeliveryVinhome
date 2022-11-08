@@ -199,9 +199,12 @@ namespace DeliveryVHGP.WebApi.Repositories
                                join odd in context.OrderDetails on o.Id equals odd.OrderId
                                join b in context.Buildings on o.BuildingId equals b.Id
                                join s in context.Stores on o.StoreId equals s.Id
+                               join bs in context.Buildings on s.BuildingId equals bs.Id
                                join m in context.Menus on o.MenuId equals m.Id
                                //join pm in context.ProductInMenus on od.ProductInMenuId equals pm.Id
                                join h in context.OrderActionHistories on o.Id equals h.OrderId
+                               //join sg in context.SegmentDeliveries on o.Id equals sg.OrderId
+                               //join ship in context.Shippers on sg.ShipperId equals ship.Id
                                join p in context.Payments on o.Id equals p.OrderId
                                where (o.Id == orderId)
                                select new OrderDetailModel()
@@ -210,9 +213,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    Total = o.Total,
                                    Time = h.CreateDate,
                                    //PaymentId = p.Id,
+                                   FullName = o.FullName,
+                                   PhoneNumber = o.PhoneNumber,
                                    PaymentName = p.Type,
                                    //StoreId= o.StoreId,
                                    StoreName = s.Name,
+                                   StoreBuilding = bs.Name,
+                                   //ShipperName = ship.FullName,
+                                   //ShipperPhone = ship.Phone,
                                    ModeId = m.SaleMode,
                                    BuildingName = b.Name,
                                    Note = o.Note,

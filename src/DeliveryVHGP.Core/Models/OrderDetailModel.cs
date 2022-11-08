@@ -7,6 +7,8 @@
         public double? Total { get; set; }
         public double? ShipCost { get; set; }
         //public string? PaymentId { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? FullName { get; set; }
         public string? PaymentName { get; set; }
         public string? ModeId { get; set; }
 
@@ -14,6 +16,9 @@
         public string? BuildingName { get; set; }
         //public string? StoreId { get; set; }
         public string? StoreName { get; set; }
+        public string? StoreBuilding { get; set; }
+        public string? ShipperName { get; set; } = "";
+        public string? ShipperPhone { get; set; } = "";
         public string? Note { get; set; }
 
 
