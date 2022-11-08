@@ -388,24 +388,21 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<List<TimeDurationOrder>> GetDurationOrder(string menuId, int pageIndex, int pageSize)
         {
-            var lsrDuration = await (from d in context.DeliveryTimeFrames
-                                    where d.MenuId == menuId
-                                    select new TimeDurationOrder()
+
+            var lsrDuration = await  context.DeliveryTimeFrames.Where(d => d.MenuId == menuId)
+                                    .Select(d => new  TimeDurationOrder
                                     {
                                         Id = d.Id,
                                         MenuId = d.MenuId,
                                         FromDate = d.FromDate,
                                         ToDate = d.ToDate,
-                                        ToHour = d.ToHour,
-                                        FromHour = d.FromHour,
-        }
+                                        ToHour = TimeSpan.FromHours((double)d.ToHour).ToString(@"hh\:mm"),
+                                        FromHour = TimeSpan.FromHours((double)d.FromHour).ToString(@"hh\:mm"),
+                                      }
                                     ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
             return lsrDuration;
-                                    
-
         }
-        public async Task<string> ConvertFromDecimalToDDHHMM(decimal dHours)
+        public string ConvertFromDecimalToDDHHMM(decimal dHours)
         {
             try
             {
