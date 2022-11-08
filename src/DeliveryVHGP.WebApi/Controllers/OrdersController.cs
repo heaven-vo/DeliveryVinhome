@@ -114,5 +114,14 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             return Ok(order);
         }
+        /// <summary>
+        /// Get TimeDuration By MenuId in Mode3 (customer web)
+        /// </summary>
+        //GET: api/v1/order?pageIndex=1&pageSize=3 
+        [HttpGet("ByMenuId")]
+        public async Task<ActionResult> GetTimeDuration(string menuId, int pageIndex, int pageSize)
+        {
+            return Ok(await repository.Order.GetDurationOrder(menuId, pageIndex, pageSize));
+        }
     }
 }
