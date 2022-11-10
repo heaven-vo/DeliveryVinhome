@@ -410,7 +410,24 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lsrDuration;
         }
-        public async Task<string> GetTime()
+        public async Task<Object> DeleteOrderById(string orderId)
+        {
+            var order = await context.Orders.FindAsync(orderId);
+            var orderHistory = context.OrderActionHistories.FirstOrDefault(d => d.OrderId == order.Id);
+            var payment = context.Payments.FirstOrDefault(p => p.OrderId == order.Id);
+            var orderDetail = context.OrderDetails.FirstOrDefault(od => od.OrderId == order.Id);
+
+
+            context.Orders.Remove(order);
+            context.OrderActionHistories.Remove(orderHistory);
+            context.Payments.Remove(payment);
+            context.OrderDetails.Remove(orderDetail);
+            await context.SaveChangesAsync();
+
+            return order;
+
+        }
+    public async Task<string> GetTime()
         {
             DateTime utcDateTime = DateTime.UtcNow;
 
