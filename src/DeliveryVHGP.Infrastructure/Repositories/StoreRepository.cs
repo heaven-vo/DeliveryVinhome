@@ -7,6 +7,7 @@ using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP_WebApi.ViewModels;
 using DeliveryVHGP.Core.Enums;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -100,7 +101,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return listStore;
         }
-        public async Task<List<OrderAdminDto>> GetListOrderDeliveringByStore(string StoreId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderDeliveringByStore(string StoreId, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -111,7 +112,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && h.ToStatus == 0  && (order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9)
-                                  select new OrderAdminDto()
+                                  select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
@@ -129,10 +130,15 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var or in lstOrder)
+            {
+                var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
+                or.CountProduct = countpro.ToString();
 
+            }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDto>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -143,7 +149,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12)
-                                  select new OrderAdminDto()
+                                  select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
@@ -161,10 +167,15 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var or in lstOrder)
+            {
+                var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
+                or.CountProduct = countpro.ToString();
 
+            }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDto>> GetListOrderByStoreByModeId(string StoreId,string modeId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId,string modeId, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -175,8 +186,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
-                                  where order.Status == 2 || order.Status == 3
-                                  select new OrderAdminDto()
+                                 && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
+                                  select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
@@ -194,10 +205,15 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var or in lstOrder)
+            {
+                var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
+                or.CountProduct = countpro.ToString();
 
+            }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDto>> GetListOrderPreparingsByStore(string StoreId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderPreparingsByStore(string StoreId, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -208,7 +224,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3) 
-                                  select new OrderAdminDto()
+                                  
+                                  select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
                                       Total = order.Total,
@@ -226,7 +243,12 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
+            foreach (var or in lstOrder)
+            {
+                var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
+                or.CountProduct = countpro.ToString();
+                
+    }
             return lstOrder;
         }
         public async Task<Object> GetStoreById(string storeId)
