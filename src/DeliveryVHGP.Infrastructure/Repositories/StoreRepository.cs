@@ -110,7 +110,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9
+                                  where s.Id == StoreId && (order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -142,7 +142,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12
+                                  where s.Id == StoreId && (order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -174,7 +174,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && modeId == m.SaleMode 
+                                  where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
                                   where order.Status == 2 || order.Status == 3
                                   select new OrderAdminDto()
                                   {
@@ -207,7 +207,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3
+                                  where s.Id == StoreId && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
