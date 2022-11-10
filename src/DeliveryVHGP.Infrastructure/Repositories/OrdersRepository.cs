@@ -6,6 +6,8 @@ using System.Linq;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Core.Enums;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
+using DeliveryVHGP.Infrastructure.Services;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -15,8 +17,15 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
         }
         //Get list order (in admin web)
-        public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize , DateFilterRequest request)
         {
+            //var fromm = request?.FromDate;
+            //var to = request?.ToDate;
+            //if (fromm != null && to != null)
+            //{
+            //    fromm = ((DateTime)fromm).GetStartOfDate();
+            //    to = ((DateTime)to).GetEndOfDate();
+            //}
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
                                   join h in context.OrderActionHistories on order.Id equals h.OrderId
@@ -24,7 +33,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  where h.ToStatus == 0
+                                  where h.ToStatus == 0 && h.CreateDate.Contains(request.DateFilter)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,

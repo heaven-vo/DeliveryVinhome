@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DeliveryVHGP.Core.Interfaces;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -17,11 +18,11 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize, [FromQuery] DateFilterRequest request)
         {
             try
             {
-                return Ok(await repository.Order.GetAll(pageIndex, pageSize));
+                return Ok(await repository.Order.GetAll(pageIndex, pageSize, request));
 
             }
             catch
