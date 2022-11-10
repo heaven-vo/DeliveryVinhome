@@ -1,4 +1,6 @@
-﻿namespace DeliveryVHGP.Core.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DeliveryVHGP.Core.Models
 {
     public class OrderAdminDto
     {
@@ -15,5 +17,15 @@
         public int? Status { get; set; }
         public string? Time { get; set; }
         //public TimeCreateOrder TimeCreate{ get; set; }
+        public class DateFilterRequest
+        {
+            public string? DateFilter { get; set; } = "";
+
+            //[DataType(DataType.DateTime)]
+            //public DateTime? FromDate { get; set; }
+
+            //[DataType(DataType.DateTime)]
+            //public DateTime? ToDate { get; set; }
+        }
     }
 }
