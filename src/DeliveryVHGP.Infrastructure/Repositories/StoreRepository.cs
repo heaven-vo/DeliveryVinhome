@@ -267,6 +267,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    CloseTime = s.CloseTime,
                                    OpenTime = s.OpenTime,
                                    Slogan = s.Slogan,
+                                   Description = s.Description,
                                    BrandId = b.Id,
                                    BuildingId = bs.Id,
                                    StoreCategoryId = sc.Id,
@@ -291,6 +292,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Name = store.Name,
                     Phone = store.Phone,
                     Slogan = store.Slogan,
+                    Description = store.Description,
                     Image = await _fileService.UploadFile(fileImg, store.Image),
                     Rate = store.Rate,
                     OpenTime = store.OpenTime,
@@ -355,6 +357,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             result.CloseTime = store.CloseTime;
             result.Phone = store.Phone;
             result.Slogan = store.Slogan;
+            result.Description = store.Description;
             result.Status = store.Status;
             result.UpdateAt = time;
             account.Password = store.Password;
