@@ -835,6 +835,8 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.CreditAccount).HasMaxLength(100);
 
+                entity.Property(e => e.Description).HasMaxLength(500);
+
                 entity.Property(e => e.Image).HasMaxLength(250);
 
                 entity.Property(e => e.Name).HasMaxLength(100);

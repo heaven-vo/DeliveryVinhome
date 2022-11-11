@@ -25,7 +25,7 @@
         public String Name { get; set; }
         public String Image { get; set; }
         public String? DayFilter { get; set; }
-        public List<ProductViewInList> ListProducts { get; set; }
+        public List<StoreInMenuView> ListStores { get; set; }
     }
     public class MenuViewModel
     {

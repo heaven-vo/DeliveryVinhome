@@ -341,15 +341,72 @@ namespace DeliveryVHGP.WebApi.Repositories
                 DayFilter = x.DayFilter.ToString()
             }).OrderBy(x => x.DayFilter).ToListAsync();
             if (listMenuMode3 == null) throw new Exception("Not found menu");
-            foreach (var menu in listMenuMode3) 
+            foreach (var me in listMenuMode3) 
             {
-                var listProducts = await GetListProductInMenu(menu.Id, 1,pageSize);
-                if(listProducts != null)
-                {
-                    menu.ListProducts = listProducts;
-                }
+                var listStore = await (from menu in context.Menus
+                                       join sm in context.StoreInMenus on menu.Id equals sm.MenuId
+                                       join store in context.Stores on sm.StoreId equals store.Id
+                                       join bu in context.Buildings on store.BuildingId equals bu.Id
+                                       join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                       where menu.Id == me.Id && store.Status == true
+                                       select new StoreInMenuView
+                                       {
+                                           Id = store.Id,
+                                           Name = store.Name,
+                                           Image = store.Image,
+                                           Building = bu.Name,
+                                           StoreCategory = sc.Name
+                                       }).Take(pageSize).ToListAsync();
+                if (listStore != null)
+                    me.ListStores = listStore;
             }
             return listMenuMode3;// ?? new List<MenuViewMode3>();
+        }
+        //Get list store in a menu mode 3 {customer web}
+        public async Task<StoreInMenuViewMode3> GetListStoreInMenuMode3(string menuId, int page, int pageSize)
+        {
+            DateTime? date = DateTime.Now.Date;
+            List<DateTime> listDate = new List<DateTime>();
+            for (int i = 0; i <= 7; i++)
+            {
+                listDate.Add(date.Value.AddDays(i));
+            }
+
+            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter)).OrderBy(x => x.DayFilter).Select(x => new MenuMode3Model
+            {
+                Id = x.Id,
+                Name = x.Name,
+                DayFilter = x.DayFilter.ToString(),
+                DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
+            }).ToListAsync();
+            var listCate = await (from menu in context.Menus
+                                  join ct in context.CategoryInMenus on menu.Id equals ct.MenuId
+                                  join cate in context.Categories on ct.CategoryId equals cate.Id
+                                  where menu.Id == menuId
+                                  select new CategoryInMenuView
+                                  {
+                                      Id = cate.Id,
+                                      Name = cate.Name,
+                                      Image = cate.Image
+                                  }).ToListAsync();
+
+            var listStore = await (from menu in context.Menus
+                                   join sm in context.StoreInMenus on menu.Id equals sm.MenuId
+                                   join store in context.Stores on sm.StoreId equals store.Id
+                                   join bu in context.Buildings on store.BuildingId equals bu.Id
+                                   join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                   where menu.Id == menuId && store.Status == true
+                                   select new StoreInMenuView
+                                   {
+                                       Id = store.Id,
+                                       Name = store.Name,
+                                       Image = store.Image,
+                                       Building = bu.Name,
+                                       StoreCategory = sc.Name
+                                   }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            StoreInMenuViewMode3 storeInMenuViewMode3 = new StoreInMenuViewMode3 { menuMode3s = listMenuMode3, categoryInMenuViews = listCate, stores = listStore };
+            return storeInMenuViewMode3;
+
         }
 
 
@@ -376,6 +433,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             listCategory = listCategory.Where(x => x.ListProducts != null).ToList();
             return listCategory;
         }
+        //get list store in menu filter by cate (when click cate in menu mode 1 in customer web)
         public async Task<List<StoreInMenuView>> GetListStoreInMenuFilerByCategory(string menuId, string categoryId, int page, int pageSize)
         {
             var stores = await (from menu in context.Menus
@@ -411,6 +469,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     Id=store.Id,
                                     Image = store.Image,
                                     Name = store.Name,
+                                    Description = store.Description,
                                     OpenTime = store.OpenTime,
                                     CloseTime = store.CloseTime,
                                     Location = bu.Name + ", " + area.Name + ", Vinhomes Grand Park"
@@ -445,45 +504,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             cateView.ListProducts = await GetListProductInMenuByCategoryIdAndStoreId(storeId, categoryId, menuId, page, pageSize);
             return cateView;
         }
-        //Get all product when click a menu in mode 3
-        public async Task<ProductInMenuViewMode3> GetListProductInMenuMode3ByMenuId(String menuId, PagingRequest request)
-        {
-            DateTime? date = DateTime.Now.Date;
-            List<DateTime> listDate = new List<DateTime>();
-            for (int i = 0; i <= 7; i++)
-            {
-                listDate.Add(date.Value.AddDays(i));
-            }
-
-            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter)).OrderBy(x => x.DayFilter).Select(x => new MenuMode3Model
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DayFilter = x.DayFilter.ToString(),
-                DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
-            }).ToListAsync();
-            var listCate = await (from menu in context.Menus
-                                  join ct in context.CategoryInMenus on menu.Id equals ct.MenuId
-                                  join cate in context.Categories on ct.CategoryId equals cate.Id
-                                  where menu.Id == menuId
-                                  select new CategoryInMenuView
-                                  {
-                                      Id = cate.Id,
-                                      Name = cate.Name,
-                                      Image = cate.Image
-                                  }).ToListAsync();
-            List<ProductViewInList> listProduct = new List<ProductViewInList>();
-            if (request.searchBy == "")
-            {
-                listProduct = await GetListProductInMenu(menuId, request.page, request.pageSize);
-            }
-            else
-            {
-                listProduct = await GetListProductInMenuByCategoryId(request.searchBy, menuId, request.page, request.pageSize);
-            }
-            ProductInMenuViewMode3 productInMenuViewMode3 = new ProductInMenuViewMode3 { menuMode3s = listMenuMode3, categoryInMenuViews = listCate, products = listProduct };
-            return productInMenuViewMode3;
-        }
+        
         //-- Query Product-----------------------------------------------------------------------------------------------------------
         //Get all product in menu (use for mode 3) with paging
         public async Task<List<ProductViewInList>> GetListProductInMenu(string menuId,int page, int pageSize)

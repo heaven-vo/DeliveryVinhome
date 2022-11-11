@@ -27,6 +27,7 @@
         public string Id { get; set; } = null!;
         public string? Image { get; set; }
         public string? Name { get; set; }
+        public string? Description { get; set; }
         public string? CloseTime { get; set; }
         public string? OpenTime { get; set; }
         public string? Location { get; set; }
@@ -51,11 +52,11 @@
         public List<ProductViewInList> ListProducts { get; set; }
 
     }
-    public class ProductInMenuViewMode3
+    public class StoreInMenuViewMode3
     {
         public List<MenuMode3Model> menuMode3s { get; set; }
         public List<CategoryInMenuView> categoryInMenuViews { get; set; }
-        public List<ProductViewInList> products { get; set; }
+        public List<StoreInMenuView> stores { get; set; }
     }
     public class MenuMode3Model
     {

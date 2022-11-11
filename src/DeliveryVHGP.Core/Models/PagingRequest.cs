@@ -10,7 +10,7 @@ namespace DeliveryVHGP.Core.Models
     {
         public int page { get; set; } = 1;
         public int pageSize { get; set; } = 8;
-        public string keySearch { get; set; } = "";
+        //public string keySearch { get; set; } = "";
         public string searchBy { get; set; } = "";
         //public SortOrder SortType { get; set; } = SortOrder.Descending;
         //public string ColName { get; set; } = "Id";
