@@ -363,7 +363,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             return listMenuMode3;// ?? new List<MenuViewMode3>();
         }
         //Get list store in a menu mode 3 {customer web}
-        public async Task<StoreInMenuViewMode3> GetListStoreInMenuMode3(string menuId, int page, int pageSize)
+        public async Task<StoreInMenuViewMode3> GetListStoreInMenuMode3(string menuId, PagingRequest request)
         {
             DateTime? date = DateTime.Now.Date;
             List<DateTime> listDate = new List<DateTime>();
@@ -389,21 +389,28 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Name = cate.Name,
                                       Image = cate.Image
                                   }).ToListAsync();
-
-            var listStore = await (from menu in context.Menus
-                                   join sm in context.StoreInMenus on menu.Id equals sm.MenuId
-                                   join store in context.Stores on sm.StoreId equals store.Id
-                                   join bu in context.Buildings on store.BuildingId equals bu.Id
-                                   join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
-                                   where menu.Id == menuId && store.Status == true
-                                   select new StoreInMenuView
-                                   {
-                                       Id = store.Id,
-                                       Name = store.Name,
-                                       Image = store.Image,
-                                       Building = bu.Name,
-                                       StoreCategory = sc.Name
-                                   }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            List<StoreInMenuView> listStore = null;
+            if (request.searchBy == "")
+            {
+                listStore = await (from menu in context.Menus
+                                       join sm in context.StoreInMenus on menu.Id equals sm.MenuId
+                                       join store in context.Stores on sm.StoreId equals store.Id
+                                       join bu in context.Buildings on store.BuildingId equals bu.Id
+                                       join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                       where menu.Id == menuId && store.Status == true
+                                       select new StoreInMenuView
+                                       {
+                                           Id = store.Id,
+                                           Name = store.Name,
+                                           Image = store.Image,
+                                           Building = bu.Name,
+                                           StoreCategory = sc.Name
+                                       }).Skip((request.page - 1) * request.pageSize).Take(request.pageSize).ToListAsync();
+            }
+            else
+            {
+                listStore = await GetListStoreInMenuFilerByCategory(menuId, request.searchBy, request.page, request.pageSize);
+            }
             StoreInMenuViewMode3 storeInMenuViewMode3 = new StoreInMenuViewMode3 { menuMode3s = listMenuMode3, categoryInMenuViews = listCate, stores = listStore };
             return storeInMenuViewMode3;
 
