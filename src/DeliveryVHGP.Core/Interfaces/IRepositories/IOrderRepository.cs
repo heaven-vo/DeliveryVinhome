@@ -20,5 +20,6 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
 
         Task<OrderDto> CreatNewOrder(OrderDto order);
         Task<OrderStatusModel> OrderUpdateStatus(string orderId, OrderStatusModel order);
+        Task<Object> PaymentOrder(string orderId);
     }
 }

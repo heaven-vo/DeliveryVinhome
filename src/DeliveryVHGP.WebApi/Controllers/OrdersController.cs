@@ -123,5 +123,22 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             return Ok(await repository.Order.GetDurationOrder(menuId, pageIndex, pageSize));
         }
+        /// <summary>
+        /// Get order by id with pagination
+        /// </summary>
+        //GET: api/v1/orderById?pageIndex=1&pageSize=3
+        [HttpGet("ByOrderId")]
+        public async Task<ActionResult> GetPaymentOrder(string orderId)
+        {
+            try
+            {
+                var pro = await repository.Order.PaymentOrder(orderId);
+                return Ok(pro);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
     }
 }

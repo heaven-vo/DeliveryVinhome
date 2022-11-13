@@ -19,4 +19,11 @@
 
 
     }
+    public class OrderInfor
+    {
+        public string OrderId { get; set; }
+        public double Amount { get; set; }
+        public int Status { get; set; }
+        //public string PaymentId { get; set; }
+    }
 }
