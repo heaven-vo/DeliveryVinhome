@@ -133,6 +133,24 @@ namespace DeliveryVHGP.WebApi.Controllers
             try
             {
                 var pro = await repository.Order.PaymentOrder(orderId);
+
+                return Redirect(pro.ToString());
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+        /// <summary>
+        /// Get order by id with pagination
+        /// </summary>
+        //GET: api/v1/orderById?pageIndex=1&pageSize=3
+        [HttpGet("ByOrderId-confirm")]
+        public async Task<ActionResult> GetPaymentConfirm(string orderId)
+        {
+            try
+            {
+                var pro = await repository.Order.PaymentConfirm(orderId);
                 return Ok(pro);
             }
             catch
@@ -140,5 +158,6 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return NotFound();
             }
         }
+
     }
 }
