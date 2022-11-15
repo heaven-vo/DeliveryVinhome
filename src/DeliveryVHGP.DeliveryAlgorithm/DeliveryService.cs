@@ -29,6 +29,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 //    scopeSev.WriteTest("assssssssss");
                 //await Task.Delay(5000, stoppingToken);
                 //}                
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 Console.WriteLine("Test backround service delay 250s");
                 await Task.Delay(250000, stoppingToken);
             }
