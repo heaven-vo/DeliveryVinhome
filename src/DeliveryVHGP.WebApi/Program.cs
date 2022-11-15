@@ -6,6 +6,7 @@ using DeliveryVHGP.Core.Models.Noti;
 using DeliveryVHGP.DeliveryAlgorithm;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
+using DeliveryVHGP.WebApi;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -15,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITimeStageService,TimeStageService >();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-builder.Services.AddHostedService<DeliveryService>();
+builder.Services.AddHostedService<DeliveryServiceTest>();
 
 builder.Services.AddControllers();
 
