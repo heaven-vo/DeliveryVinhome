@@ -6,7 +6,6 @@ using DeliveryVHGP.Core.Models.Noti;
 using DeliveryVHGP.DeliveryAlgorithm;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
-using DeliveryVHGP.WorkerService;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -17,7 +16,6 @@ builder.Services.AddScoped<ITimeStageService,TimeStageService >();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 builder.Services.AddHostedService<DeliveryService>();
-builder.Services.AddHostedService<Worker>();
 
 builder.Services.AddControllers();
 
