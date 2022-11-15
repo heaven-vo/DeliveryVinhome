@@ -3,6 +3,7 @@ using CorePush.Google;
 using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models.Noti;
+using DeliveryVHGP.DeliveryAlgorithm;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITimeStageService,TimeStageService >();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+builder.Services.AddHostedService<DeliveryService>();
 
 builder.Services.AddControllers();
 

@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DeliveryVHGP.Core\DeliveryVHGP.Core.csproj" />
+    <ProjectReference Include="..\DeliveryVHGP.DeliveryAlgorithm\DeliveryVHGP.DeliveryAlgorithm.csproj" />
     <ProjectReference Include="..\DeliveryVHGP.Infrastructure\DeliveryVHGP.Infrastructure.csproj" />
   </ItemGroup>
 
