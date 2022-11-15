@@ -34,5 +34,16 @@ namespace DeliveryVHGP.DeliveryAlgorithm
 
             }
         }
+        public override Task StartAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("Worker STARTING");
+            return base.StartAsync(cancellationToken);
+        }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _logger.LogWarning("Worker STOPPING: {time}", DateTimeOffset.Now);
+            return base.StopAsync(cancellationToken);
+        }
     }
 }
