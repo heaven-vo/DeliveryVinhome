@@ -151,36 +151,30 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet("Payment-confirm")]
         public async Task<ActionResult> GetPaymentConfirm()
         {
-                string hashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuỗi bí mật
-                                                                        //string vnpayData = HttpContext.Request.QueryString.ToString();
+
+            string hashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuỗi bí mật
+                                                                    //string vnpayData = HttpContext.Request.QueryString.ToString();
             VnPayLibrary pay = new VnPayLibrary();
             var vnpayData = Request.QueryString.ToString();
             Console.WriteLine(vnpayData);
             //lấy toàn bộ dữ liệu được trả về
-
-            //foreach (string s in vnpayData)
-            //{
-            //    if (!string.IsNullOrEmpty(s) && s.StartsWith("vnp_"))
-            //    {
-            //        pay.AddResponseData(s, vnpayData[s]);
-            //    }
-            //}
             string[] authorsList = vnpayData.Split("&");
             string vnp_Amount = "";
-            string vnp_Command = "pay";
-            string vnp_CreateDate = "20221115143237";
-            string vnp_CurrCode = "VND";
-            string vnp_Locale = "vn";
+            string vnp_BankCode = "";
+            string vnp_BankTranNo = "";
+            string vnp_CardType = "";
             string vnp_OrderInfo = "";
-            string vnp_OrderType = "other";
-            string vnp_ReturnUrl = "https://localhost:7102/api/v1/orders/Payment-confirm";
+            string vnp_PayDate = "";
+            string vnp_ResponseCode = "";
             string vnp_TmnCode = "";
+            string vnp_TransactionNo = "";
+            string vnp_TransactionStatus = "";
             string vnp_TxnRef = "";
-            string vnp_Version = "2.1.0";
-            Console.WriteLine("authorsList"+ String.Join(Environment.NewLine, authorsList));
-            foreach(string author in authorsList)
+
+            Console.WriteLine("authorsList" + String.Join(Environment.NewLine, authorsList));
+            foreach (string author in authorsList)
             {
-                
+
                 string[] ListRespone = author.Split("=");
                 Console.WriteLine("ListRespone[0]" + ListRespone[0]);
                 Console.WriteLine("ListRespone[1]" + ListRespone[1]);
@@ -188,61 +182,68 @@ namespace DeliveryVHGP.WebApi.Controllers
                 {
                     vnp_Amount = ListRespone[1];
                 }
-                //else if(ListRespone[0] == "vnp_CreateDate")
-                //{
-                //    vnp_CreateDate = ListRespone[1];
-                //}
-                //else if(ListRespone[0] == "vnp_CurrCode")
-                //{
-                //    vnp_CurrCode = ListRespone[1];
-                //}
-                //else if(ListRespone[0] == "vnp_Locale")
-                //{
-                //    vnp_Locale = ListRespone[1];
-                //} 
-                else if(ListRespone[0] == "vnp_OrderInfo")
+                else if (ListRespone[0] == "vnp_BankCode")
+                {
+                    vnp_BankCode = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_BankTranNo")
+                {
+                    vnp_BankTranNo = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_CardType")
+                {
+                    vnp_CardType = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_OrderInfo")
                 {
                     vnp_OrderInfo = ListRespone[1];
                 }
-                else if(ListRespone[0] == "vnp_TmnCode")
+                else if (ListRespone[0] == "vnp_PayDate")
+                {
+                    vnp_PayDate = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_ResponseCode")
+                {
+                    vnp_ResponseCode = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TmnCode")
                 {
                     vnp_TmnCode = ListRespone[1];
                 }
-                //else if (ListRespone[0] == "vnp_OrderType")
-                //{
-                //    vnp_OrderType = ListRespone[1];
-                //} 
-                //else if (ListRespone[0] == "vnp_ReturnUrl")
-                //{
-                //    vnp_ReturnUrl = ListRespone[1];
-                //}
+                else if (ListRespone[0] == "vnp_TransactionNo")
+                {
+                    vnp_TransactionNo = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TransactionStatus")
+                {
+                    vnp_TransactionStatus = ListRespone[1];
+                }
                 else if (ListRespone[0] == "vnp_TxnRef")
                 {
                     vnp_TxnRef = ListRespone[1];
-                } 
-                else if (ListRespone[0] == "vnp_Version")
-                {
-                    vnp_Version = ListRespone[1];
                 }
+                
             }
             //string orderId = pay.GetResponseData("vnp_TxnRef"); //mã hóa đơn
             //string vnpayTranId = pay.GetResponseData("vnp_TransactionNo"); //mã giao dịch tại hệ thống VNPAY
             //pay.GetResponseData
-            string vnp_ResponseCode = Request.Query["vnp_ResponseCode"];//response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
             string vnp_SecureHash = Request.Query["vnp_SecureHash"]; //hash của dữ liệu trả về
 
+            string hashRaw = "vnp_Amount=" + vnp_Amount + "&" + "vnp_BankCode=" + vnp_BankCode + "&" + "vnp_BankTranNo=" + vnp_BankTranNo + "&" + "vnp_CardType=" +
+                vnp_CardType + "&" + "vnp_OrderInfo=" + vnp_OrderInfo + "&" + "vnp_PayDate=" + vnp_PayDate + "&" + "vnp_ResponseCode=" + vnp_ResponseCode + "&" + "vnp_TmnCode=" + vnp_TmnCode + "&" + "vnp_TransactionNo=" + vnp_TransactionNo +
+                "&" + "vnp_TransactionStatus=" + vnp_TransactionStatus + "&" + "vnp_TxnRef=" + vnp_TxnRef;
 
-            string hashRaw = vnp_Amount + "&" + vnp_Command + "&" + vnp_CreateDate + "&" + vnp_CurrCode + "&" + vnp_Locale + "&" + vnp_OrderInfo + "&" + vnp_OrderType + "&"     + vnp_ReturnUrl + "&" + vnp_TmnCode + "&" + vnp_TxnRef +"&" + vnp_Version;
-            Console.WriteLine("hashRaw"+ hashRaw);
-            Console.WriteLine("vnp_Amount"+vnp_Amount);
-            bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
-            Console.WriteLine(checkSignature);
-            if (checkSignature )
+            Console.WriteLine("hashRaw" + hashRaw);
+            bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret, hashRaw); //check chữ ký đúng hay không?
+            Console.WriteLine("checkSignature: " + checkSignature);
+            if (checkSignature)
             {
                 if (vnp_ResponseCode == "00")
                 {
                     //Thanh toán thành công
-                    throw new Exception ("Successful" + vnp_SecureHash );
+                    //var order = await repository.Order.PaymentOrder(vnp_IpAddr);
+
+                    return Ok("Successful" );
 
                 }
                 else
@@ -250,11 +251,9 @@ namespace DeliveryVHGP.WebApi.Controllers
                     //Thanh toán không thành công. Mã lỗi: vnp_ResponseCode
                     throw new Exception("Faild" + vnp_SecureHash);
                 }
-                
+
             }
             return Ok(vnpayData);
         }
-
-
     }
 }

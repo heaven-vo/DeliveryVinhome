@@ -80,9 +80,9 @@ namespace DeliveryVHGP.Infrastructure.Services
 
         #region Response process
 
-        public bool ValidateSignature(string inputHash, string secretKey)
+        public bool ValidateSignature(string inputHash, string secretKey, string hashRaw)
         {
-            string rspRaw = GetResponseData();
+            string rspRaw = hashRaw;
             Console.WriteLine("rspRaw" + rspRaw);
             string myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
