@@ -55,6 +55,7 @@ namespace DeliveryVHGP.Infrastructure.Services
                 {
                     data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
                 }
+                
             }
             string queryString = data.ToString();
 
@@ -65,7 +66,9 @@ namespace DeliveryVHGP.Infrastructure.Services
 
                 signData = signData.Remove(data.Length - 1, 1);
             }
+            Console.WriteLine("signData"+signData);
             string vnp_SecureHash = Utils.HmacSHA512(vnp_HashSecret, signData);
+
             baseUrl += "vnp_SecureHash=" + vnp_SecureHash;
 
             return baseUrl;
@@ -80,6 +83,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         public bool ValidateSignature(string inputHash, string secretKey)
         {
             string rspRaw = GetResponseData();
+            Console.WriteLine("rspRaw" + rspRaw);
             string myChecksum = Utils.HmacSHA512(secretKey, rspRaw);
             return myChecksum.Equals(inputHash, StringComparison.InvariantCultureIgnoreCase);
         }
@@ -92,7 +96,7 @@ namespace DeliveryVHGP.Infrastructure.Services
                 _responseData.Remove("vnp_SecureHashType");
             }
             if (_responseData.ContainsKey("vnp_SecureHash"))
-            {
+            {   
                 _responseData.Remove("vnp_SecureHash");
             }
             foreach (KeyValuePair<string, string> kv in _responseData)
@@ -102,11 +106,14 @@ namespace DeliveryVHGP.Infrastructure.Services
                     data.Append(WebUtility.UrlEncode(kv.Key) + "=" + WebUtility.UrlEncode(kv.Value) + "&");
                 }
             }
+            Console.WriteLine("data1" + data);
             //remove last '&'
             if (data.Length > 0)
             {
                 data.Remove(data.Length - 1, 1);
             }
+            Console.WriteLine("data2" + data);
+
             return data.ToString();
         }
 
@@ -133,14 +140,16 @@ namespace DeliveryVHGP.Infrastructure.Services
 
             return hash.ToString();
         }
+
         //public static string GetIpAddress()
         //{
         //    string ipAddress;
         //    try
         //    {
-        //        ipAddress = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
 
-        //        if (string.IsNullOrEmpty(ipAddress) || (ipAddress.ToLower() == "unknown") || ipAddress.Length > 45)
+        //        ipAddress = Req.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+        //        if (string.IsNullOrEmpty(ipAddress) || (ipAddress.ToLower() == "unknown"))
         //            ipAddress = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
         //    }
         //    catch (Exception ex)
@@ -151,6 +160,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         //    return ipAddress;
         //}
     }
+}
 
     public class VnPayCompare : IComparer<string>
     {
@@ -163,5 +173,5 @@ namespace DeliveryVHGP.Infrastructure.Services
             return vnpCompare.Compare(x, y, CompareOptions.Ordinal);
         }
     }
-}
+
 

@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "CorePush/3.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/CorePush.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CorePush.dll": {}
+        }
+      },
       "Firebase.Auth/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -1771,6 +1784,15 @@
           "lib/netstandard2.0/NuGet.Versioning.dll": {}
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
         "type": "package",
         "runtimeTargets": {
@@ -3336,7 +3358,8 @@
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "6.0.9",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9"
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9",
+          "Newtonsoft.Json": "13.0.1"
         },
         "compile": {
           "bin/placeholder/DeliveryVHGP.Core.dll": {}
@@ -3349,6 +3372,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "CorePush": "3.1.1",
           "DeliveryVHGP.Core": "1.0.0",
           "FirebaseDatabase.net": "4.1.0",
           "FirebaseStorage.net": "1.0.3",
@@ -3365,6 +3389,20 @@
     }
   },
   "libraries": {
+    "CorePush/3.1.1": {
+      "sha512": "hJcLlEIJ7DqyuRHIxBEBiBxTuMQM4ZOir7Pq2qckNvaFb5wRmShF3/a6Q6uoPIudylqMzRkxX8Ryl6kHmeSa1Q==",
+      "type": "package",
+      "path": "corepush/3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "README.md",
+        "corepush.3.1.1.nupkg.sha512",
+        "corepush.nuspec",
+        "lib/netstandard2.0/CorePush.dll"
+      ]
+    },
     "Firebase.Auth/1.0.0": {
       "sha512": "MRAGIRDXqB0jRvtJx0yRmTMjZInQcUSyHN7LuOwxL/nfyceDEA+Gfiimn7HtI2ntHw3hdUAoeeCA6BCc3qg0/A==",
       "type": "package",
@@ -6082,6 +6120,21 @@
         "lib/netstandard2.0/NuGet.Versioning.xml",
         "nuget.versioning.6.2.1.nupkg.sha512",
         "nuget.versioning.nuspec"
+      ]
+    },
+    "Portable.BouncyCastle/1.9.0": {
+      "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.9.0.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -10261,19 +10314,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\DUONGAS\\.nuget\\packages\\": {}
+    "C:\\Users\\ACER\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.WebApi\\DeliveryVHGP.WebApi.csproj",
+      "projectUniqueName": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.WebApi\\DeliveryVHGP.WebApi.csproj",
       "projectName": "DeliveryVHGP.WebApi",
-      "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.WebApi\\DeliveryVHGP.WebApi.csproj",
-      "packagesPath": "C:\\Users\\DUONGAS\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.WebApi\\obj\\",
+      "projectPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.WebApi\\DeliveryVHGP.WebApi.csproj",
+      "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
+      "outputPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\DUONGAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -10287,11 +10340,11 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {
-              "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj"
+            "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {
+              "projectPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj"
             },
-            "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj"
+            "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj": {
+              "projectPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj"
             }
           }
         }
@@ -10369,7 +10422,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
       }
     }
   }

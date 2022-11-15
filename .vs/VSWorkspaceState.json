@@ -1,6 +1,11 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\src",
+    "\\src\\DeliveryVHGP.Infrastructure",
+    "\\src\\DeliveryVHGP.Infrastructure\\Repositories",
+    "\\src\\DeliveryVHGP.WebApi",
+    "\\src\\DeliveryVHGP.WebApi\\Controllers"
   ],
   "SelectedNode": "\\DeliveryVHGP-Solution.sln",
   "PreviewInSolutionExplorer": false

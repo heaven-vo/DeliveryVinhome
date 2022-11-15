@@ -25,6 +25,18 @@
           "DeliveryVHGP.WebApi.dll": {}
         }
       },
+      "CorePush/3.1.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/CorePush.dll": {
+            "assemblyVersion": "3.1.1.0",
+            "fileVersion": "3.1.1.0"
+          }
+        }
+      },
       "Firebase.Auth/1.0.0": {
         "dependencies": {
           "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
@@ -1514,6 +1526,14 @@
           }
         }
       },
+      "Portable.BouncyCastle/1.9.0": {
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "assemblyVersion": "1.9.0.0",
+            "fileVersion": "1.9.0.1"
+          }
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
       "runtime.fedora.24-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {},
@@ -2398,7 +2418,8 @@
       "DeliveryVHGP.Core/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "6.0.9",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9"
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9",
+          "Newtonsoft.Json": "13.0.1"
         },
         "runtime": {
           "DeliveryVHGP.Core.dll": {}
@@ -2406,6 +2427,7 @@
       },
       "DeliveryVHGP.Infrastructure/1.0.0": {
         "dependencies": {
+          "CorePush": "3.1.1",
           "DeliveryVHGP.Core": "1.0.0",
           "FirebaseDatabase.net": "4.1.0",
           "FirebaseStorage.net": "1.0.3",
@@ -2423,6 +2445,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "CorePush/3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hJcLlEIJ7DqyuRHIxBEBiBxTuMQM4ZOir7Pq2qckNvaFb5wRmShF3/a6Q6uoPIudylqMzRkxX8Ryl6kHmeSa1Q==",
+      "path": "corepush/3.1.1",
+      "hashPath": "corepush.3.1.1.nupkg.sha512"
     },
     "Firebase.Auth/1.0.0": {
       "type": "package",
@@ -3060,6 +3089,13 @@
       "sha512": "sha512-+o507LXjsN1YVAgmpqKCQZ70cLsXDoVmR8H0Wgy0muiFnOhkXN2+a6PGFBAIuA7qJch/umTYu1hp7Dlh1Qcrgg==",
       "path": "nuget.versioning/6.2.1",
       "hashPath": "nuget.versioning.6.2.1.nupkg.sha512"
+    },
+    "Portable.BouncyCastle/1.9.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "path": "portable.bouncycastle/1.9.0",
+      "hashPath": "portable.bouncycastle.1.9.0.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {}
+    "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {
+    "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj",
+        "projectUniqueName": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj",
         "projectName": "DeliveryVHGP.Core",
-        "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj",
-        "packagesPath": "C:\\Users\\DUONGAS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\obj\\",
+        "projectPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj",
+        "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
+        "outputPath": "D:\\repo\\DeliveryVinhomeyolo\\src\\DeliveryVHGP.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\DUONGAS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -59,6 +59,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.9, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
             }
           },
           "imports": [
@@ -76,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

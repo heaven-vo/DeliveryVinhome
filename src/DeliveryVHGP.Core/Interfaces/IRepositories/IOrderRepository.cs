@@ -17,9 +17,10 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<OrderAdminDto>> GetOrderByStatus(int status, int pageIndex, int pageSize);
         Task<List<TimeDurationOrder>> GetDurationOrder(string menuId, int pageIndex, int pageSize);
         Task<Object> GetOrdersById(string orderId);
-
         Task<OrderDto> CreatNewOrder(OrderDto order);
         Task<OrderStatusModel> OrderUpdateStatus(string orderId, OrderStatusModel order);
         Task<Object> PaymentOrder(string orderId);
+        //Task<Object> PaymentConfirm();
+
     }
 }

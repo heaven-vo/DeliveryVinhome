@@ -10,6 +10,7 @@ namespace DeliveryVHGP.Core.Entities
         public string? Type { get; set; }
         public string? OrderId { get; set; }
         public string? Status { get; set; }
+        public string? Url { get; set; }
 
         public virtual Order? Order { get; set; }
     }

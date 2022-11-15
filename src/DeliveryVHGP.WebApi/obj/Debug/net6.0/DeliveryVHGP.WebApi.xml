@@ -79,9 +79,29 @@
             Create a collection
             </summary>
         </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersManagementController.GetOrder(System.Int32,System.Int32,DeliveryVHGP.Core.Models.OrderAdminDto.DateFilterRequest)">
+            <summary>
+            Get list order with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersManagementController.GetListOrderByPayment(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all order by payment with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersManagementController.GetListOrderByStatus(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Get list all order by status with pagination
+            </summary>
+        </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersManagementController.GetOrderDetail(System.String)">
             <summary>
             Get product by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ProductManagementController.GetListProduct(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list product in menu  with pagination (web for admin)
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.GetAll(System.Int32,System.Int32)">
@@ -94,9 +114,24 @@
             Get Shipper by id with pagination
             </summary>
         </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.GetListShipperByName(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all shipper by name with pagination
+            </summary>
+        </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.CreateShipper(DeliveryVHGP.Core.Models.ShipperDto)">
             <summary>
             Create a shipper
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.UpdateShipperById(System.String,DeliveryVHGP.Core.Models.ShipperDto,System.Boolean)">
+            <summary>
+            Update shipper  with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.ShippersManagementController.UpdateStatusStoreById(System.String,DeliveryVHGP.Core.Models.StatusShipDto)">
+            <summary>
+            Update status shipper  with pagination
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.StoreCategoryManagementController.GetAll(System.Int32,System.Int32)">
@@ -137,6 +172,26 @@
         <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetStoreById(System.String)">
             <summary>
             Get store by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetOrderPreparingByStore(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders preparing by store ,status:0,1,2,3 (store app) 
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetOrderDeliveringByStore(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders delivering by store ,status:4,7,8 (store app) 
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetOrderCompletedByStore(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders completed by store ,status:5,6,9,10,11,12 (store app) 
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.GetOrderByStoreByMode(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list orders byMode in store ,status:2,3 (store app) 
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.StoresManagementController.CreateNewStore(DeliveryVHGP.Core.Models.StoreDto)">
@@ -239,6 +294,41 @@
             Get all menu by modeId (store, admin web)
             </summary>
         </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetListStoreByName(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list all store by Name with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetListProductInStoreByName(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list product in store by name with pagination (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuByModeWithListCategory(System.String)">
+            <summary>
+            Get list category in menu in realtime by modeId(when click a mode 1 in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuByModeWithListStoreCategory(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list stores in menu in realtime by modeId(when click a mode 1 in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuByModeWithListStore(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list stores in menu in realtime by modeId(when click a mode 1 in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuMode3(System.Int32)">
+            <summary>
+            Get list menu in next 7 day(when click a mode 3 in customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetAllProductInMenuByStoreId(System.String,DeliveryVHGP.Core.Models.PagingRequest)">
+            <summary>
+            Get list products in a menu and a store(when click see all in customer web)
+            </summary>
+        </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenusByModeId(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Get list menus in realtime by modeId(when click a mode in customer web)
@@ -248,6 +338,11 @@
         <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetMenuByStoreId(System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Get list category in include products in menu by store id(when click a menu in store web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetListStoreInMenuFilerByCategory(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get list stores in menu by categoryId(when click a cate in customer web)
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.MenusController.GetAllProductInMenuByStoreId(System.String,System.String,System.Int32,System.Int32)">
@@ -285,7 +380,7 @@
             Get list orders by store (customer web)
             </summary>
         </member>
-        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrderByStoreByStatus(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetOrderByStoreByStatus(System.Int32,System.String,System.Int32,System.Int32)">
             <summary>
             Get list orders by store (store web)
             </summary>
@@ -301,8 +396,27 @@
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.UpdateOrder(System.String,DeliveryVHGP.Core.Models.OrderStatusModel)">
+            <remarks>
+            Status in body
+            CreateOrder = 1, ShipAccept = 2, Shipping = 3, Done = 4, Cancel = 5, ShipCancel = 6, ShipCancelOther = 7, ShopCancel = 8, CustomerCancel = 9, CustomerPayCancel = 10
+            </remarks>
             <summary>
             Update a status order (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetTimeDuration(System.String,System.Int32,System.Int32)">
+            <summary>
+            Get TimeDuration By MenuId in Mode3 (customer web)
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetPaymentOrder(System.String)">
+            <summary>
+            Get order by id with pagination
+            </summary>
+        </member>
+        <member name="M:DeliveryVHGP.WebApi.Controllers.OrdersController.GetPaymentConfirm">
+            <summary>
+            Get order by id with pagination
             </summary>
         </member>
         <member name="M:DeliveryVHGP.WebApi.Controllers.ProductController.GetProduct(System.String,System.Int32,System.Int32)">

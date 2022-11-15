@@ -1,0 +1,26 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "07fd7c39-6f31-484b-a199-119a186d6450": {
+      "ProjectGuid": "07fd7c39-6f31-484b-a199-119a186d6450",
+      "DisplayName": "DeliveryVHGP.Infrastructure",
+      "ColorIndex": 0
+    },
+    "eb954dde-ee78-447f-b33b-a002ca40d809": {
+      "ProjectGuid": "eb954dde-ee78-447f-b33b-a002ca40d809",
+      "DisplayName": "DeliveryVHGP.Core",
+      "ColorIndex": 1
+    },
+    "0944e907-51f4-407e-a089-b92821465ae0": {
+      "ProjectGuid": "0944e907-51f4-407e-a089-b92821465ae0",
+      "DisplayName": "DeliveryVHGP.WebApi",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}

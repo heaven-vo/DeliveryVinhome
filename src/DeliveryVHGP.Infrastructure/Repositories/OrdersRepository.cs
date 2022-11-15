@@ -2,13 +2,11 @@
 using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Core.Enums;
 using static DeliveryVHGP.Core.Models.OrderAdminDto;
 using DeliveryVHGP.Infrastructure.Services;
-
 namespace DeliveryVHGP.WebApi.Repositories
 {
     public class OrdersRepository : RepositoryBase<Order>, IOrderRepository
@@ -438,7 +436,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> PaymentOrder(string orderId)
         {
-            string vnp_Returnurl = "http://localhost:16262/vnpay_return.aspx"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://localhost:7102/api/v1/orders/Payment-confirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "MM9A0YQZ"; //Ma website
             string vnp_HashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuoi bi mat
@@ -448,7 +446,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             OrderInfor order = new OrderInfor();
 
             order.OrderId = orderId;
-            order.Amount = (double)payy.Amount*100;
+            order.Amount = (double)payy.Amount * 100;
             order.Status = 0;
 
             VnPayLibrary pay = new VnPayLibrary();
@@ -458,18 +456,48 @@ namespace DeliveryVHGP.WebApi.Repositories
             pay.AddRequestData("vnp_TmnCode", vnp_TmnCode); //Mã website của merchant trên hệ thống của VNPAY (khi đăng ký tài khoản sẽ có trong mail VNPAY gửi về)
             pay.AddRequestData("vnp_Amount", order.Amount.ToString()); //số tiền cần thanh toán, công thức: số tiền * 100 - ví dụ 10.000 (mười nghìn đồng) --> 1000000
             pay.AddRequestData("vnp_BankCode", ""); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
-            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); //ngày thanh toán theo định dạng yyyyMMddHHmmss
+            pay.AddRequestData("vnp_CreateDate", "20221115143237"); //ngày thanh toán theo định dạng yyyyMMddHHmmss
             pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VND
             pay.AddRequestData("vnp_Locale", "vn"); //Ngôn ngữ giao diện hiển thị - Tiếng Việt (vn), Tiếng Anh (en)
+            //pay.AddRequestData("vnp_IpAddr", Util.GetIpAddress()); //Địa chỉ IP của khách hàng thực hiện giao dịch
             pay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang"); //Thông tin mô tả nội dung thanh toán
             pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
             pay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
             pay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); //mã hóa đơn
 
             string paymentUrl = pay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+
             return paymentUrl;
 
         }
-    } 
-    
+    //    public async Task<Object> PaymentConfirm()
+    //    {
+    //        string hashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuoi bi mat
+
+    //        string orderId = pay.GetResponseData("vnp_TxnRef"); //mã hóa đơn
+    //        //string vnpayTranId = pay.GetResponseData("vnp_TransactionNo"); //mã giao dịch tại hệ thống VNPAY
+    //        string vnp_ResponseCode = pay.GetResponseData("vnp_ResponseCode"); //response code: 00 - thành công, khác 00 - xem thêm https://sandbox.vnpayment.vn/apis/docs/bang-ma-loi/
+    //        string vnp_SecureHash = Request.Query["vnp_SecureHash"]; //hash của dữ liệu trả về
+
+    //        bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret); //check chữ ký đúng hay không?
+
+    //        if (checkSignature)
+    //        {
+    //            if (vnp_ResponseCode == "00")
+    //            {
+    //                //Thanh toán thành công
+    //                throw new Exception("Successful" + vnp_SecureHash);
+
+    //            }
+    //            else
+    //            {
+    //                //Thanh toán không thành công. Mã lỗi: vnp_ResponseCode
+    //                throw new Exception("Faild" + vnp_SecureHash);
+    //            }
+
+    //        }
+    //    return 
+
+    //}
+} 
 }
