@@ -7,5 +7,6 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
     public interface IAccountRepository : IRepositoryBase<Account>
     {
         Task<List<AccountModel>> GetAll(int pageIndex, int pageSize);
+        Task CreateAcc();
     }
 }

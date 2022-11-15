@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using DeliveryVHGP.Core.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,16 +24,14 @@ namespace DeliveryVHGP.DeliveryAlgorithm
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //using (var scope = _serviceProvider.CreateScope())
-                //{
-                //    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                //    var scopeSev = scope.ServiceProvider.GetService<ITaskBack>();
-                //    scopeSev.WriteTest("assssssssss");
-                //await Task.Delay(5000, stoppingToken);
-                //}                
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                Console.WriteLine("Test backround service delay 250s");
-                await Task.Delay(250000, stoppingToken);
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
+                    await scopeSev.Account.CreateAcc();
+                    await Task.Delay(55000, stoppingToken);
+                }
+
             }
         }
     }

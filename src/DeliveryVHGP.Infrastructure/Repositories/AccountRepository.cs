@@ -26,6 +26,12 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return listAccount;
         }
+        public async Task CreateAcc()
+        {
+            Account acc = new Account() { Id = "123"+ DateTime.UtcNow, Name = "Duongas", RoleId = "2", Password = "adasdas", Status = "true"};
+            await context.Accounts.AddAsync(acc);
+            context.SaveChangesAsync();
+        }
 
     }
 }
