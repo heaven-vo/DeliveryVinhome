@@ -28,8 +28,8 @@ namespace DeliveryVHGP.WebApi
                 {
                     _logger.LogInformation("Worker assssssssssss running at: {time}", DateTimeOffset.Now);
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
-                    await scopeSev.Account.CreateAcc();
-                    await Task.Delay(5000, stoppingToken);
+                    //await scopeSev.Account.CreateAcc();
+                    await Task.Delay(55000, stoppingToken);
                 }
 
             }
