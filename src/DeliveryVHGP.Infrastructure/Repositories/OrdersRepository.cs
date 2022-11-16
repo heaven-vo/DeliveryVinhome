@@ -54,7 +54,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
         }
-        public async Task<List<OrderAdminDto>> GetOrderByPayment(string PaymentType, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -312,7 +312,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                     ProductName = pro.Name,
                     ProductId = ord.ProductId,
                 };
-
                 await context.OrderDetails.AddAsync(odd);
             }
             foreach (var pay in order.Payments)
@@ -322,7 +321,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Id = Guid.NewGuid().ToString(),
                     Type = pay.Type,
                     OrderId = od.Id,
-                    Amount = order.Total
+                    Amount = order.Total,
+                    Status = 0
                 };
                 await context.Payments.AddAsync(payment);
                 //await context.SaveChangesAsync();
@@ -330,13 +330,6 @@ namespace DeliveryVHGP.WebApi.Repositories
             //await context.SaveChangesAsync();
             string time = await GetTime();
 
-            //var timeOfOrder = new TimeOfOrderStage()
-            //{
-            //    Id = Guid.NewGuid().ToString(),
-            //    OrderId = od.Id,
-            //    StatusId = 1 ,
-            //    Time = time
-            //};
             var actionHistory = new OrderActionHistory()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -438,7 +431,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> PaymentOrder(string orderId)
         {
-            string vnp_Returnurl = "http://localhost:16262/vnpay_return.aspx"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://localhost:7102/api/v1/orders/Payment-confirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "MM9A0YQZ"; //Ma website
             string vnp_HashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuoi bi mat
@@ -448,27 +441,53 @@ namespace DeliveryVHGP.WebApi.Repositories
             OrderInfor order = new OrderInfor();
 
             order.OrderId = orderId;
-            order.Amount = (double)payy.Amount*100;
-            order.Status = 0;
+            order.Amount = (double)payy.Amount * 100;
+            //order.Status = 0;1         
 
             VnPayLibrary pay = new VnPayLibrary();
-
-            pay.AddRequestData("vnp_Version", "2.1.0"); //Phiên bản api mà merchant kết nối. Phiên bản hiện tại là 2.1.0
-            pay.AddRequestData("vnp_Command", "pay"); //Mã API sử dụng, mã cho giao dịch thanh toán là 'pay'
-            pay.AddRequestData("vnp_TmnCode", vnp_TmnCode); //Mã website của merchant trên hệ thống của VNPAY (khi đăng ký tài khoản sẽ có trong mail VNPAY gửi về)
-            pay.AddRequestData("vnp_Amount", order.Amount.ToString()); //số tiền cần thanh toán, công thức: số tiền * 100 - ví dụ 10.000 (mười nghìn đồng) --> 1000000
-            pay.AddRequestData("vnp_BankCode", ""); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
-            pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); //ngày thanh toán theo định dạng yyyyMMddHHmmss
-            pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VND
-            pay.AddRequestData("vnp_Locale", "vn"); //Ngôn ngữ giao diện hiển thị - Tiếng Việt (vn), Tiếng Anh (en)
-            pay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang"); //Thông tin mô tả nội dung thanh toán
-            pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
-            pay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
-            pay.AddRequestData("vnp_TxnRef", DateTime.Now.Ticks.ToString()); //mã hóa đơn
-
+            if (payy.Type == 1)
+            {
+                pay.AddRequestData("vnp_Version", "2.1.0"); //Phiên bản api mà merchant kết nối. Phiên bản hiện tại là 2.1.0
+                pay.AddRequestData("vnp_Command", "pay"); //Mã API sử dụng, mã cho giao dịch thanh toán là 'pay'
+                pay.AddRequestData("vnp_TmnCode", vnp_TmnCode); //Mã website của merchant trên hệ thống của VNPAY (khi đăng ký tài khoản sẽ có trong mail VNPAY gửi về)
+                pay.AddRequestData("vnp_Amount", order.Amount.ToString()); //số tiền cần thanh toán, công thức: số tiền * 100 - ví dụ 10.000 (mười nghìn đồng) --> 1000000
+                pay.AddRequestData("vnp_BankCode", ""); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
+                pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); //ngày thanh toán theo định dạng yyyyMMddHHmmss
+                pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VNDddddddddddddđddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddđđdd
+                pay.AddRequestData("vnp_Locale", "vn"); //Ngôn ngữ giao diện hiển thị - Tiếng Việt (vn), Tiếng Anh (en)
+                //pay.AddRequestData("vnp_IpAddr", orderId); //Địa chỉ IP của khách hàng thực hiện giao dịch
+                pay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang"); //Thông tin mô tả nội dung thanh toán
+                pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
+                pay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
+                pay.AddRequestData("vnp_TxnRef", orderId.ToString()); //mã hóa đơn''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''xddddddddddddddddddddddddddddddđ
+            }
+            else
+            {
+                throw new Exception("Đơn hàng đã hoàn thành");
+            }
             string paymentUrl = pay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-            return paymentUrl;
 
+
+            return paymentUrl;
+        }
+        public async Task<Object> PaymentOrderSuccessfull(string orderId)
+        {
+            //var o = await context.Orders.FindAsync(orderId);
+            var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
+            payy.Status = 1;
+            context.Entry(payy).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return payy;
+        }
+        public async Task<Object> PaymentOrderFalse(string orderId)
+        {
+            var o = await context.Orders.FindAsync(orderId);
+            var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
+            payy.Status = 2;
+
+            context.Entry(payy).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return o;
         }
     } 
     
