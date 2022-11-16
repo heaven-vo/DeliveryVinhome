@@ -9,7 +9,7 @@
         //public string? PaymentId { get; set; }
         public string? PhoneNumber { get; set; }
         public string? FullName { get; set; }
-        public string? PaymentName { get; set; }
+        public int? PaymentName { get; set; }
         public string? ModeId { get; set; }
 
         //public string? BuildingId { get; set; }

@@ -12,7 +12,7 @@ namespace DeliveryVHGP.Core.Models
         public double? Total { get; set; }
         public string? Note { get; set; }
         public double? ShipCost { get; set; }
-        public string? PaymentName { get; set; }
+        public int? PaymentName { get; set; }
         public string? ModeId { get; set; }
         public int? Status { get; set; }
         public string? Time { get; set; }
@@ -31,7 +31,7 @@ namespace DeliveryVHGP.Core.Models
             public double? Total { get; set; }
             public string? Note { get; set; }
             public double? ShipCost { get; set; }
-            public string? PaymentName { get; set; }
+            public int? PaymentName { get; set; }
             public string? ModeId { get; set; }
             public int? Status { get; set; }
             public string? Time { get; set; }

@@ -243,7 +243,7 @@ namespace DeliveryVHGP.WebApi.Controllers
                 {
                     //Thanh toán thành công
                     var order = await repository.Order.PaymentOrderSuccessfull(vnp_TxnRef);
-                    string Successfull = "https://foodd-delivery.netlify.app/orderf";
+                    string Successfull = "https://foodd-delivery.netlify.app/order";
                     return Redirect(Successfull);
                 }
                else

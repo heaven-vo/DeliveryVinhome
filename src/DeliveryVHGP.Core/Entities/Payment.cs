@@ -7,9 +7,9 @@ namespace DeliveryVHGP.Core.Entities
     {
         public string Id { get; set; } = null!;
         public double? Amount { get; set; }
-        public string? Type { get; set; }
+        public int? Type { get; set; }
         public string? OrderId { get; set; }
-        public string? Status { get; set; }
+        public int? Status { get; set; }
 
         public virtual Order? Order { get; set; }
     }
