@@ -431,7 +431,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> PaymentOrder(string orderId)
         {
-            string vnp_Returnurl = "https://localhost:7102/api/v1/orders/Payment-confirm"; //URL nhan ket qua tra ve 
+            string vnp_Returnurl = "https://deliveryvhgp-webapi.azurewebsites.net/api/v1/orders/Payment-confirm"; //URL nhan ket qua tra ve 
             string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"; //URL thanh toan cua VNPAY 
             string vnp_TmnCode = "MM9A0YQZ"; //Ma website
             string vnp_HashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuoi bi mat
