@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Infrastructure.Services;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -138,8 +139,121 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             catch
             {
-                return NotFound();
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = "Loại hình thanh toán của đơn hàng không hợp lệ !! Vui lòng kiểm tra và thử lại"
+                });
             }
+        }
+        /// <summary>
+        /// Get order by id with pagination
+        /// </summary>
+        //GET: api/v1/orderById?pageIndex=1&pageSize=3
+        [HttpGet("Payment-confirm")]
+        public async Task<ActionResult> GetPaymentConfirm()
+        {
+
+            string hashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuỗi bí mật
+            VnPayLibrary pay = new VnPayLibrary();
+            var vnpayData = Request.QueryString.ToString();
+            Console.WriteLine(vnpayData);
+            //lấy toàn bộ dữ liệu được trả về
+            string[] authorsList = vnpayData.Split("&");
+            string vnp_Amount = "";
+            string vnp_BankCode = "";
+            string vnp_BankTranNo = "";
+            string vnp_CardType = "";
+            string vnp_OrderInfo = "";
+            string vnp_PayDate = "";
+            string vnp_ResponseCode = "";
+            string vnp_TmnCode = "";
+            string vnp_TransactionNo = "";
+            string vnp_TransactionStatus = "";
+            string vnp_TxnRef = "";
+
+            Console.WriteLine("authorsList" + String.Join(Environment.NewLine, authorsList));
+            foreach (string author in authorsList)
+            {
+
+                string[] ListRespone = author.Split("=");
+                Console.WriteLine("ListRespone[0]" + ListRespone[0]);
+                Console.WriteLine("ListRespone[1]" + ListRespone[1]);
+                if (ListRespone[0] == "?vnp_Amount")
+                {
+                    vnp_Amount = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_BankCode")
+                {
+                    vnp_BankCode = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_BankTranNo")
+                {
+                    vnp_BankTranNo = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_CardType")
+                {
+                    vnp_CardType = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_OrderInfo")
+                {
+                    vnp_OrderInfo = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_PayDate")
+                {
+                    vnp_PayDate = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_ResponseCode")
+                {
+                    vnp_ResponseCode = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TmnCode")
+                {
+                    vnp_TmnCode = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TransactionNo")
+                {
+                    vnp_TransactionNo = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TransactionStatus")
+                {
+                    vnp_TransactionStatus = ListRespone[1];
+                }
+                else if (ListRespone[0] == "vnp_TxnRef")
+                {
+                    vnp_TxnRef = ListRespone[1];
+                }
+
+            }
+            
+            
+            string vnp_SecureHash = Request.Query["vnp_SecureHash"]; //hash của dữ liệu trả về
+
+            string hashRaw = "vnp_Amount=" + vnp_Amount + "&" + "vnp_BankCode=" + vnp_BankCode + "&" + "vnp_BankTranNo=" + vnp_BankTranNo + "&" + "vnp_CardType=" +
+                vnp_CardType + "&" + "vnp_OrderInfo=" + vnp_OrderInfo + "&" + "vnp_PayDate=" + vnp_PayDate + "&" + "vnp_ResponseCode=" + vnp_ResponseCode + "&" + "vnp_TmnCode=" + vnp_TmnCode + "&" + "vnp_TransactionNo=" + vnp_TransactionNo +
+                "&" + "vnp_TransactionStatus=" + vnp_TransactionStatus + "&" + "vnp_TxnRef=" + vnp_TxnRef;
+
+            Console.WriteLine("hashRaw" + hashRaw);
+            bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret, hashRaw); //check chữ ký đúng hay không?
+            Console.WriteLine("checkSignature: " + checkSignature);
+
+            if (checkSignature)
+            {
+                if (vnp_ResponseCode == "00")
+                {
+                    //Thanh toán thành công
+                    var order = await repository.Order.PaymentOrderSuccessfull(vnp_TxnRef);
+                    string Successfull = "https://foodd-delivery.netlify.app/orderf";
+                    return Redirect(Successfull);
+                }
+               else
+                {
+                    string Failed = "https://foodd-delivery.netlify.app/Failed ";
+                    return Redirect(Failed);
+                }
+
+            }
+            return Ok();
         }
 
     }

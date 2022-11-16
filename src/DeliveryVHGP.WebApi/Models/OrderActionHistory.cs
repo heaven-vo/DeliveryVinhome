@@ -8,8 +8,8 @@ namespace DeliveryVHGP.WebApi.Models
         public string Id { get; set; } = null!;
         public string? OrderId { get; set; }
         public string? TypeId { get; set; }
-        public string? FromStatus { get; set; }
-        public string? ToStatus { get; set; }
+        public int? FromStatus { get; set; }
+        public int? ToStatus { get; set; }
         public string? CreateDate { get; set; }
 
         public virtual Order? Order { get; set; }

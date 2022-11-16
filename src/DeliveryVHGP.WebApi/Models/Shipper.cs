@@ -8,7 +8,7 @@ namespace DeliveryVHGP.WebApi.Models
         public Shipper()
         {
             DeliveryShiftOfShippers = new HashSet<DeliveryShiftOfShipper>();
-            SegmentDeliveries = new HashSet<SegmentDelivery>();
+            SegmentDeliveryRoutes = new HashSet<SegmentDeliveryRoute>();
             SegmentTasks = new HashSet<SegmentTask>();
         }
 
@@ -26,7 +26,7 @@ namespace DeliveryVHGP.WebApi.Models
         public string? Colour { get; set; }
 
         public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
-        public virtual ICollection<SegmentDelivery> SegmentDeliveries { get; set; }
+        public virtual ICollection<SegmentDeliveryRoute> SegmentDeliveryRoutes { get; set; }
         public virtual ICollection<SegmentTask> SegmentTasks { get; set; }
     }
 }

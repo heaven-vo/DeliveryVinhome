@@ -35,7 +35,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //GET: api/v1/OrderByPayment?pageIndex=1&pageSize=3
         [HttpGet("search-payment")]
-        public async Task<ActionResult> GetListOrderByPayment(string paymentType, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetListOrderByPayment(int paymentType, int pageIndex, int pageSize)
         {
             return Ok(await repository.Order.GetOrderByPayment(paymentType, pageIndex, pageSize));
         }

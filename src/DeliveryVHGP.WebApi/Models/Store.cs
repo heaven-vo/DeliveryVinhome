@@ -23,6 +23,7 @@ namespace DeliveryVHGP.WebApi.Models
         public string? Image { get; set; }
         public string? StoreCategoryId { get; set; }
         public string? Slogan { get; set; }
+        public string? Description { get; set; }
         public string? CreditAccount { get; set; }
         public string? Phone { get; set; }
         public string? CreateAt { get; set; }
