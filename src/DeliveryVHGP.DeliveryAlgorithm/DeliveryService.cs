@@ -29,6 +29,11 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
                     await scopeSev.Account.CreateAcc();
+
+                    MemoryCacheHelper.Add("topProducts", "Adu vip", DateTimeOffset.UtcNow.AddHours(1));
+                    var topProducts = MemoryCacheHelper.GetValue("topProducts");
+                    Console.WriteLine("Cache: " + topProducts);
+
                     await Task.Delay(300000, stoppingToken);
                 }
 
