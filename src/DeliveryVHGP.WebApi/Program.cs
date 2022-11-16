@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<ITimeStageService,TimeStageService >();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
-builder.Services.AddHostedService<DeliveryServiceTest>();
+builder.Services.AddHostedService<DeliveryService>();
 
 builder.Services.AddControllers();
 

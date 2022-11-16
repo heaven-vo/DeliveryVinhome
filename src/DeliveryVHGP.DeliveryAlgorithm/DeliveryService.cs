@@ -29,7 +29,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
                     await scopeSev.Account.CreateAcc();
-                    await Task.Delay(55000, stoppingToken);
+                    await Task.Delay(300000, stoppingToken);
                 }
 
             }

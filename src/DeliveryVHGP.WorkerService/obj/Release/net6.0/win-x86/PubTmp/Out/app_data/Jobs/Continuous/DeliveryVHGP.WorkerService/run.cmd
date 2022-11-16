@@ -1,1 +1,0 @@
-DeliveryVHGP.WorkerService.exe %*
