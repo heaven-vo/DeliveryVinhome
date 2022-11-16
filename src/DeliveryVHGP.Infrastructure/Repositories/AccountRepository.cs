@@ -12,6 +12,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public AccountRepository(DeliveryVHGP_DBContext context) : base(context)
         {
         }
+
         public async Task<List<AccountModel>> GetAll(int pageIndex, int pageSize)
         {
             var listAccount = await context.Accounts.
