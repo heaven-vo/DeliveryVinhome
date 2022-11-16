@@ -30,9 +30,9 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
                     await scopeSev.Account.CreateAcc();
 
-                    //MemoryCacheHelper.Add("topProducts", "Adu vip", DateTimeOffset.UtcNow.AddHours(1));
+                    MemoryCacheHelper.Add("topProducts", "Adu vip", DateTimeOffset.UtcNow.AddHours(1));
                     var topProducts = MemoryCacheHelper.GetValue("topProducts");
-                    Console.WriteLine("Cache: " + topProducts);
+                    _logger.LogInformation("Cache: " + topProducts);
 
                     await Task.Delay(300000, stoppingToken);
                 }
