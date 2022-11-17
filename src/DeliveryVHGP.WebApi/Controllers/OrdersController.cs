@@ -243,12 +243,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 {
                     //Thanh toán thành công
                     var order = await repository.Order.PaymentOrderSuccessfull(vnp_TxnRef);
-                    string Successfull = "https://foodd-delivery.netlify.app/order";
+                    string Successfull = "https://foodd-delivery.netlify.app/order/"+ vnp_TxnRef;
                     return Redirect(Successfull);
                 }
-               else
+                else
                 {
-                    string Failed = "https://foodd-delivery.netlify.app/Failed ";
+                    string Failed = "https://foodd-delivery.netlify.app/failed";
                     return Redirect(Failed);
                 }
 

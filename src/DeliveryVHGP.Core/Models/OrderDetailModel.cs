@@ -10,6 +10,7 @@
         public string? PhoneNumber { get; set; }
         public string? FullName { get; set; }
         public int? PaymentName { get; set; }
+        public int? PaymentStatus { get; set; }
         public string? ModeId { get; set; }
 
         //public string? BuildingId { get; set; }
