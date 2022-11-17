@@ -128,7 +128,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// Get order by id with pagination
         /// </summary>
         //GET: api/v1/orderById?pageIndex=1&pageSize=3
-        [HttpGet("ByOrderId")]
+        [HttpGet("ByOrderId/payment")]
         public async Task<ActionResult> GetPaymentOrder(string orderId)
         {
             try

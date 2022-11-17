@@ -17,6 +17,8 @@ namespace DeliveryVHGP.WebApi.Models
         public string? Name { get; set; }
         public string? ClusterId { get; set; }
         public string? HubId { get; set; }
+        public string? Longitude { get; set; }
+        public string? Latitude { get; set; }
 
         public virtual Cluster? Cluster { get; set; }
         public virtual Hub? Hub { get; set; }
