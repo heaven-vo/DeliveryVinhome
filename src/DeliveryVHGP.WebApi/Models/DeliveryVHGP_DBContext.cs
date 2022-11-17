@@ -129,6 +129,10 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.HubId).HasMaxLength(50);
 
+                entity.Property(e => e.Latitude).HasMaxLength(250);
+
+                entity.Property(e => e.Longitude).HasMaxLength(250);
+
                 entity.Property(e => e.Name).HasMaxLength(100);
 
                 entity.HasOne(d => d.Cluster)
@@ -537,8 +541,6 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.Property(e => e.Id).HasMaxLength(100);
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
-
-                entity.Property(e => e.Type).HasMaxLength(50);
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Payments)

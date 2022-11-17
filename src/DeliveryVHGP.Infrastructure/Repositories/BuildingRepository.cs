@@ -19,10 +19,24 @@ namespace DeliveryVHGP.WebApi.Repositories
                 {
                     Id = x.Id,
                     Name = x.Name,
+                    Longitude = x.Longitude,
+                    Latitude = x.Latitude,
                 }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             
             return listBuilding;
-        } 
+        }
+        public async Task<Object> GetBuildinById(string buildingId)
+        {
+            var building = await context.Buildings.Where(x => x.Id == buildingId)
+                                     .Select(x => new ViewListBuilding
+                                     {
+                                         Id = x.Id,
+                                         Name = x.Name,
+                                         Longitude = x.Longitude,
+                                         Latitude = x.Latitude,
+                                     }).FirstOrDefaultAsync();
+            return building;
+        }
         public async Task<BuildingModel> CreateBuilding(BuildingModel building)
         {
             context.Buildings.Add(
@@ -35,6 +49,25 @@ namespace DeliveryVHGP.WebApi.Repositories
             await context.SaveChangesAsync();
             return building;
 
+        }
+        public async Task<BuildingDto> UpdateLongLatBuilding(string buildingId, BuildingDto building)
+        {
+            var result = await context.Buildings.FindAsync(buildingId);
+
+            result.Longitude = building.Longitude;
+            result.Latitude = building.Latitude;
+
+        
+            try
+            {
+                context.Entry(result).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+                }
+             catch
+            {
+                  throw;
+            }
+                return building;
         }
     }
 }
