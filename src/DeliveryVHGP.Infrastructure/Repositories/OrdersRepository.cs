@@ -474,7 +474,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             //var o = await context.Orders.FindAsync(orderId);
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
-            payy.Status = 1;
+            payy.Status = 1; 
             context.Entry(payy).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return payy;
