@@ -233,10 +233,15 @@ namespace DeliveryVHGP.WebApi.Controllers
                 vnp_CardType + "&" + "vnp_OrderInfo=" + vnp_OrderInfo + "&" + "vnp_PayDate=" + vnp_PayDate + "&" + "vnp_ResponseCode=" + vnp_ResponseCode + "&" + "vnp_TmnCode=" + vnp_TmnCode + "&" + "vnp_TransactionNo=" + vnp_TransactionNo +
                 "&" + "vnp_TransactionStatus=" + vnp_TransactionStatus + "&" + "vnp_TxnRef=" + vnp_TxnRef;
 
-            Console.WriteLine("hashRaw" + hashRaw);
+            Console.WriteLine("vnp_ResponseCode" + vnp_ResponseCode);
             bool checkSignature = pay.ValidateSignature(vnp_SecureHash, hashSecret, hashRaw); //check chữ ký đúng hay không?
-            Console.WriteLine("checkSignature: " + checkSignature);
 
+            string hashRaw2 = "vnp_Amount=" + vnp_Amount + "&" + "vnp_BankCode=" + vnp_BankCode + "&" + "vnp_BankTranNo=" + vnp_BankTranNo + "&" + "vnp_CardType=" +
+                vnp_CardType + "&" + "vnp_OrderInfo=" + vnp_OrderInfo + "&" + "vnp_PayDate=" + vnp_PayDate + "&" + "vnp_ResponseCode=" + vnp_ResponseCode + "&" + "vnp_TmnCode=" + vnp_TmnCode + "&" + "vnp_TransactionNo=" + vnp_TransactionNo +
+                "&" + "vnp_TransactionStatus=" + vnp_TransactionStatus + "&" + "vnp_TxnRef=" + vnp_TxnRef;
+
+            Console.WriteLine("checkSignature" + checkSignature);
+            Console.WriteLine("vnp_TxnRef" + vnp_TxnRef);
             if (checkSignature)
             {
                 if (vnp_ResponseCode == "00")
@@ -248,10 +253,17 @@ namespace DeliveryVHGP.WebApi.Controllers
                 }
                 else
                 {
-                    string Failed = "https://foodd-delivery.netlify.app/failed";
+                    var faild = await repository.Order.PaymentOrderFalse(vnp_TxnRef);
+                    string Failed = "https://foodd-delivery.netlify.app/order";
                     return Redirect(Failed);
                 }
 
+            }
+            else
+            {
+                var faild = await repository.Order.PaymentOrderFalse(vnp_TxnRef);
+                string Failed = "https://foodd-delivery.netlify.app/order/Failed";
+                return Redirect(Failed);
             }
             return Ok();
         }
