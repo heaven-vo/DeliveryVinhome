@@ -12,6 +12,8 @@
         public int? status { get; set; }
         public string? Time { get; set; }
         public double? quantity { get; set; }
+        public string? TimeDuration { get; set; }
+        public string? Dayfilter { get; set; }
         public List<double> productInmenuId { get; set; }
 
 

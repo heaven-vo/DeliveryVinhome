@@ -35,6 +35,7 @@ namespace DeliveryVHGP.WebApi.Models
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderAction> OrderActions { get; set; } = null!;
         public virtual DbSet<OrderActionHistory> OrderActionHistories { get; set; } = null!;
+        public virtual DbSet<OrderCache> OrderCaches { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderTask> OrderTasks { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
@@ -451,8 +452,6 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.RouteEdgeId).HasMaxLength(50);
 
-                entity.Property(e => e.Status).HasMaxLength(50);
-
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderActions)
                     .HasForeignKey(d => d.OrderId)
@@ -470,7 +469,7 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.CreateDate).HasMaxLength(50);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 
@@ -485,6 +484,28 @@ namespace DeliveryVHGP.WebApi.Models
                     .WithMany(p => p.OrderActionHistories)
                     .HasForeignKey(d => d.TypeId)
                     .HasConstraintName("FK_OrderActionHistory_ActionType");
+            });
+
+            modelBuilder.Entity<OrderCache>(entity =>
+            {
+                entity.ToTable("OrderCache");
+
+                entity.HasIndex(e => e.OrderId, "UQ__OrderCac__C3905BCEF6F86C79")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateAt).HasColumnType("datetime");
+
+                entity.HasOne(d => d.Order)
+                    .WithOne(p => p.OrderCache)
+                    .HasForeignKey<OrderCache>(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderCache_Order");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
@@ -716,11 +737,7 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 
-                entity.Property(e => e.SegmentMode).HasMaxLength(50);
-
                 entity.Property(e => e.SegmentTaskId).HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.Property(e => e.ToBuildingId).HasMaxLength(50);
 
@@ -756,8 +773,6 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.Property(e => e.FromShipperId).HasMaxLength(50);
 
                 entity.Property(e => e.ShipperId).HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.Property(e => e.ToShipperId).HasMaxLength(50);
 

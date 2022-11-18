@@ -21,6 +21,8 @@
         public string? ShipperName { get; set; } = "";
         public string? ShipperPhone { get; set; } = "";
         public string? Note { get; set; }
+        public string? TimeDuration { get; set; }
+        public string? Dayfilter { get; set; }
 
 
         public List<ViewListDetail> ListProInMenu { get; set; }

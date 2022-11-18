@@ -32,8 +32,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  where h.ToStatus == 0 && h.CreateDate.Contains(request.DateFilter)
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -49,7 +50,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
                                       Status = order.Status,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate.ToString(),
+                                      TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -63,6 +66,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where p.Type == PaymentType && h.ToStatus == 0
                                   select new OrderAdminDto()
@@ -80,8 +84,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ModeId = m.SaleMode,
                                       BuildingName = b.Name,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate
-
+                                      Time = h.CreateDate.ToString(),
+                                      TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
@@ -94,6 +99,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where order.Status == status && h.ToStatus == 0
                                   select new OrderAdminDto()
@@ -111,7 +117,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate.ToString(),
+                                       TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -125,7 +133,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join c in context.Customers on order.CustomerId equals c.Id
                                   join h in context.OrderActionHistories on order.Id equals h.OrderId
                                   join b in context.Buildings on order.BuildingId equals b.Id
+                                  join m in context.Menus on order.MenuId equals m.Id
                                   join od in context.OrderDetails on order.Id equals od.OrderId
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where c.Id == CusId
                                   select new OrderModels()
                                   {
@@ -137,7 +147,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       status = order.Status,
                                       BuildingId = b.Id,
                                       buildingName = b.Name,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate.ToString(),
+                                      TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
@@ -151,6 +163,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && h.ToStatus == 0
                                   select new OrderAdminDto()
                                   {
@@ -167,7 +180,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate.ToString(),
+                                      TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -183,6 +198,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && order.Status == StatusId && h.ToStatus == StatusId
                                   select new OrderAdminDto()
                                   {
@@ -199,7 +215,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate.ToString(),
+                                      TimeDuration = dt.Id,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -220,12 +238,13 @@ namespace DeliveryVHGP.WebApi.Repositories
                                //join sg in context.SegmentDeliveries on o.Id equals sg.OrderId
                                //join ship in context.Shippers on sg.ShipperId equals ship.Id
                                join p in context.Payments on o.Id equals p.OrderId
+                               join dt in context.DeliveryTimeFrames on o.DeliveryTimeId equals dt.Id
                                where (o.Id == orderId)
                                select new OrderDetailModel()
                                {
                                    Id = o.Id,
                                    Total = o.Total,
-                                   Time = h.CreateDate,
+                                   Time = h.CreateDate.ToString(),
                                    //PaymentId = p.Id,
                                    FullName = o.FullName,
                                    PhoneNumber = o.PhoneNumber,
@@ -240,6 +259,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    BuildingName = b.Name,
                                    Note = o.Note,
                                    ShipCost = o.ShipCost,
+                                   TimeDuration = dt.Id,
+                                   Dayfilter = m.DayFilter.ToString()
                                }
                                 ).FirstOrDefaultAsync();
             if (order == null)
@@ -265,7 +286,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     select new ListStatusOrder
                                     {
                                         Status = h.ToStatus,//status
-                                        Time = h.CreateDate
+                                        Time = h.CreateDate.ToString()
                                     }
                                     ).OrderBy(t => t.Status).ToListAsync();
             order.ListStatusOrder = listStatus;
@@ -303,7 +324,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 DeliveryTimeId = order.DeliveryTimeId,
                 ServiceId = order.ServiceId,
                 Status = (int)OrderStatusEnum.Received
-            };            
+            };
             await context.Orders.AddAsync(od);
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
@@ -329,7 +350,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Type = pay.Type,
                     OrderId = od.Id,
                     Amount = order.Total,
-                    Status = 0
+                    Status = (int)PaymentStatusEnum.unpaid,
                 };
                 await context.Payments.AddAsync(payment);
             }
@@ -341,7 +362,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = od.Id,
                 FromStatus = (int)OrderStatusEnum.New,
                 ToStatus = (int)OrderStatusEnum.New,
-                CreateDate = time,
+                CreateDate = DateTime.UtcNow,
                 TypeId = "1"
             };
             var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
@@ -350,10 +371,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = od.Id,
                 FromStatus = (int)OrderStatusEnum.New,
                 ToStatus = (int)OrderStatusEnum.Received,
-                CreateDate = time,
+                CreateDate = DateTime.UtcNow,
                 TypeId = "1"
             };
-            await context.OrderActionHistories.AddRangeAsync(actionNewHistory, actionReviceHistory);                 
+            await context.OrderActionHistories.AddRangeAsync(actionNewHistory, actionReviceHistory);
             try
             {
                 await context.SaveChangesAsync();
@@ -383,7 +404,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = orderId,
                 FromStatus = oldStatus,
                 ToStatus = order.StatusId,
-                CreateDate = time,
+                CreateDate = DateTime.UtcNow,
                 TypeId = "1"
             };
             await context.OrderActionHistories.AddAsync(actionHistory);
@@ -488,16 +509,31 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             //var o = await context.Orders.FindAsync(orderId);
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
-            payy.Status = 1; 
+            payy.Status = (int)PaymentStatusEnum.successful; 
             context.Entry(payy).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return payy;
         }
         public async Task<Object> PaymentOrderFalse(string orderId)
         {
+            string time = await GetTime();
             var o = await context.Orders.FindAsync(orderId);
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
-            payy.Status = 2;
+
+            o.Status = (int)FailStatus.CustomerFail;
+            payy.Status = (int)PaymentStatusEnum.failed;
+
+            var actionReviceHistory = new OrderActionHistory()
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = orderId,
+                FromStatus = (int)OrderStatusEnum.Received,
+                ToStatus = (int)FailStatus.CustomerFail,
+                CreateDate = DateTime.Now,
+                TypeId = "1"
+            };
+            await context.OrderActionHistories.AddAsync(actionReviceHistory);
+            await context.SaveChangesAsync();
 
             context.Entry(payy).State = EntityState.Modified;
             await context.SaveChangesAsync();

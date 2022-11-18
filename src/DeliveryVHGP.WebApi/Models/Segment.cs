@@ -7,12 +7,12 @@ namespace DeliveryVHGP.WebApi.Models
     {
         public string Id { get; set; } = null!;
         public string? FromBuildingId { get; set; }
+        public string? ToBuildingId { get; set; }
         public string? HubId { get; set; }
         public string? OrderId { get; set; }
         public string? SegmentTaskId { get; set; }
-        public string? SegmentMode { get; set; }
-        public string? Status { get; set; }
-        public string? ToBuildingId { get; set; }
+        public int? SegmentMode { get; set; }
+        public int? Status { get; set; }
 
         public virtual Building? FromBuilding { get; set; }
         public virtual Hub? Hub { get; set; }

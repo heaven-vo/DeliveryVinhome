@@ -16,6 +16,7 @@ namespace DeliveryVHGP.WebApi.Models
         public int? Priority { get; set; }
         public double? Distance { get; set; }
         public string? RouteId { get; set; }
+        public int? Status { get; set; }
 
         public virtual SegmentDeliveryRoute? Route { get; set; }
         public virtual ICollection<OrderAction> OrderActions { get; set; }

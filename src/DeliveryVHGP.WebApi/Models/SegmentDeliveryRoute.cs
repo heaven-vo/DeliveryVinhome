@@ -17,7 +17,7 @@ namespace DeliveryVHGP.WebApi.Models
         public double? Distance { get; set; }
         public int? Duration { get; set; }
         public string? Description { get; set; }
-        public string? Status { get; set; }
+        public int? Status { get; set; }
 
         public virtual Shipper? Shipper { get; set; }
         public virtual ICollection<RouteEdge> RouteEdges { get; set; }

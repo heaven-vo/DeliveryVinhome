@@ -34,6 +34,7 @@ namespace DeliveryVHGP.WebApi.Models
         public virtual Menu? Menu { get; set; }
         public virtual Service? Service { get; set; }
         public virtual Store? Store { get; set; }
+        public virtual OrderCache? OrderCache { get; set; }
         public virtual ICollection<OrderActionHistory> OrderActionHistories { get; set; }
         public virtual ICollection<OrderAction> OrderActions { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

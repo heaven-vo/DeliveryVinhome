@@ -258,7 +258,7 @@ namespace DeliveryVHGP.WebApi.Controllers
                 else
                 {
                     var faild = await repository.Order.PaymentOrderFalse(vnp_TxnRef);
-                    string Failed = "https://foodd-delivery.netlify.app/order";
+                    string Failed = "https://foodd-delivery.netlify.app/order/payment/failed";
                     return Redirect(Failed);
                 }
 
@@ -266,7 +266,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             else
             {
                 var faild = await repository.Order.PaymentOrderFalse(vnp_TxnRef);
-                string Failed = "https://foodd-delivery.netlify.app/order/Failed";
+                string Failed = "https://foodd-delivery.netlify.app/order/payment/failed";
                 return Redirect(Failed);
             }
             return Ok();
