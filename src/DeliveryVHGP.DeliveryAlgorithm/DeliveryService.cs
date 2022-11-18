@@ -30,7 +30,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
                     await scopeSev.Account.CreateAcc();
 
-                    await Task.Delay(300000, stoppingToken);
+                    await Task.Delay(3600000, stoppingToken);
                 }
 
             }

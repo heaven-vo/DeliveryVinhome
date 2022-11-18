@@ -13,6 +13,7 @@
         public string? FullName { get; set; }
         public double? ShipCost { get; set; }
         public string? DeliveryTimeId { get; set; }
+        public string? ServiceId { get; set; }
 
         public List<OrderDetailDto> OrderDetail { get; set; }
         public List<PaymentDto> Payments { get; set; }

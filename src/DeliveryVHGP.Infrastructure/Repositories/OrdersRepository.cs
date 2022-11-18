@@ -285,6 +285,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                 order.Id = refixOrderCode + "-" + orderCount.ToString().PadLeft(7, '0');
             }
             var store = context.Stores.FirstOrDefault(s => s.Id == order.StoreId);
+            if (store.Status == false)
+            {
+                throw new Exception("Đơn hàng không hợp lệ");
+            }
             var od = new Order
             {
                 Id = order.Id,
@@ -297,12 +301,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                 MenuId = order.MenuId,
                 ShipCost = order.ShipCost,
                 DeliveryTimeId = order.DeliveryTimeId,
-                Status = (int)OrderStatusEnum.New
-            };
-            if (store.Status == false)
-            {
-                throw new Exception("Đơn hàng không hợp lệ");
-            }
+                ServiceId = order.ServiceId,
+                Status = (int)OrderStatusEnum.Received
+            };            
             await context.Orders.AddAsync(od);
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
@@ -331,12 +332,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Status = 0
                 };
                 await context.Payments.AddAsync(payment);
-                //await context.SaveChangesAsync();
             }
-            //await context.SaveChangesAsync();
             string time = await GetTime();
 
-            var actionHistory = new OrderActionHistory()
+            var actionNewHistory = new OrderActionHistory()
             {
                 Id = Guid.NewGuid().ToString(),
                 OrderId = od.Id,
@@ -345,14 +344,23 @@ namespace DeliveryVHGP.WebApi.Repositories
                 CreateDate = time,
                 TypeId = "1"
             };
-            await context.OrderActionHistories.AddAsync(actionHistory);
+            var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = od.Id,
+                FromStatus = (int)OrderStatusEnum.New,
+                ToStatus = (int)OrderStatusEnum.Received,
+                CreateDate = time,
+                TypeId = "1"
+            };
+            await context.OrderActionHistories.AddRangeAsync(actionNewHistory, actionReviceHistory);                 
             try
             {
                 await context.SaveChangesAsync();
             }
             catch
             {
-                throw;
+                throw new Exception("Save changes async not");
             }
 
             return order;

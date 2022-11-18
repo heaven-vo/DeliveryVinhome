@@ -1,4 +1,5 @@
 ﻿using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Interfaces.IRepositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,6 @@ namespace DeliveryVHGP.Core.Interfaces
         IShipperRepository Shipper { get; }
         IStoreRepository Store { get; }
         IStoreCategoryRepository StoreCategory { get; }
+        ISegmentRepository Segment { get; }
     }
 }

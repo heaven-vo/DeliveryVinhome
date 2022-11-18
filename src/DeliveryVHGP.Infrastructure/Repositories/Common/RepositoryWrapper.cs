@@ -1,6 +1,7 @@
 ﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Interface.IRepositories;
 using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Infrastructure.Services;
 using DeliveryVHGP.WebApi.Repositories;
 using System;
@@ -35,6 +36,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             Shipper = new ShipperRepository(_timeStageService, _fileService, _context);
             Store = new StoreRepository(_timeStageService, _fileService, _context);
             StoreCategory = new StoreCategoryRepository(_context);
+            Segment = new SegmentRepository(_context);
         }
         public IMenuRepository Menu { get; private set; }
 
@@ -61,5 +63,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
         public IStoreRepository Store { get; private set; }
 
         public IStoreCategoryRepository StoreCategory { get; private set; }
+        public ISegmentRepository Segment { get; private set; }
     }
 }

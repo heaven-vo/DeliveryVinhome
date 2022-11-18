@@ -155,8 +155,9 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusShipDto> UpdateStatusShipper(string ShipId, StatusShipDto shipper)
         {
             var result = await context.Shippers.FindAsync(ShipId);
-            var segmentDeli = context.SegmentDeliveries.FirstOrDefault(sd => sd.ShipperId == ShipId);
-            var status = context.Orders.FirstOrDefault(x => x.Id == segmentDeli.OrderId);
+            var segmentDeli = context.SegmentDeliveryRoutes.FirstOrDefault(sd => sd.ShipperId == ShipId);
+            //var status = context.Orders.FirstOrDefault(x => x.Id == segmentDeli.OrderId);
+            Order status = null;
             if (status == null || segmentDeli == null)
             {
                 result.Status = shipper.Status;

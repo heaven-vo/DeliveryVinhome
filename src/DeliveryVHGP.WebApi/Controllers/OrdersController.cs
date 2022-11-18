@@ -75,6 +75,10 @@ namespace DeliveryVHGP.WebApi.Controllers
             try
             {
                 var result = await repository.Order.CreatNewOrder(order);
+                if(result != null)
+                {
+                    await repository.Segment.CreatSegment(result);
+                }
                 return Ok( new { StatusCode = "Successful" , data = result });
             }
             catch
