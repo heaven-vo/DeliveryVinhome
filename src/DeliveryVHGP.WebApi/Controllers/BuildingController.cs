@@ -52,6 +52,23 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         /// <summary>
+        /// Create a Building (customer web)
+        /// </summary>
+        //POST: api/v1/building
+        [HttpPost("ByArea")]
+        public async Task<ActionResult> CreateBuilding(string AreaId, string ClusterId, BuildingModel building)
+        {
+            try
+            {
+                var result = await repository.Building.CreateBuildingByArea(AreaId,ClusterId, building);
+                return Ok(result);
+            }
+            catch
+            {
+                return Conflict();
+            }
+        }
+        /// <summary>
         /// Update Long,Lat Building  with pagination
         /// </summary>
         //PUT: api/v1/Building?id
@@ -67,6 +84,27 @@ namespace DeliveryVHGP.WebApi.Controllers
             catch
             {
                 return Conflict(); ;
+            }
+        }
+        /// <summary>
+        /// Delete a buildingg by id
+        /// </summary>
+        //DELETE: api/v1/buildingg/{id}
+        [HttpDelete("{buildingId}")]
+        public async Task<ActionResult> DeleteBuilding(string buildingId)
+        {
+            try
+            {
+                var result = await repository.Building.DeleteById(buildingId);
+                return Ok(new { StatusCode = "Successful", data = result });
+            }
+            catch
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = "Hiện tại tòa nhà đang có cửa hàng sử dụng !! vui lòng kiểm tra và thử lại"
+                });
             }
         }
     }

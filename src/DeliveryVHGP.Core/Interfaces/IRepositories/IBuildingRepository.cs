@@ -8,7 +8,9 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
     {
         Task<List<ViewListBuilding>> GetAll(int pageIndex, int pageSize);
         Task<BuildingModel> CreateBuilding(BuildingModel building);
+        Task<BuildingModel> CreateBuildingByArea(string AreaId, string ClusterId, BuildingModel building);
         Task<Object> GetBuildinById(string buildingId);
         Task<BuildingDto> UpdateLongLatBuilding(string buildingId, BuildingDto building);
+        Task<Object> DeleteById(string buildingId);
     }
 }

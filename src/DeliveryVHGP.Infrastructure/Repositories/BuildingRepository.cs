@@ -44,6 +44,28 @@ namespace DeliveryVHGP.WebApi.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = building.Name,
+                    Latitude = building.Latitude,
+                    Longitude = building.Longitude
+                }
+                );
+            await context.SaveChangesAsync();
+            return building;
+
+        }
+        public async Task<BuildingModel> CreateBuildingByArea(string AreaId, string ClusterId,BuildingModel building)
+        {
+            var area = await context.Areas.FindAsync(AreaId);
+            var cluster = context.Clusters.FirstOrDefault(c => c.AreaId == AreaId);
+            var newBuilding = context.Buildings.FirstOrDefault(x => x.ClusterId == ClusterId);
+            context.Buildings.Add(
+                new Building
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = building.Name,
+                    ClusterId = ClusterId,
+                    HubId = building.HubId,
+                    Longitude= building.Longitude,
+                    Latitude= building.Latitude,
                 }
                 );
             await context.SaveChangesAsync();
@@ -53,7 +75,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<BuildingDto> UpdateLongLatBuilding(string buildingId, BuildingDto building)
         {
             var result = await context.Buildings.FindAsync(buildingId);
-
+            result.Name = building.Name;
             result.Longitude = building.Longitude;
             result.Latitude = building.Latitude;
 
@@ -68,6 +90,15 @@ namespace DeliveryVHGP.WebApi.Repositories
                   throw;
             }
                 return building;
+        }
+        public async Task<Object> DeleteById(string buildingId)
+        {
+            var building = await context.Buildings.FindAsync(buildingId);
+            context.Buildings.Remove(building);
+            await context.SaveChangesAsync();
+
+            return building;
+
         }
     }
 }

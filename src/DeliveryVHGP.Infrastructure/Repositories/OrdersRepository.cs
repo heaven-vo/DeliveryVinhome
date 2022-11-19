@@ -52,6 +52,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Status = order.Status,
                                       Time = h.CreateDate.ToString(),
                                       TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       Dayfilter = m.DayFilter.ToString()
 
                                   }

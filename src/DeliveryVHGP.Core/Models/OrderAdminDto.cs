@@ -18,6 +18,8 @@ namespace DeliveryVHGP.Core.Models
         public int? Status { get; set; }
         public string? Time { get; set; }
         public string? TimeDuration { get; set; }
+        public string? FromHour { get; set; }  
+        public string? ToHour { get; set; }
         public string? Dayfilter { get; set; }
         //public TimeCreateOrder TimeCreate{ get; set; }
         public class DateFilterRequest
