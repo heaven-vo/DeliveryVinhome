@@ -52,7 +52,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         /// <summary>
-        /// Create a Building (customer web)
+        /// Create a Building By Area
         /// </summary>
         //POST: api/v1/building
         [HttpPost("ByArea")]
