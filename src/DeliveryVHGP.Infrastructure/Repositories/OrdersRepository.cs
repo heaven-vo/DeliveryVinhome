@@ -369,16 +369,20 @@ namespace DeliveryVHGP.WebApi.Repositories
                 CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
-            var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
+            if(order.ModeId == "1")
             {
-                Id = Guid.NewGuid().ToString(),
-                OrderId = od.Id,
-                FromStatus = (int)OrderStatusEnum.New,
-                ToStatus = (int)OrderStatusEnum.Received,
-                CreateDate = DateTime.UtcNow.AddHours(7),
-                TypeId = "1"
-            };
-            await context.OrderActionHistories.AddRangeAsync(actionNewHistory, actionReviceHistory);
+                var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OrderId = od.Id,
+                    FromStatus = (int)OrderStatusEnum.New,
+                    ToStatus = (int)OrderStatusEnum.Received,
+                    CreateDate = DateTime.UtcNow.AddHours(7),
+                    TypeId = "1"
+                };
+                await context.OrderActionHistories.AddAsync(actionReviceHistory);
+            }          
+            await context.OrderActionHistories.AddAsync(actionNewHistory);
             try
             {
                 await context.SaveChangesAsync();
@@ -513,8 +517,18 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             var order = await context.Orders.FindAsync(orderId);
             order.Status = (int)OrderStatusEnum.Received;
+            var actionReviceHistory = new OrderActionHistory()
+            {
+                Id = Guid.NewGuid().ToString(),
+                OrderId = orderId,
+                FromStatus = (int)OrderStatusEnum.New,
+                ToStatus = (int)OrderStatusEnum.Received,
+                CreateDate = DateTime.UtcNow.AddHours(7),
+                TypeId = "1"
+            };
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
-            payy.Status = (int)PaymentStatusEnum.successful; 
+            payy.Status = (int)PaymentStatusEnum.successful;
+            await context.AddAsync(actionReviceHistory);
             context.Entry(payy).State = EntityState.Modified;
             await context.SaveChangesAsync();
             return payy;
