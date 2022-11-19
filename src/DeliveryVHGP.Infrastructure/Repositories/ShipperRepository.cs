@@ -155,22 +155,23 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusShipDto> UpdateStatusShipper(string ShipId, StatusShipDto shipper)
         {
             var result = await context.Shippers.FindAsync(ShipId);
+            var segmentTask = context.SegmentTasks.FirstOrDefault(sd => sd.ShipperId == ShipId);
+            var segment = context.Segments.FirstOrDefault(s => s.SegmentTaskId == segmentTask.Id);
             var segmentDeli = context.SegmentDeliveryRoutes.FirstOrDefault(sd => sd.ShipperId == ShipId);
-            //var status = context.Orders.FirstOrDefault(x => x.Id == segmentDeli.OrderId);
-            Order status = null;
-            if (status == null || segmentDeli == null)
+            var order = context.Orders.FirstOrDefault(x => x.Id == segment.OrderId);
+            if (order == null || segmentDeli == null)
             {
                 result.Status = shipper.Status;
             }
-            if (status != null)
+            if (order != null)
             {
                 //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
-                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed)
+                if (order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)OrderStatusEnum.Completed)
                 {
                     result.Status = shipper.Status;
                 }
-                if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess)
+                if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
+                    || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess)
                     throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
