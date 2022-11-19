@@ -40,6 +40,9 @@ namespace DeliveryVHGP.Core.Models
             public string? ModeId { get; set; }
             public int? Status { get; set; }
             public DateTime? Time { get; set; }
+            public string? TimeDuration { get; set; }
+            public string? FromHour { get; set; }
+            public string? ToHour { get; set; }
             public string? CountProduct { get; set; }
         }
         public class CountProduct{
