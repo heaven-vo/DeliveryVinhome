@@ -22,11 +22,21 @@ namespace DeliveryVHGP.DeliveryAlgorithm
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            //Add order to segment
+            //Load order in segment(cache in db), and run algorithm to create route
+
+            // Load order thoa man dieu kien 
+            //Add to segment with creatAt, updateAt
+            //Load order from segment
+            //Run algorithm
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                    _logger.LogInformation("Worker running at: {time}", DateTime.Now);
+                    _logger.LogInformation("Worker running at: {time}", DateTime.UtcNow.AddHours(7));
                     var scopeSev = scope.ServiceProvider.GetService<IRepositoryWrapper>();
                     await scopeSev.Account.CreateAcc();
 

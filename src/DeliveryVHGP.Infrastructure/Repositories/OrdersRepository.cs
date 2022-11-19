@@ -509,7 +509,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> PaymentOrderSuccessfull(string orderId)
         {
-            //var o = await context.Orders.FindAsync(orderId);
+            var order = await context.Orders.FindAsync(orderId);
+            order.Status = (int)OrderStatusEnum.Received;
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
             payy.Status = (int)PaymentStatusEnum.successful; 
             context.Entry(payy).State = EntityState.Modified;

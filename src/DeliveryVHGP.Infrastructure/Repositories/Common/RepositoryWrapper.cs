@@ -37,6 +37,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             Store = new StoreRepository(_timeStageService, _fileService, _context);
             StoreCategory = new StoreCategoryRepository(_context);
             Segment = new SegmentRepository(_context);
+            Cache = new CacheRepository(_context);
+            RouteAction = new RouteActionRepository(_context);
         }
         public IMenuRepository Menu { get; private set; }
 
@@ -64,5 +66,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
 
         public IStoreCategoryRepository StoreCategory { get; private set; }
         public ISegmentRepository Segment { get; private set; }
+        public ICacheRepository Cache { get; private set; }
+        public IRouteActionRepository RouteAction { get; private set; }
     }
 }

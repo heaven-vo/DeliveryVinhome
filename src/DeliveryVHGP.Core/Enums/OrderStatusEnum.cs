@@ -8,19 +8,19 @@ namespace DeliveryVHGP.Core.Enums
 {
     public enum OrderStatusEnum
     {
-        New = 0,
-        Received = 1,
-        Assigning = 2,
-        Accepted = 3,
-        InProcess = 4,
-        Completed = 5,
-        Fail = 6
+        New = 0, // Create order
+        Received = 1, // Shop accept(option)
+        Assigning = 2, // Add to segment
+        Accepted = 3, // Shipper accept a route inclde 1-n order
+        InProcess = 4, // Shipper doing at this node( khi nao chuyen qua progress hay skip)
+        Completed = 5, // Done
+        Fail = 6 // Fail with problem
     }
     public enum InProcessStatus
     {
-        HubDelivery = 7,
-        AtHub = 8,
-        CustomerDelivery = 9
+        HubDelivery = 7, // Doing delivery to hub
+        AtHub = 8, // Order in hub
+        CustomerDelivery = 9 // Doing delivery to customer
     }
     public enum FailStatus
     {

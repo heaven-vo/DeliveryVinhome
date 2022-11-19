@@ -24,5 +24,7 @@ namespace DeliveryVHGP.Core.Interfaces
         IStoreRepository Store { get; }
         IStoreCategoryRepository StoreCategory { get; }
         ISegmentRepository Segment { get; }
+        ICacheRepository Cache { get; }
+        IRouteActionRepository RouteAction { get; }
     }
 }

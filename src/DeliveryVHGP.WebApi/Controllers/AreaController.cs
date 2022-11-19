@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.Core.Interfaces;
+﻿using DeliveryVHGP.Core.Entities;
+using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,28 @@ namespace DeliveryVHGP.WebApi.Controllers
         public AreaController(IRepositoryWrapper repository)
         {
             this.repository = repository;
+        }
+        [HttpGet("Route")]
+        public async Task<ActionResult> CreateRoute()
+        {
+            List<SegmentDeliveryRoute> list = new List<SegmentDeliveryRoute>();
+            SegmentDeliveryRoute routeA = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
+            routeA.RouteEdges = new List<RouteEdge>() {
+                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 1,},
+                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 2}
+            };
+            SegmentDeliveryRoute routeB = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
+
+            List< RouteEdge > edgeB = new List<RouteEdge>() {
+                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 3},
+                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 4}
+            };
+            routeB.RouteEdges = edgeB;       
+
+            list.Add(routeA);
+            list.Add(routeB);
+            await repository.RouteAction.CreateRoute(list);
+            return Ok();
         }
         /// <summary>
         /// Get list all Bulding with pagination
