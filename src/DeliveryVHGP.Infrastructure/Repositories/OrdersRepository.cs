@@ -19,7 +19,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, DateFilterRequest request)
         {
-            //var fromm = request?.FromDate;
+            var fromm = request?.DateFilter;
             //var to = request?.ToDate;
             //if (fromm != null && to != null)
             //{
@@ -34,7 +34,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(fromm.ToString())
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -50,7 +50,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
                                       Status = order.Status,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                       TimeDuration = dt.Id,
                                       ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
                                       FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
@@ -86,7 +86,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ModeId = m.SaleMode,
                                       BuildingName = b.Name,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                       TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
                                   }
@@ -119,7 +119,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                        TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
 
@@ -149,7 +149,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       status = order.Status,
                                       BuildingId = b.Id,
                                       buildingName = b.Name,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                       TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
                                   }
@@ -182,7 +182,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                       TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
 
@@ -217,7 +217,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate.ToString(),
+                                      Time = h.CreateDate,
                                       TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
 
@@ -246,7 +246,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                {
                                    Id = o.Id,
                                    Total = o.Total,
-                                   Time = h.CreateDate.ToString(),
+                                   Time = h.CreateDate,
                                    //PaymentId = p.Id,
                                    FullName = o.FullName,
                                    PhoneNumber = o.PhoneNumber,
@@ -262,6 +262,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    Note = o.Note,
                                    ShipCost = o.ShipCost,
                                    TimeDuration = dt.Id,
+                                   ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                   FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                    Dayfilter = m.DayFilter.ToString()
                                }
                                 ).FirstOrDefaultAsync();
@@ -288,7 +290,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     select new ListStatusOrder
                                     {
                                         Status = h.ToStatus,//status
-                                        Time = h.CreateDate.ToString()
+                                        Time = h.CreateDate
                                     }
                                     ).OrderBy(t => t.Status).ToListAsync();
             order.ListStatusOrder = listStatus;
@@ -364,7 +366,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = od.Id,
                 FromStatus = (int)OrderStatusEnum.New,
                 ToStatus = (int)OrderStatusEnum.New,
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
             var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
@@ -373,7 +375,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = od.Id,
                 FromStatus = (int)OrderStatusEnum.New,
                 ToStatus = (int)OrderStatusEnum.Received,
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
             await context.OrderActionHistories.AddRangeAsync(actionNewHistory, actionReviceHistory);
@@ -406,7 +408,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = orderId,
                 FromStatus = oldStatus,
                 ToStatus = order.StatusId,
-                CreateDate = DateTime.UtcNow,
+                CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
             await context.OrderActionHistories.AddAsync(actionHistory);
@@ -490,13 +492,13 @@ namespace DeliveryVHGP.WebApi.Repositories
                 pay.AddRequestData("vnp_Amount", order.Amount.ToString()); //số tiền cần thanh toán, công thức: số tiền * 100 - ví dụ 10.000 (mười nghìn đồng) --> 1000000
                 pay.AddRequestData("vnp_BankCode", ""); //Mã Ngân hàng thanh toán (tham khảo: https://sandbox.vnpayment.vn/apis/danh-sach-ngan-hang/), có thể để trống, người dùng có thể chọn trên cổng thanh toán VNPAY
                 pay.AddRequestData("vnp_CreateDate", DateTime.Now.ToString("yyyyMMddHHmmss")); //ngày thanh toán theo định dạng yyyyMMddHHmmss
-                pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VNDddddddddddddđddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddđđdd
+                pay.AddRequestData("vnp_CurrCode", "VND"); //Đơn vị tiền tệ sử dụng thanh toán. Hiện tại chỉ hỗ trợ VND
                 pay.AddRequestData("vnp_Locale", "vn"); //Ngôn ngữ giao diện hiển thị - Tiếng Việt (vn), Tiếng Anh (en)
                 //pay.AddRequestData("vnp_IpAddr", orderId); //Địa chỉ IP của khách hàng thực hiện giao dịch
                 pay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang"); //Thông tin mô tả nội dung thanh toán
                 pay.AddRequestData("vnp_OrderType", "other"); //topup: Nạp tiền điện thoại - billpayment: Thanh toán hóa đơn - fashion: Thời trang - other: Thanh toán trực tuyến
                 pay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl); //URL thông báo kết quả giao dịch khi Khách hàng kết thúc thanh toán
-                pay.AddRequestData("vnp_TxnRef", orderId.ToString()); //mã hóa đơn''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''xddddddddddddddddddddddddddddddđ
+                pay.AddRequestData("vnp_TxnRef", orderId.ToString()); //mã hóa đơn
             }
             else
             {
@@ -532,7 +534,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 OrderId = orderId,
                 FromStatus = (int)OrderStatusEnum.Received,
                 ToStatus = (int)FailStatus.CustomerFail,
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
             await context.OrderActionHistories.AddAsync(actionReviceHistory);

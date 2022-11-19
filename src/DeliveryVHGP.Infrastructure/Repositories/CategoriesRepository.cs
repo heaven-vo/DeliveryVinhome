@@ -74,13 +74,13 @@ namespace DeliveryVHGP.WebApi.Repositories
             return category;
         }
 
-        public async Task<Object> DeleteCateInMenuById(string CateInMenuId)
+        public async Task<Object> DeleteCategoryId(string CateId)
         {
-            var CateMenu = await context.CategoryInMenus.FindAsync(CateInMenuId);
-            context.CategoryInMenus.Remove(CateMenu);
+            var Cate = await context.Categories.FindAsync(CateId);
+            context.Categories.Remove(Cate);
             await context.SaveChangesAsync();
 
-            return CateInMenuId;
+            return Cate;
 
         }
         public async Task<Object> UpdateCategoryById(string categoryId, CategoryDto category, Boolean imgUpdate)

@@ -72,22 +72,23 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// <summary>
         /// Delete a Category In Menu by id
         /// </summary>
-        //DELETE: api/v1/CateGoryInMenu/{id}
-        [HttpDelete("{id}/menus")]
-        public async Task<ActionResult> DeleteStoreCategory(string id)
+        //DELETE: api/v1/Category/{id}
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCategory(string id)
         {
             try
             {
-                var result = await repository.Category.DeleteCateInMenuById(id);
-                return Ok(result);
+                var result = await repository.Category.DeleteCategoryId(id);
+                return Ok(new { StatusCode = "Successful", data = result });
             }
             catch (Exception)
             {
-                return Ok(new
+                 return Ok(new
                 {
-                    message = "Hiện tại danh mục đang có trong menu !!" +
-                                              "Vui lòng xóa danh mục khỏi menu và thử lại "
-                });
+                    StatusCode = "Fail",
+                     message = "Hiện tại danh mục đang có trong menu !!" +
+                                              "Vui lòng xóa danh mục khỏi menu và thử lại"
+                 });
             }
 
         }

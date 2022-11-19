@@ -111,6 +111,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && h.ToStatus == 0  && (order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9)
                                   select new OrderAdminDtoInStore()
                                   {
@@ -126,6 +127,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
+                                      TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       Time = h.CreateDate
 
                                   }
@@ -148,6 +152,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12)
                                   select new OrderAdminDtoInStore()
                                   {
@@ -163,6 +168,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
+                                      TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       Time = h.CreateDate
 
                                   }
@@ -185,6 +193,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
                                  && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
                                   select new OrderAdminDtoInStore()
@@ -200,6 +209,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       PaymentName = p.Type,
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
+                                      TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       //ShipperName = sp.FullName,
                                       Time = h.CreateDate
 
@@ -222,6 +234,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join b in context.Buildings on order.BuildingId equals b.Id
                                   join p in context.Payments on order.Id equals p.OrderId
                                   join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3) 
                                   
@@ -239,6 +252,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       BuildingName = b.Name,
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
+                                      TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       Time = h.CreateDate
 
                                   }

@@ -3,7 +3,7 @@
     public class OrderDetailModel
     {
         public string Id { get; set; } = null!;
-        public string? Time { get; set; }
+        public DateTime? Time { get; set; }
         public double? Total { get; set; }
         public double? ShipCost { get; set; }
         //public string? PaymentId { get; set; }
@@ -22,6 +22,8 @@
         public string? ShipperPhone { get; set; } = "";
         public string? Note { get; set; }
         public string? TimeDuration { get; set; }
+        public string? FromHour { get; set; }
+        public string? ToHour { get; set; }
         public string? Dayfilter { get; set; }
 
 
