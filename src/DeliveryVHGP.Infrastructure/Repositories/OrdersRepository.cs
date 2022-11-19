@@ -327,9 +327,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                 ShipCost = order.ShipCost,
                 DeliveryTimeId = order.DeliveryTimeId,
                 ServiceId = order.ServiceId,
-                Status = (int)OrderStatusEnum.Received
+                Status = (int)OrderStatusEnum.New
             };
-            await context.Orders.AddAsync(od);
+            
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
             {
@@ -369,7 +369,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
-            if(order.ModeId == "1")
+            if (order.Payments[0].Type == (int)PaymentEnum.Cash)
             {
                 var actionReviceHistory = new OrderActionHistory()// Beacause Store not need accept orrder, so order status change to next status
                 {
@@ -380,8 +380,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                     CreateDate = DateTime.UtcNow.AddHours(7),
                     TypeId = "1"
                 };
+                od.Status = (int)OrderStatusEnum.Received;
                 await context.OrderActionHistories.AddAsync(actionReviceHistory);
-            }          
+            }
+            await context.Orders.AddAsync(od);
             await context.OrderActionHistories.AddAsync(actionNewHistory);
             try
             {
@@ -536,10 +538,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<Object> PaymentOrderFalse(string orderId)
         {
             string time = await GetTime();
-            var o = await context.Orders.FindAsync(orderId);
+            var order = await context.Orders.FindAsync(orderId);
             var payy = context.Payments.FirstOrDefault(p => p.OrderId == orderId);
 
-            o.Status = (int)FailStatus.CustomerFail;
+            order.Status = (int)FailStatus.CustomerFail;
             payy.Status = (int)PaymentStatusEnum.failed;
 
             var actionReviceHistory = new OrderActionHistory()
@@ -556,7 +558,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             context.Entry(payy).State = EntityState.Modified;
             await context.SaveChangesAsync();
-            return o;
+            return order;
         }
     } 
     
