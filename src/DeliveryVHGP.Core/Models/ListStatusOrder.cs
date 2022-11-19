@@ -3,6 +3,6 @@
     public class ListStatusOrder
     {
         public int? Status { get; set; }
-        public string? Time { get; set; }
+        public DateTime? Time { get; set; }
     }
 }

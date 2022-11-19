@@ -11,7 +11,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<Object> GetCategoryById(string cateId);
         Task<IEnumerable<CategoryModel>> GetListCategoryByName(string cateName, int pageIndex, int pageSize);
         Task<CategoryDto> CreateCategory(CategoryDto category);
-        Task<Object> DeleteCateInMenuById(string CateInMenuId);
+        Task<Object> DeleteCategoryId(string CateId);
         Task<Object> UpdateCategoryById(string categoryId, CategoryDto category, Boolean imgUpdate);
 
     }

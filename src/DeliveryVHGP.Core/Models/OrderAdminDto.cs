@@ -16,7 +16,7 @@ namespace DeliveryVHGP.Core.Models
         public int? PaymentStatus { get; set; }
         public string? ModeId { get; set; }
         public int? Status { get; set; }
-        public string? Time { get; set; }
+        public DateTime? Time { get; set; }
         public string? TimeDuration { get; set; }
         public string? FromHour { get; set; }  
         public string? ToHour { get; set; }

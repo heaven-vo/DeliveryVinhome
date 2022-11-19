@@ -26,6 +26,18 @@ namespace DeliveryVHGP.WebApi.Repositories
                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return liststorecate;
         }
+        public async Task<IEnumerable<StoreCategoryModel>> GetStoreCategoryByName(string cateName, int pageIndex, int pageSize)
+        {
+            var listStoreCategory = await (from Scate in context.StoreCategories
+                                  .Where(c => c.Name.Contains(cateName))
+                                  select new StoreCategoryModel()
+                                  {
+                                      Id = Scate.Id,
+                                      Name = Scate.Name,
+                                      Status = Scate.Status
+                                  }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            return listStoreCategory;
+        }
         public async Task<StoreCategoryDto> CreateStoreCategory(StoreCategoryDto storeCate)
         {
             context.StoreCategories.Add(new StoreCategory { 

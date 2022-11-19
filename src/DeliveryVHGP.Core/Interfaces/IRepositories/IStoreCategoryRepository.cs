@@ -7,6 +7,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
     public interface IStoreCategoryRepository : IRepositoryBase<StoreCategory>
     {
         Task<IEnumerable<StoreCategoryModel>> GetAll(int pageIndex, int pageSize);
+        Task<IEnumerable<StoreCategoryModel>> GetStoreCategoryByName(string cateName, int pageIndex, int pageSize);
         Task<StoreCategoryDto> CreateStoreCategory(StoreCategoryDto storeCate);
         Task<Object> DeleteById(string proId);
         Task<Object> UpdateStoreCateById(string storecaId, StoreCategoryModel storeCate);

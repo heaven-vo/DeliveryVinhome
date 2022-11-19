@@ -10,7 +10,7 @@
         public string? StoreId { get; set; }
         public string? storeName { get; set; }
         public int? status { get; set; }
-        public string? Time { get; set; }
+        public DateTime? Time { get; set; }
         public double? quantity { get; set; }
         public string? TimeDuration { get; set; }
         public string? Dayfilter { get; set; }

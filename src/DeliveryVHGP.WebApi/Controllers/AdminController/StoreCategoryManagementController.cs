@@ -23,6 +23,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(await repository.StoreCategory.GetAll(pageIndex, pageSize));
         }
         /// <summary>
+        /// Get list Storecategory by name with pagination
+        /// </summary>
+        //GET: api/v1/cateByName?pageIndex=1&pageSize=3
+        [HttpGet("search-name")]
+        public async Task<ActionResult> GetListStoreCateByName(string storeCateName, int pageIndex, int pageSize)
+        {
+            return Ok(await repository.StoreCategory.GetStoreCategoryByName(storeCateName, pageIndex, pageSize));
+        }
+        /// <summary>
         /// Create a storeCategory
         /// </summary>
         //POST: api/v1/storeCategory
