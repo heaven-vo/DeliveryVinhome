@@ -130,7 +130,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       TimeDuration = dt.Id,
                                       ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
                                       FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -171,7 +172,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       TimeDuration = dt.Id,
                                       ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
                                       FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -197,6 +199,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
                                   && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
                                   where h.CreateDate.ToString().Contains(request.DateFilter)
+                                  where s.Name.Contains(request.KeySearch)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
@@ -214,7 +217,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
                                       FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
                                       //ShipperName = sp.FullName,
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
@@ -256,7 +260,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       TimeDuration = dt.Id,
                                       ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
                                       FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
-                                      Time = h.CreateDate
+                                      Time = h.CreateDate,
+                                      Dayfilter = m.DayFilter.ToString()
 
                                   }
                                   ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();

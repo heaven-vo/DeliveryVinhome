@@ -25,6 +25,11 @@ namespace DeliveryVHGP.Core.Models
         public class DateFilterRequest
         {
             public string? DateFilter { get; set; } = "";
+            public string? KeySearch { get; set; } = "";
+            //[DataType(DataType.DateTime)]
+            //public DateTime? FromDate { get; set; }
+            //   [DataType(DataType.DateTime)]
+            //public DateTime? ToDate { get; set; }
         }
         public class OrderAdminDtoInStore
         {
@@ -43,6 +48,7 @@ namespace DeliveryVHGP.Core.Models
             public string? TimeDuration { get; set; }
             public string? FromHour { get; set; }
             public string? ToHour { get; set; }
+            public string? Dayfilter { get; set; }
             public string? CountProduct { get; set; }
         }
         public class CountProduct{
