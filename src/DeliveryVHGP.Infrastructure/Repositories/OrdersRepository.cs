@@ -241,7 +241,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                //join ship in context.Shippers on sg.ShipperId equals ship.Id
                                join p in context.Payments on o.Id equals p.OrderId
                                join dt in context.DeliveryTimeFrames on o.DeliveryTimeId equals dt.Id
-                               where (o.Id == orderId)
+                               where (o.Id == orderId) && h.ToStatus == 0
                                select new OrderDetailModel()
                                {
                                    Id = o.Id,
