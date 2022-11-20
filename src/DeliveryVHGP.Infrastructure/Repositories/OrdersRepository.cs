@@ -19,7 +19,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, DateFilterRequest request)
         {
-            var fromm = request?.DateFilter;
+            //var fromm = request?.FromDate;
+            //var to = request?.ToDate;
             //var to = request?.ToDate;
             //if (fromm != null && to != null)
             //{
@@ -34,7 +35,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(fromm.ToString())
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,

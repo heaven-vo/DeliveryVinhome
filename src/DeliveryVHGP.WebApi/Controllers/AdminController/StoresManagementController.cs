@@ -2,6 +2,7 @@
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP_WebApi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -94,9 +95,9 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet("byStoreId/byModeId/order")]
-        public async Task<ActionResult> GetOrderByStoreByMode(string storeId, string modeId, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrderByStoreByMode(string storeId, string modeId, [FromQuery] DateFilterRequest request, int pageIndex, int pageSize)
         {
-            var listOder = await repository.Store.GetListOrderByStoreByModeId(storeId, modeId, pageIndex, pageSize);
+            var listOder = await repository.Store.GetListOrderByStoreByModeId(storeId, modeId, request, pageIndex, pageSize);
             if (storeId == null)
                 return NotFound();
             return Ok(listOder);

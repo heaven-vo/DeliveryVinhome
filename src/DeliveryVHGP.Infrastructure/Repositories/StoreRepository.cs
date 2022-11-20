@@ -183,7 +183,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId,string modeId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId,string modeId, DateFilterRequest request, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -195,7 +195,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
-                                 && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
+                                  && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
+                                  where h.CreateDate.ToString().Contains(request.DateFilter)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
