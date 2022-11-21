@@ -81,8 +81,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
                                                     || order.Status == (int)OrderStatusEnum.Completed
                                                   ).Count(), //tong don hang
-                TotalStore = countStore.ToString(), // tong store
-                TotalShipper = countShipper.ToString(), // tong store
+                TotalStore = countStore, // tong store
+                TotalShipper = countShipper, // tong store
             };
             return report;
         }

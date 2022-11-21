@@ -62,8 +62,8 @@ namespace DeliveryVHGP.Core.Models
             public int TotalOrderCancel { get; set; }
             public int TotalOrderCompleted { get; set; }
             public int TotalOrder { get; set; }
-            public string TotalStore { get; set; }
-            public string TotalShipper { get; set; }
+            public int TotalStore { get; set; }
+            public int TotalShipper { get; set; }
         }
         public class SystemReportModelInStore
         {
