@@ -11,5 +11,6 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
     public interface ISegmentRepository : IRepositoryBase<Segment>
     {
         Task CreatSegment(OrderDto order);
+        Task<List<SegmentModel>> GetSegmentAvaliable(List<string> listOrder);
     }
 }

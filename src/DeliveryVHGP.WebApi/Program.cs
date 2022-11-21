@@ -17,7 +17,10 @@ builder.Services.AddScoped<ITimeStageService,TimeStageService >();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 builder.Services.AddHostedService<DeliveryService>();
-
+builder.Services.Configure<HostOptions>(hostOptions =>
+{
+    hostOptions.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
+});
 builder.Services.AddControllers();
 
 builder.Services.AddTransient<INotificationService, NotificationService>();

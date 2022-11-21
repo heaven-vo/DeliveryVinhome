@@ -17,6 +17,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm.Model
             { 0, 502, 502, 650, 536, 0},
         };
         public int[,] DistanceMatrix { get; set; }
+        public int[][] PickupsDeliveriesData { get; set; }
         public int[][] PickupsDeliveries { get; set; }
         public int[] ListNodes { get; set; }
         public int[] ListNodeWithNewIndex { get; set; }

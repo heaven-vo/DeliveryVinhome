@@ -470,7 +470,7 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.CreateDate).HasMaxLength(50);
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.OrderId).HasMaxLength(50);
 

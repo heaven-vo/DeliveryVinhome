@@ -33,7 +33,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     HubId = hubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.StoreToHub,
-                    Status = (int)SegmentStatusEnum.NotAssign
+                    Status = (int)SegmentStatusEnum.Viable
                 };
                 Segment toCusSegment = new Segment()
                 {
@@ -43,7 +43,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     HubId = hubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.HubToCus,
-                    Status = (int)SegmentStatusEnum.NotAssign
+                    Status = (int)SegmentStatusEnum.Unviable
                 };
                 await context.Segments.AddRangeAsync(toHubSegment, toCusSegment);
             }
@@ -57,11 +57,29 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     HubId = hubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.StoreToCus,
-                    Status = (int)SegmentStatusEnum.NotAssign
+                    Status = (int)SegmentStatusEnum.Viable
                 };
                 await Add(storeToCusSegment);
             }
             await Save();
+        }
+        public async Task<List<SegmentModel>> GetSegmentAvaliable(List<string> listOrder)
+        {
+            List<SegmentModel> listVetorBuilding = new List<SegmentModel>();
+            var listSegment = await context.Segments.Where(x => listOrder.Contains(x.OrderId) && x.Status == (int)SegmentStatusEnum.Viable)
+               .ToListAsync();
+            if(listSegment != null)
+            {
+                listSegment.ForEach(x => x.Status = (int)SegmentStatusEnum.Unviable);
+                listVetorBuilding = listSegment.Select(x => new SegmentModel
+                {
+                    fromBuilding = x.FromBuildingId,
+                    toBuilding = x.ToBuildingId
+                }).ToList();
+                await Save();
+            }
+            
+            return listVetorBuilding;
         }
     }
 }

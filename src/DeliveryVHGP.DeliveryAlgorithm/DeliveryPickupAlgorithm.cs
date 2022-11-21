@@ -1,6 +1,7 @@
 ﻿using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.DeliveryAlgorithm.Model;
 using Google.OrTools.ConstraintSolver;
 using Google.Protobuf.WellKnownTypes;
@@ -22,13 +23,18 @@ namespace DeliveryVHGP.DeliveryAlgorithm
         }
         public void AlgorithsProcess(List<SegmentModel> listSegments)
         {
-            List<SegmentModel> list = new List<SegmentModel>() { new SegmentModel(){fromBuilding = "b1", toBuilding = "b3"},
-                                                                 new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"},
-                                                                new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"}};
+            //List<SegmentModel> list = new List<SegmentModel>() { new SegmentModel(){fromBuilding = "b1", toBuilding = "b3"},
+            //                                                     new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"},
+            //                                                    new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"}};
             // Instantiate the data problem.
             DataModel data = new DataModel();
-            data.PickupsDeliveries = ChangeBuildingIdIntoInt(listSegments); //{1,6},{2,6},{1,6},{2,1} quen tao vector moi
-            data.ListNodes = ChangeListSegmetToNode(data.PickupsDeliveries); //{0,1,2,6}
+            data.VehicleNumber = 4;
+            data.PickupsDeliveriesData = ChangeBuildingIdIntoInt(listSegments); //{1,6},{2,6},{1,6},{2,1} 
+            foreach (var a in data.PickupsDeliveriesData)
+            {
+                Console.WriteLine(a[0] + " " + a[1]);
+            }
+            data.ListNodes = ChangeListSegmetToNode(data.PickupsDeliveriesData); //{0,1,2,6}
             data.DistanceMatrix = Convert(data.DistanceMatrixData, data.ListNodes); //new matrix
             data.ListNodeWithNewIndex = ChangeNodesIntoNewIndex(data.ListNodes); //{0,1,2,3}
             List<NodesMapping> map = new List<NodesMapping>();           //real:{0,1,2,6}, fake:{0,1,2,3}
@@ -39,7 +45,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 //Console.WriteLine(node.RealNode + " " + node.FakeNode);
             }
             data.NodesMappings = map;
-
+            data.PickupsDeliveries = ChangeSegmentToNew(data.PickupsDeliveriesData, map); //{1,6},{2,6},{1,6},{2,1} ->{1,3},{2,3},{1,3},{2,1}
             // Create Routing Index Manager
             RoutingIndexManager manager =
                 new RoutingIndexManager(data.DistanceMatrix.GetLength(0), data.VehicleNumber, data.Depot);
@@ -101,58 +107,65 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 // Inspect solution.----------------------------------------------------
                 long maxRouteDistance = 0;
                 long totalRouteDistance = 0;
+                var enumCount = System.Enum.GetNames(typeof(BuildingEnum)).Length;
                 List<SegmentDeliveryRoute> listRoute = new List<SegmentDeliveryRoute>();
                 for (int i = 0; i < 4; ++i) //data.VehicleNumber = 4
                 {
-                    //Console.WriteLine("Route for Vehicle {0}:", i);
+                    Console.WriteLine("Route for Vehicle {0}:", i);
                     // Creat table Delivery Route
                     SegmentDeliveryRoute route = new SegmentDeliveryRoute() {Id = Guid.NewGuid().ToString(),  Status = (int)RouteStatusEnum.NotAssign};
+                    List<RouteEdge> listEdge = new List<RouteEdge>();
                     long routeDistance = 0;
                     var start = routing.Start(i);
                     var index = solution.Value(routing.NextVar(start));
+                    string previousBuiding = "";
+                    int priority = 1;
                     while (routing.IsEnd(index) == false)
-                    {
+                    {                                              
                         RouteEdge edge = new RouteEdge() { Id = Guid.NewGuid().ToString(), Status = (int)EdgeStatusEnum.NotYet };
-                        //Console.Write("{0} -> ", manager.IndexToNode((int)index));
-                        foreach (var node in data.NodesMappings)
+                        Console.Write("{0} -> ", manager.IndexToNode((int)index));
+                        int buildingEnum = data.NodesMappings.Where(x => x.FakeNode == index).Select(x => x.RealNode).FirstOrDefault();//new code
+                        if(buildingEnum > enumCount)
                         {
-                            int building;
-                            BuildingEnum buildId = BuildingEnum.b1;
-                            String previousBuiding = "";
-                            if (index == node.FakeNode)
-                            {
-                                if (node.RealNode < 33)
-                                {
-                                    building = node.RealNode;
-                                }
-                                else
-                                {
-                                    building = node.RealNode - 32;
-                                    buildId = (BuildingEnum)building;//check lai
-                                }
-                                //Create Route edge
-                                //List order Id -> list segment -> check building id -> create orderAction()
-                                //if segment type 2(hub - cus), 3(store - cus) -> remove order Queue
-                                //if segment type 1(store - hub) -> remove then add to queue || do nothing
-
-                                //load list order from queue -> segment(not done, done) -> 1 segment then remove order from queue 
-                                //-> segment done -> order done, fail or at hub
-                                //if order at hub -> add order to queue
-                            }
-                            previousBuiding = buildId.ToString();
+                            buildingEnum -= enumCount;
                         }
+                        string buildId = ((BuildingEnum)buildingEnum).ToString();
+                        previousBuiding = buildId;
+                        
+                        //        //Create Route edge
+                        //        //List order Id -> list segment -> check building id -> create orderAction()
+                        //        //if segment type 2(hub - cus), 3(store - cus) -> remove order Queue
+                        //        //if segment type 1(store - hub) -> remove then add to queue || do nothing
+
+                        //        //load list order from queue -> segment(not done, done) -> 1 segment then remove order from queue 
+                        //        //-> segment done -> order done, fail or at hub
+                        //        //if order at hub -> add order to queue
+                        
                         var previousIndex = index;
                         index = solution.Value(routing.NextVar(index));
                         routeDistance += routing.GetArcCostForVehicle(previousIndex, index, 0);
 
-                        edge.Distance = routeDistance;
+                        edge.FromBuildingId = previousBuiding;
+                        edge.ToBuildingId = buildId;
+                        edge.Priority = priority;
+                        
+                        if(routeDistance > 0)
+                        {
+                            edge.Distance = routeDistance;
+                            listEdge.Add(edge);
+                            priority++;
+                        }                                               
                     }
-                    //Console.WriteLine("{0}", manager.IndexToNode((int)index));
-                    //Console.WriteLine("Distance of the route: {0}m", routeDistance);
+                    Console.WriteLine("{0}", manager.IndexToNode((int)index));
+                    Console.WriteLine("Distance of the route: {0}m", routeDistance);
                     //maxRouteDistance = Math.Max(routeDistance, maxRouteDistance);
                     totalRouteDistance += routeDistance;
                     route.Distance = totalRouteDistance;
-                    listRoute.Add(route);
+                    route.RouteEdges = listEdge;                   
+                    if(totalRouteDistance > 0)
+                    {
+                        listRoute.Add(route);
+                    }
                 }
                 repo.RouteAction.CreateRoute(listRoute);
                 //Console.WriteLine("Maximum distance of the routes: {0}m", maxRouteDistance);
@@ -182,7 +195,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     }
                     else if (build.Item1.ToString() == bu.toBuilding)
                     {
-                        a[1] = build.Item2 + 10;
+                        a[1] = build.Item2 ; //+n(n: building)
                         //Console.WriteLine(build.Item2);
                     }
 
@@ -242,6 +255,18 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 result[i] = i;
             }
             return result;
-        }              
+        }
+        public int[][] ChangeSegmentToNew(int[][] segment, List<NodesMapping> map)
+        {
+            //var result = new int[segment.Length][];
+            for (int i = 0; i < segment.Length; i++)
+            {
+                for (int j = 0; j < segment[i].Length; j++)
+                {
+                    segment[i][j] = map.Where(x => x.RealNode == segment[i][j]).Select(x => x.FakeNode).FirstOrDefault();
+                }
+            }
+            return segment;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace DeliveryVHGP.Core.Entities
         public string OrderId { get; set; } = null!;
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
+        public bool? IsReady { get; set; }
 
         public virtual Order Order { get; set; } = null!;
     }

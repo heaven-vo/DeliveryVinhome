@@ -560,6 +560,20 @@ namespace DeliveryVHGP.WebApi.Repositories
             await context.SaveChangesAsync();
             return order;
         }
-    } 
-    
+        public async Task<List<string>> CheckAvailableOrder()
+        {
+            var time = Double.Parse(DateTime.UtcNow.AddHours(7).ToString("HH.mm"));
+            DateTime date = DateTime.UtcNow.AddHours(7).Date;
+            var listOrder = await context.Orders.Where(x => (x.Menu.SaleMode == "1" && x.Status == (int)OrderStatusEnum.Received) 
+                             || (x.Menu.SaleMode == "2" && x.DeliveryTime.FromHour <= time)
+                             || (x.Menu.SaleMode == "3" && x.Menu.DayFilter == date && x.DeliveryTime.FromHour <= time)
+                             && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash 
+                                || (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash && x.Payments.FirstOrDefault().Status == (int)PaymentStatusEnum.successful)
+                                )
+                             && x.OrderCache.Id == null
+                             )
+                .Select(x => x.Id).Take(100).ToListAsync(); //improve performace take 100
+            return listOrder;
+        }
+    }     
 }

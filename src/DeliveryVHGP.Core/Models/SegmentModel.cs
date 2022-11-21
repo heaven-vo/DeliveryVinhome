@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeliveryVHGP.DeliveryAlgorithm.Model
+namespace DeliveryVHGP.Core.Models
 {
     public class SegmentModel
     {

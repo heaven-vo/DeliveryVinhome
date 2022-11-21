@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.DeliveryAlgorithm.Model;
+﻿using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.DeliveryAlgorithm.Model;
 using Google.OrTools.ConstraintSolver;
 using System;
 using System.Collections.Generic;

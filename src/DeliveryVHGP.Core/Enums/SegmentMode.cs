@@ -14,8 +14,8 @@ namespace DeliveryVHGP.Core.Enums
     }
     public enum SegmentStatusEnum
     {
-        NotAssign = 1,
-        ToDo = 2,
+        Unviable = 1,
+        Viable = 2,
         Done = 3
     }
 }
