@@ -10,6 +10,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
     public interface IOrderRepository : IRepositoryBase<Order>
     {
         Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, DateFilterRequest request);
+        Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request);
         Task<List<OrderModels>> GetListOrders(string CusId,int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetListOrdersByStoreByStatus(string StoreId, int StatusId, int pageIndex, int pageSize);

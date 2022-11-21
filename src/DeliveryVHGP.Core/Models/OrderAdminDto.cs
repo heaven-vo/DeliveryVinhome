@@ -25,6 +25,11 @@ namespace DeliveryVHGP.Core.Models
         public class DateFilterRequest
         {
             public string? DateFilter { get; set; } = "";
+            //public string? KeySearch { get; set; } = "";
+            //[DataType(DataType.DateTime)]
+            //public DateTime? FromDate { get; set; }
+            //   [DataType(DataType.DateTime)]
+            //public DateTime? ToDate { get; set; }
         }
         public class OrderAdminDtoInStore
         {
@@ -43,12 +48,30 @@ namespace DeliveryVHGP.Core.Models
             public string? TimeDuration { get; set; }
             public string? FromHour { get; set; }
             public string? ToHour { get; set; }
+            public string? Dayfilter { get; set; }
             public string? CountProduct { get; set; }
         }
         public class CountProduct{
             public string? size { get; set; }
-
-
+        }
+        public class SystemReportModel
+        {
+            public int TotalOrderNew { get; set; }
+            public int TotalOrderUnpaidVNpay { get; set; }
+            //public int TotalOrderAssigend { get; set; }
+            public int TotalOrderCancel { get; set; }
+            public int TotalOrderCompleted { get; set; }
+            public int TotalOrder { get; set; }
+            public int TotalStore { get; set; }
+            public int TotalShipper { get; set; }
+        }
+        public class SystemReportModelInStore
+        {
+            public int TotalOrderNew { get; set; }
+            public int TotalOrderUnpaidVNpay { get; set; }
+            public int TotalOrderCancel { get; set; }
+            public int TotalOrderCompleted { get; set; }
+            public int TotalOrder { get; set; }
         }
 
     }

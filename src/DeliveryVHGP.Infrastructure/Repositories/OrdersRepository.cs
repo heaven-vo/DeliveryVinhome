@@ -19,7 +19,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, DateFilterRequest request)
         {
-            var fromm = request?.DateFilter;
+            //var fromm = request?.FromDate;
+            //var to = request?.ToDate;
             //var to = request?.ToDate;
             //if (fromm != null && to != null)
             //{
@@ -34,7 +35,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
-                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(fromm.ToString())
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   select new OrderAdminDto()
                                   {
                                       Id = order.Id,
@@ -59,6 +60,31 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
+        }
+        public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
+        {
+            var lstOrder = await (from orderr in context.Orders
+                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                  select orderr).ToListAsync();
+            var countStore = context.Stores.Count();
+            var countShipper = context.Shippers.Count();
+            SystemReportModel report = new SystemReportModel()
+            {
+                TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received).Count(), //don hang moi
+                TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(), //don hang thanh cong
+                TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
+                                                    || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
+                                                    || order.Status == (int)OrderStatusEnum.Completed
+                                                  ).Count(), //tong don hang
+                TotalStore = countStore, // tong store
+                TotalShipper = countShipper, // tong store
+            };
+            return report;
         }
         public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
@@ -241,7 +267,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                //join ship in context.Shippers on sg.ShipperId equals ship.Id
                                join p in context.Payments on o.Id equals p.OrderId
                                join dt in context.DeliveryTimeFrames on o.DeliveryTimeId equals dt.Id
-                               where (o.Id == orderId)
+                               where (o.Id == orderId) && h.ToStatus == 0
                                select new OrderDetailModel()
                                {
                                    Id = o.Id,
