@@ -48,6 +48,28 @@ namespace DeliveryVHGP.WebApi.Repositories
             }    
             return listStore;
         }
+        public async Task<SystemReportModelInStore> GetListOrdersReport(string storeId ,DateFilterRequest request)
+        {
+            var lstOrder = await (from orderr in context.Orders
+                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                  join s in context.Stores on orderr.StoreId equals s.Id
+                                  where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter) 
+                                  select orderr).ToListAsync();
+            SystemReportModelInStore report = new SystemReportModelInStore()
+            {
+                TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received).Count(), //don hang moi
+                TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(), //don hang thanh cong
+                TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
+                                                    || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
+                                                    || order.Status == (int)OrderStatusEnum.Completed
+                                                  ).Count(), //tong don hang
+            };
+            return report;
+        }
         public async Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize)
         {
             var listStore = await (from store in context.Stores
@@ -199,7 +221,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
                                   && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
                                   where h.CreateDate.ToString().Contains(request.DateFilter)
-                                  where s.Name.Contains(request.KeySearch)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,

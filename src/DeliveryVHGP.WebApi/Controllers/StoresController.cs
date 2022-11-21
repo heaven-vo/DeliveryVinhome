@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DeliveryVHGP.Core.Interfaces;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -22,6 +23,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             return Ok(await repository.Store.GetListStore( pageIndex, pageSize));
         }
+       
         /// <summary>
         /// Get list all store by brand with pagination
         /// </summary>
@@ -30,7 +32,8 @@ namespace DeliveryVHGP.WebApi.Controllers
         public async Task<ActionResult> GetListStoreByBrand( string brandName, int pageIndex, int pageSize)
         {
             return Ok(await repository.Store.GetListStoreInBrand(brandName, pageIndex, pageSize));
-        } /// <summary>
+        } 
+        /// <summary>
         /// Get list all store by brand with pagination
         /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3

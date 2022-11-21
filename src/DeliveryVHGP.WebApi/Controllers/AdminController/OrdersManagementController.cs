@@ -31,6 +31,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         /// <summary>
+        /// Get order report(admin web)
+        /// </summary>
+        //GET: api/v1/OrderReport?pageIndex=1&pageSize=3
+        [HttpGet("report")]
+        public async Task<ActionResult> GetListOrdersReport([FromQuery] DateFilterRequest request)
+        {
+            return Ok(await repository.Order.GetListOrdersReport(request));
+        }
+        /// <summary>
         /// Get list all order by payment with pagination
         /// </summary>
         //GET: api/v1/OrderByPayment?pageIndex=1&pageSize=3

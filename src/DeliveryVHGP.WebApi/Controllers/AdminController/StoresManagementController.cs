@@ -26,6 +26,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(await repository.Store.GetListStore(pageIndex, pageSize));
         }
         /// <summary>
+        /// Get order report in store
+        /// </summary>
+        //GET: api/v1/orderReportBystore?pageIndex=1&pageSize=3
+        [HttpGet("orderReport")]
+        public async Task<ActionResult> GetListStoreByBrand(string storeId, [FromQuery] DateFilterRequest request)
+        {
+            return Ok(await repository.Store.GetListOrdersReport(storeId, request));
+        }
+        /// <summary>
         /// Get list all store by brand with pagination
         /// </summary>
         //GET: api/v1/storeByBrand?pageIndex=1&pageSize=3

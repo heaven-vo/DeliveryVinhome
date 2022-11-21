@@ -61,6 +61,31 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lstOrder;
         }
+        public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
+        {
+            var lstOrder = await (from orderr in context.Orders
+                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                  select orderr).ToListAsync();
+            var countStore = context.Stores.Count();
+            var countShipper = context.Shippers.Count();
+            SystemReportModel report = new SystemReportModel()
+            {
+                TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received).Count(), //don hang moi
+                TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count(),//don hang chua thanh toan vnpay
+                TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(), //don hang thanh cong
+                TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
+                                                    || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
+                                                    || order.Status == (int)OrderStatusEnum.Completed
+                                                  ).Count(), //tong don hang
+                TotalStore = countStore.ToString(), // tong store
+                TotalShipper = countShipper.ToString(), // tong store
+            };
+            return report;
+        }
         public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
