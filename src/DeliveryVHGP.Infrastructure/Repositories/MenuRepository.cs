@@ -711,7 +711,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             catch
             {
-                throw;
+                throw;      
             }
             return menu;
         }

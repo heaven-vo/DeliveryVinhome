@@ -14,6 +14,7 @@ namespace DeliveryVHGP.Core.Interfaces
         IAccountRepository Account { get; }
         IAreaRepository Area { get; }
         IBrandRepository Brand { get; }
+        IHubRepository Hub { get; }
         IBuildingRepository Building { get; }
         ICategoriesRepository Category { get; }
         ICollectionRepository Collection { get; }

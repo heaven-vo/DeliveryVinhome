@@ -25,11 +25,13 @@ namespace DeliveryVHGP.Core.Models
         public class DateFilterRequest
         {
             public string? DateFilter { get; set; } = "";
-            //public string? KeySearch { get; set; } = "";
-            //[DataType(DataType.DateTime)]
-            //public DateTime? FromDate { get; set; }
-            //   [DataType(DataType.DateTime)]
-            //public DateTime? ToDate { get; set; }
+        }
+        public class FilterRequest
+        {
+            public string? DateFilter { get; set; } = "";
+            public string? SearchByPayment { get; set; } = "";
+            public string? SearchByStatus { get; set; } = "";
+            public string? SearchByMode { get; set; } = "";
         }
         public class OrderAdminDtoInStore
         {

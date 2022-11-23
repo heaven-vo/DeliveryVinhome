@@ -59,19 +59,34 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       {
                                           Id = b.Id,
                                           Name = b.Name,
+                                          Longitude = b.Longitude,
+                                          Latitude = b.Latitude,
                                       }
                                      ).ToListAsync();
             return listBuilding;
         }
         public async Task<AreaModel> CreateArea(AreaModel area)
         {
-            context.Areas.Add(
-                new Area
+            var id = Guid.NewGuid().ToString();
+            var newArea = new Area
+            { 
+                Id = id,
+                Name = area.Name,
+            };
+            context.Areas.Add(newArea);
+
+            List<Cluster> list = new List<Cluster>();
+            foreach (var cluster in area.listCluster)
+            {
+                var newCluster = new Cluster
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = area.Name,   
-                }
-                );
+                   Id = Guid.NewGuid().ToString(),
+                  Name = cluster.Name,
+                    AreaId = id,
+                };
+                list.Add(newCluster);
+            }
+            context.Clusters.AddRangeAsync(list);
             await context.SaveChangesAsync();
             return area;
         }
@@ -85,7 +100,25 @@ namespace DeliveryVHGP.WebApi.Repositories
             result.Id = area.Id;
             result.Name = area.Name;
 
+            var clusterr = context.Clusters.Where(c => c.AreaId == areaId).ToList();
+            if (clusterr.Any())
+            {
+                context.Clusters.RemoveRange(clusterr);
+            }
+            List<Cluster> list = new List<Cluster>();
+            foreach (var cluster in area.listCluster)
+            {
+                var newCluster = new Cluster
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = cluster.Name,
+                    AreaId = areaId,
+                };
+                list.Add(newCluster);
+            }
+            context.Clusters.AddRangeAsync(list);
             context.Entry(result).State = EntityState.Modified;
+
             try
             {
                 await context.SaveChangesAsync();

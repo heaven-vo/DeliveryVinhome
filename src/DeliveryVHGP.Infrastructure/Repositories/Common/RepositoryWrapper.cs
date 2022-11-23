@@ -27,6 +27,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             Account = new AccountRepository(_context);
             Area = new AreaRepositore(_context);
             Brand = new BrandRepository(_context);
+            Hub = new HubRepository(_context);
             Building = new BuildingRepository(_context);
             Category = new CategoriesRepository(_fileService, _context);
             Collection = new CollectionRepository(_context);
@@ -47,6 +48,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
         public IAreaRepository Area { get; private set; }
 
         public IBrandRepository Brand { get; private set; }
+        public IHubRepository Hub { get; private set; }
 
         public IBuildingRepository Building { get; private set; }
 
