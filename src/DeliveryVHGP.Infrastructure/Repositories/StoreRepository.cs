@@ -134,7 +134,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
-                                  where s.Id == StoreId && h.ToStatus == 0  && (order.Status == 4 || order.Status == 7 || order.Status == 8 || order.Status == 9)
+                                  where s.Id == StoreId && h.ToStatus == 0  && (order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
@@ -176,7 +176,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
-                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 5 || order.Status == 6 || order.Status == 13 || order.Status == 10 || order.Status == 11 || order.Status == 12)
+                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
@@ -219,7 +219,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   where s.Id == StoreId && modeId == m.SaleMode && h.ToStatus == 0
-                                  && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3)
+                                  && (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted)
                                   where h.CreateDate.ToString().Contains(request.DateFilter)
                                   select new OrderAdminDtoInStore()
                                   {
@@ -262,7 +262,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == 0 || order.Status == 1 || order.Status == 2 || order.Status == 3) 
+                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted) 
                                   
                                   select new OrderAdminDtoInStore()
                                   {
