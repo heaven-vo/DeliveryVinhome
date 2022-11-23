@@ -18,7 +18,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet]
-        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize, [FromQuery] DateFilterRequest request)
+        public async Task<ActionResult> GetOrder(int pageIndex, int pageSize, [FromQuery] FilterRequest request)
         {
             try
             {
