@@ -37,7 +37,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task<List<string>> GetOrderFromCache(int size)
         {
-            var listOrer = await context.OrderCaches.Where(x => x.IsReady == true).Select(x => x.OrderId).Take(size).ToListAsync();
+            var listOrer = await context.OrderCaches.Where(x => x.IsReady == true).OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
             return listOrer;
         }
     }

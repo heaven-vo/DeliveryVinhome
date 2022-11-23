@@ -1,14 +1,13 @@
 ﻿using DeliveryVHGP.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DeliveryVHGP.Core.Models;
 
 namespace DeliveryVHGP.Core.Interfaces.IRepositories
 {
     public interface IRouteActionRepository : IRepositoryBase<SegmentDeliveryRoute>
     {
-        Task CreateRoute(List<SegmentDeliveryRoute> route);
+        Task<List<RouteModel>> GetCurrentAvalableRoute();
+        Task CreateRoute(List<SegmentDeliveryRoute> route, List<SegmentModel> listSegments);
+        Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments);
+        Task RemoveRouteActionNotShipper();
     }
 }

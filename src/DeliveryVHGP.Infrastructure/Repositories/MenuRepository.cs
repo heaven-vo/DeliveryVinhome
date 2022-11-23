@@ -654,7 +654,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 listProduct.RemoveAll(x => x.Id == product);
             }
             // Remove duplicate
-            return listProduct.GroupBy(x => x.Id).Select(x => x.First()).ToList();
+            return listProduct.OrderBy(x => x.Id).GroupBy(x => x.Id).Select(x => x.First()).ToList();
         }
 
 

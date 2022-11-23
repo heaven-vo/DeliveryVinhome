@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeliveryVHGP.DeliveryAlgorithm.Model
+﻿namespace DeliveryVHGP.DeliveryAlgorithm.Model
 {
     public enum BuildingEnum
     {
@@ -39,6 +33,12 @@ namespace DeliveryVHGP.DeliveryAlgorithm.Model
         b29 = 29,
         b30 = 30,
         b31 = 31,
-        b32 = 32
+        b32 = 32,
+        b33 = 33,
+        b34 = 34,
+        b35 = 35,
+        b36 = 36,
+        b37 = 37,
+        b38 = 38
     }
 }

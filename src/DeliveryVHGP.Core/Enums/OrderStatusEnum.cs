@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeliveryVHGP.Core.Enums
+﻿namespace DeliveryVHGP.Core.Enums
 {
     public enum OrderStatusEnum
     {
@@ -28,5 +22,12 @@ namespace DeliveryVHGP.Core.Enums
         StoreFail = 11,
         ShipperFail = 12,
         CustomerFail = 13
+    }
+    public enum OrderActionEnum
+    {
+        PickupStore = 1,
+        PickupHub = 2,
+        DeliveryHub = 3,
+        DeliveryCus = 4
     }
 }

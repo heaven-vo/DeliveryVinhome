@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DeliveryVHGP.Core.Enums
+﻿namespace DeliveryVHGP.Core.Enums
 {
     public enum RouteStatusEnum
     {
@@ -17,5 +11,10 @@ namespace DeliveryVHGP.Core.Enums
         NotYet = 1,
         ToDo = 2,
         Done = 3
+    }
+    public enum EdgeTypeEnum
+    {
+        Pickup = 1,
+        Delivery = 2
     }
 }

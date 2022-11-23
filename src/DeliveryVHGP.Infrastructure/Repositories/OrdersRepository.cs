@@ -1,13 +1,12 @@
-﻿using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
-using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Core.Enums;
-using static DeliveryVHGP.Core.Models.OrderAdminDto;
+using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -146,7 +145,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       ModeId = m.SaleMode,
                                       //ShipperName = sp.FullName,
                                       Time = h.CreateDate,
-                                       TimeDuration = dt.Id,
+                                      TimeDuration = dt.Id,
                                       Dayfilter = m.DayFilter.ToString()
 
                                   }
@@ -355,7 +354,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 ServiceId = order.ServiceId,
                 Status = (int)OrderStatusEnum.New
             };
-            
+
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
             {
@@ -590,16 +589,19 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             var time = Double.Parse(DateTime.UtcNow.AddHours(7).ToString("HH.mm"));
             DateTime date = DateTime.UtcNow.AddHours(7).Date;
-            var listOrder = await context.Orders.Where(x => (x.Menu.SaleMode == "1" && x.Status == (int)OrderStatusEnum.Received) 
+            var listOrder = await context.Orders.Include(x => x.OrderCache)//.Include(x => x.OrderActionHistories)
+                .Where(x => (x.Menu.SaleMode == "1" && x.Status == (int)OrderStatusEnum.Received)
                              || (x.Menu.SaleMode == "2" && x.DeliveryTime.FromHour <= time)
                              || (x.Menu.SaleMode == "3" && x.Menu.DayFilter == date && x.DeliveryTime.FromHour <= time)
-                             && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash 
+                             && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash
                                 || (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash && x.Payments.FirstOrDefault().Status == (int)PaymentStatusEnum.successful)
                                 )
-                             && x.OrderCache.Id == null
+                             //&& x.OrderCache != null
                              )
-                .Select(x => x.Id).Take(100).ToListAsync(); //improve performace take 100
-            return listOrder;
+                .Take(100).ToListAsync(); //improve performace take 100 Select(x => x.Id)
+            //Console.WriteLine("Order date: " + listOrder[0].OrderActionHistories.First().CreateDate.ToString());
+            var list = listOrder.Where(x => x.OrderCache == null).Select(x => x.Id).ToList();
+            return list;
         }
-    }     
+    }
 }

@@ -6,15 +6,15 @@ using DeliveryVHGP.Core.Models.Noti;
 using DeliveryVHGP.DeliveryAlgorithm;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
-using DeliveryVHGP.WebApi;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<ITimeStageService,TimeStageService >();
+builder.Services.AddScoped<ITimeStageService, TimeStageService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IFirestoreService, FirestoreService>();
 builder.Services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 builder.Services.AddHostedService<DeliveryService>();
 builder.Services.Configure<HostOptions>(hostOptions =>
@@ -65,11 +65,12 @@ app.UseSwagger(options =>
 {
     options.SerializeAsV2 = true;
 });
-app.UseSwaggerUI(c => {
+app.UseSwaggerUI(c =>
+{
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "VHGP Delivery Web API v1");
     c.RoutePrefix = string.Empty;
 });
-if (app.Environment.IsDevelopment()) 
+if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
@@ -81,4 +82,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-  app.Run();
+app.Run();

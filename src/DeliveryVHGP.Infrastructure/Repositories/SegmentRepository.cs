@@ -1,16 +1,10 @@
 ﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
-using DeliveryVHGP.Core.Interface.IRepositories;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeliveryVHGP.Infrastructure.Repositories
 {
@@ -23,7 +17,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         {
             var storeBuildingId = await context.Stores.Where(x => x.Id == order.StoreId).Select(x => x.BuildingId).FirstOrDefaultAsync();
             var hubId = await context.Buildings.Where(x => x.Id == storeBuildingId).Select(x => x.HubId).FirstOrDefaultAsync();
-            if(order.ServiceId == "0")
+            if (order.ServiceId == "0")
             {
                 Segment toHubSegment = new Segment()
                 {
@@ -68,17 +62,20 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<SegmentModel> listVetorBuilding = new List<SegmentModel>();
             var listSegment = await context.Segments.Where(x => listOrder.Contains(x.OrderId) && x.Status == (int)SegmentStatusEnum.Viable)
                .ToListAsync();
-            if(listSegment != null)
+            if (listSegment != null)
             {
-                listSegment.ForEach(x => x.Status = (int)SegmentStatusEnum.Unviable);
+                //listSegment.ForEach(x => x.Status = (int)SegmentStatusEnum.Unviable); //ko unviable nua, reroute khoi phai bat viable, segment done thoi
                 listVetorBuilding = listSegment.Select(x => new SegmentModel
                 {
+                    SegmentId = x.Id,
+                    OrderId = x.OrderId,
                     fromBuilding = x.FromBuildingId,
-                    toBuilding = x.ToBuildingId
+                    toBuilding = x.ToBuildingId,
+                    SegmentMode = x.SegmentMode
                 }).ToList();
                 await Save();
             }
-            
+
             return listVetorBuilding;
         }
     }
