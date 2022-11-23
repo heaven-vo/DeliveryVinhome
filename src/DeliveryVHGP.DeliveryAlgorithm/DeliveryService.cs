@@ -66,14 +66,14 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                                 await scopeFireStore.AddEmployee(routeModel);
                             }
                         //var route = await scopeFireStore.GetEmployeeData("a");
-                        await Task.Delay(600000, stoppingToken);
+                        await Task.Delay(400000, stoppingToken);
                     }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("Error: " + ex.Message);
-                await Task.Delay(15000, stoppingToken).ConfigureAwait(false);
+                await Task.Delay(60000, stoppingToken).ConfigureAwait(false);
                 await ExecuteAsync(stoppingToken);
             }
 
