@@ -1,5 +1,4 @@
-﻿using DeliveryVHGP.Core.Entities;
-using DeliveryVHGP.Core.Interfaces;
+﻿using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,27 +13,41 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             this.repository = repository;
         }
-        [HttpGet("Route")]
-        public async Task<ActionResult> CreateRoute()
+        [HttpGet("Remove")]
+        public async Task<ActionResult<List<RouteModel>>> RemoveRoute()
         {
-            List<SegmentDeliveryRoute> list = new List<SegmentDeliveryRoute>();
-            SegmentDeliveryRoute routeA = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
-            routeA.RouteEdges = new List<RouteEdge>() {
-                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 1,},
-                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 2}
-            };
-            SegmentDeliveryRoute routeB = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
+            var routes = await repository.RouteAction.GetCurrentAvalableRoute();
+            //await repository.RouteAction.RemoveRouteActionNotShipper();
+            return Ok(routes);
+        }
+        //[HttpGet("Route")]
+        //public async Task<ActionResult> CreateRoute()
+        //{
+        //    List<SegmentDeliveryRoute> list = new List<SegmentDeliveryRoute>();
+        //    SegmentDeliveryRoute routeA = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
+        //    routeA.RouteEdges = new List<RouteEdge>() {
+        //        new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 1,},
+        //        new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeA.Id, Priority = 2}
+        //    };
+        //    SegmentDeliveryRoute routeB = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
 
-            List< RouteEdge > edgeB = new List<RouteEdge>() {
-                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 3},
-                new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 4}
-            };
-            routeB.RouteEdges = edgeB;       
+        //    List<RouteEdge> edgeB = new List<RouteEdge>() {
+        //        new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 3},
+        //        new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = routeB.Id, Priority = 4}
+        //    };
+        //    routeB.RouteEdges = edgeB;
 
-            list.Add(routeA);
-            list.Add(routeB);
-            await repository.RouteAction.CreateRoute(list);
-            return Ok();
+        //    list.Add(routeA);
+        //    list.Add(routeB);
+        //    await repository.RouteAction.CreateRoute(list);
+        //    return Ok();
+        //}
+        [HttpGet("check")]
+        public async Task<ActionResult> CheckOrder()
+        {
+            var listOrder = await repository.Cache.GetOrderFromCache(15);
+            return Ok(await repository.Segment.GetSegmentAvaliable(listOrder));
+            //return Ok(await repository.Order.CheckAvailableOrder());
         }
         /// <summary>
         /// Get list all Bulding with pagination

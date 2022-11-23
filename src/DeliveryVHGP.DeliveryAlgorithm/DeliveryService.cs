@@ -61,13 +61,12 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         await scopeFireStore.DeleteAllEmployees();
                         List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
                         if (ListRoute.Count > 0)
-                            Console.WriteLine("LONLON");
-                        foreach (var routeModel in ListRoute)
-                        {
-                            await scopeFireStore.AddEmployee(routeModel);
-                        }
+                            foreach (var routeModel in ListRoute)
+                            {
+                                await scopeFireStore.AddEmployee(routeModel);
+                            }
                         //var route = await scopeFireStore.GetEmployeeData("a");
-                        await Task.Delay(105000, stoppingToken);
+                        await Task.Delay(600000, stoppingToken);
                     }
                 }
             }
