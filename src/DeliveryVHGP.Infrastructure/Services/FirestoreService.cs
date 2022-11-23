@@ -10,7 +10,8 @@ namespace DeliveryVHGP.Infrastructure.Services
         FirestoreDb fireStoreDb;
         public FirestoreService()
         {
-            string filepath = "..\\..\\..\\deliveryfood-9c436-e35107df256b.json";
+            //string filepath = "C:\\Users\\DUONGAS\\Downloads\\deliveryfood-9c436-e35107df256b.json";
+            string filepath = "deliveryfood-9c436-e35107df256b.json";
             Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
             projectId = "deliveryfood-9c436";
             fireStoreDb = FirestoreDb.Create(projectId);
