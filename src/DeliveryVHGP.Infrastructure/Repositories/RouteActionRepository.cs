@@ -74,7 +74,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 foreach (var segment in listSegments)// from: pickup, to: delivery
                 {
-                    OrderAction action = new OrderAction() { Id = Guid.NewGuid().ToString(), RouteEdgeId = node.EdgeId, OrderId = segment.OrderId };
+                    OrderAction action = new OrderAction() { Id = Guid.NewGuid().ToString(), RouteEdgeId = node.EdgeId, OrderId = segment.OrderId, Status = (int)OrderActionStatusEnum.Todo };
 
                     //----------------------------------------------
                     if (node.Type == (int)EdgeTypeEnum.Pickup)
@@ -145,6 +145,10 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         {
             var route = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
                 .Where(x => x.Id == routeId && x.ShipperId == null && x.Status == (int)RouteStatusEnum.NotAssign).FirstOrDefaultAsync();
+            if (route == null)
+            {
+                throw new Exception("Not correct");
+            }
             route.ShipperId = shipperId;
             route.Status = (int)RouteStatusEnum.ToDo;
             List<OrderAction> orderActions = new List<OrderAction>();
@@ -167,6 +171,10 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         {
             var listEdgeModel = new List<EdgeModel>();
             var listEdge = await context.RouteEdges.Include(x => x.OrderActions).Where(x => x.RouteId == routeId).ToListAsync();
+            if (listEdge.Count == 0)
+            {
+                throw new Exception("Not found route");
+            }
             foreach (var edge in listEdge)
             {
                 var buildingName = await context.Buildings.Where(x => x.Id == edge.ToBuildingId).Select(x => x.Name).FirstOrDefaultAsync();
@@ -182,6 +190,40 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 listEdgeModel.Add(edgeModel);
             }
             return listEdgeModel;
+        }
+        public async Task<List<OrderActionModel>> GetListOrderAction(string edgeId)
+        {
+            var listAction = await context.OrderActions.Include(x => x.Order).ThenInclude(x => x.Payments).Where(x => x.RouteEdgeId == edgeId).ToListAsync();
+            if (listAction.Count == 0) { throw new Exception(); }
+            List<OrderActionModel> listOrderActions = new List<OrderActionModel>();
+            foreach (var action in listAction)
+            {
+                OrderActionModel orderActionModel = new OrderActionModel() { OrderId = action.OrderId, PaymentType = action.Order.Payments.First().Type, ActionType = action.OrderActionType, ActionStatus = action.Status };
+                if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
+                {
+                    orderActionModel.Total = action.Order.Total;
+                }
+                if (orderActionModel.PaymentType == (int)PaymentEnum.VNPay)
+                {
+                    orderActionModel.Total = 0;
+                }
+                if (orderActionModel.ActionType == (int)OrderActionEnum.PickupStore)
+                {
+                    orderActionModel.Name = await context.Stores.Where(x => x.Id == action.Order.StoreId).Select(x => x.Name).FirstOrDefaultAsync();
+                }
+                if (orderActionModel.ActionType == (int)OrderActionEnum.PickupHub || orderActionModel.ActionType == (int)OrderActionEnum.DeliveryHub)
+                {
+                    orderActionModel.Name = await context.Orders.Include(x => x.Store).ThenInclude(x => x.Building).ThenInclude(x => x.Hub)
+                        .Where(x => x.Id == action.OrderId).Select(x => x.Store.Building.Hub.Name).FirstOrDefaultAsync();
+                }
+                if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
+                {
+                    orderActionModel.Name = action.Order.FullName;
+                    orderActionModel.Total += action.Order.ShipCost; // giao cho cus phai lay ship cost
+                }
+                listOrderActions.Add(orderActionModel);
+            }
+            return listOrderActions;
         }
     }
 }

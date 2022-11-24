@@ -1,6 +1,4 @@
 ﻿using DeliveryVHGP.Core.Interfaces;
-using DeliveryVHGP.Core.Models;
-using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -54,14 +52,14 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         //}
 
                         //Remove route and load new route in firestore
-                        var scopeFireStore = scope.ServiceProvider.GetService<IFirestoreService>();
-                        await scopeFireStore.DeleteAllRoutes();
-                        List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
-                        if (ListRoute.Count > 0)
-                            foreach (var routeModel in ListRoute)
-                            {
-                                await scopeFireStore.AddRoute(routeModel);
-                            }
+                        //var scopeFireStore = scope.ServiceProvider.GetService<IFirestoreService>();
+                        //await scopeFireStore.DeleteAllRoutes();
+                        //List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
+                        //if (ListRoute.Count > 0)
+                        //    foreach (var routeModel in ListRoute)
+                        //    {
+                        //        await scopeFireStore.AddRoute(routeModel);
+                        //    }
                         await Task.Delay(400000, stoppingToken);
                     }
                 }

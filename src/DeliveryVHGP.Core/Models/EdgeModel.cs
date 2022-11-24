@@ -9,4 +9,20 @@
         public int? Priority { get; set; }
         public int? Staus { get; set; }
     }
+    public class OrderActionModel
+    {
+        public string OrderId { get; set; }
+        public string Name { get; set; }
+        public int? PaymentType { get; set; }
+        public double? Total { get; set; }
+        public int? ActionType { get; set; }
+        public int? ActionStatus { get; set; }
+        public List<OrderDetailActionModel> OrderDetailActions { get; set; }
+    }
+    public class OrderDetailActionModel
+    {
+        public int Quantity { get; set; }
+        public string ProductName { get; set; }
+        public double Price { get; set; }
+    }
 }

@@ -30,4 +30,10 @@
         DeliveryHub = 3,
         DeliveryCus = 4
     }
+    public enum OrderActionStatusEnum
+    {
+        Todo = 1,
+        Done = 2,
+        Fail = 3
+    }
 }
