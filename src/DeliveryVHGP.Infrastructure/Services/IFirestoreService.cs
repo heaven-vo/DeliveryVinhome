@@ -4,9 +4,9 @@ namespace DeliveryVHGP.Infrastructure.Services
 {
     public interface IFirestoreService
     {
-        Task AddEmployee(RouteModel route);
-        Task UpdateEmployee(RouteModel route);
-        Task<RouteModel> GetEmployeeData(string id);
-        Task DeleteAllEmployees();
+        Task AddRoute(RouteModel route);
+        Task UpdateRoute(string routeId, RouteUpdateModel route);
+        Task<RouteModel> GetRouteData(string id);
+        Task DeleteAllRoutes();
     }
 }

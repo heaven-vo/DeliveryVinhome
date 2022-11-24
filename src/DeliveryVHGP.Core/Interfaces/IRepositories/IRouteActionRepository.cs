@@ -9,5 +9,7 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
         Task CreateRoute(List<SegmentDeliveryRoute> route, List<SegmentModel> listSegments);
         Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments);
         Task RemoveRouteActionNotShipper();
+        Task AcceptRouteByShipper(string routeId, string shipperId);
+        Task<List<EdgeModel>> GetListEdgeInRoute(string routeId);
     }
 }

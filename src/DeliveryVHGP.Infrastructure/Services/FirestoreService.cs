@@ -16,7 +16,7 @@ namespace DeliveryVHGP.Infrastructure.Services
             projectId = "deliveryfood-9c436";
             fireStoreDb = FirestoreDb.Create(projectId);
         }
-        public async Task AddEmployee(RouteModel route)
+        public async Task AddRoute(RouteModel route)
         {
 
             DocumentReference document = fireStoreDb.Collection("employees").Document(route.RouteId);
@@ -24,20 +24,19 @@ namespace DeliveryVHGP.Infrastructure.Services
 
 
         }
-        public async Task UpdateEmployee(RouteModel route)
+        public async Task UpdateRoute(string routeId, RouteUpdateModel route)
         {
             try
             {
-                RouteModel update = new RouteModel();
-                DocumentReference empRef = fireStoreDb.Collection("employees").Document(route.RouteId);
-                await empRef.SetAsync(update, SetOptions.MergeAll);
+                DocumentReference empRef = fireStoreDb.Collection("employees").Document(routeId);
+                await empRef.SetAsync(route, SetOptions.MergeAll);
             }
             catch
             {
                 throw;
             }
         }
-        public async Task<RouteModel> GetEmployeeData(string id)
+        public async Task<RouteModel> GetRouteData(string id)
         {
             try
             {
@@ -60,7 +59,7 @@ namespace DeliveryVHGP.Infrastructure.Services
                 throw;
             }
         }
-        public async Task DeleteAllEmployees()
+        public async Task DeleteAllRoutes()
         {
             try
             {

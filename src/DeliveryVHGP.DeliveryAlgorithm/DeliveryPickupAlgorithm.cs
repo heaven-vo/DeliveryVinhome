@@ -152,6 +152,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         if (priority == 1)
                         {
                             edge.Distance = 0;
+                            //edge.Status = (int)EdgeStatusEnum.ToDo;
                         }
                         else
                             edge.Distance = routeDistance;

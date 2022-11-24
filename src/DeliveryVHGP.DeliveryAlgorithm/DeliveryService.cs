@@ -32,40 +32,36 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
-                        //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                        //_logger.LogInformation("Worker running at: {time}", DateTime.Now);
-                        //_logger.LogInformation("Worker running at: {time}", DateTime.UtcNow.AddHours(7));
                         var scopeRepo = scope.ServiceProvider.GetService<IRepositoryWrapper>();
-                        //remove older route(do first)
-                        //await scopeRepo.RouteAction.RemoveRouteActionNotShipper();
+
                         //check and add new order to cache
                         //var listOrder = await scopeRepo.Order.CheckAvailableOrder();
                         //await scopeRepo.Cache.AddOrderToCache(listOrder); //change status -> assign(not do -> test)
 
-                        ////load n order from cache -> segment -> run algorithm
+                        //////load n order from cache -> segment -> run algorithm
                         //var listOrderDelivery = await scopeRepo.Cache.GetOrderFromCache(35);
                         //if (listOrderDelivery != null)
                         //{
+                        //    //remove older route(do first)
+                        //    await scopeRepo.RouteAction.RemoveRouteActionNotShipper();
                         //    var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDelivery);
                         //    if (listSegment.Any())
                         //    {
-                        //        _logger.LogInformation("LOGGING: " + listSegment[0].fromBuilding + " - " + listSegment[0].toBuilding);
+                        //        //_logger.LogInformation("LOGGING: " + listSegment[0].fromBuilding + " - " + listSegment[0].toBuilding);
                         //        DeliveryPickupAlgorithm algorithm = new DeliveryPickupAlgorithm(_serviceProvider);
                         //        algorithm.AlgorithsProcess(listSegment);
                         //    }
                         //}
-                        //load segment to algorithm -> compare vs edge to create order action
 
                         //Remove route and load new route in firestore
                         var scopeFireStore = scope.ServiceProvider.GetService<IFirestoreService>();
-                        await scopeFireStore.DeleteAllEmployees();
+                        await scopeFireStore.DeleteAllRoutes();
                         List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
                         if (ListRoute.Count > 0)
                             foreach (var routeModel in ListRoute)
                             {
-                                await scopeFireStore.AddEmployee(routeModel);
+                                await scopeFireStore.AddRoute(routeModel);
                             }
-                        //var route = await scopeFireStore.GetEmployeeData("a");
                         await Task.Delay(400000, stoppingToken);
                     }
                 }

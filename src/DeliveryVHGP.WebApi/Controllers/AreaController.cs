@@ -13,13 +13,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             this.repository = repository;
         }
-        [HttpGet("Remove")]
-        public async Task<ActionResult<List<RouteModel>>> RemoveRoute()
-        {
-            var routes = await repository.RouteAction.GetCurrentAvalableRoute();
-            //await repository.RouteAction.RemoveRouteActionNotShipper();
-            return Ok(routes);
-        }
+
         //[HttpGet("Route")]
         //public async Task<ActionResult> CreateRoute()
         //{

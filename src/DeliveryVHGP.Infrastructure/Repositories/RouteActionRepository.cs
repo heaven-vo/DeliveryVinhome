@@ -4,21 +4,23 @@ using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryVHGP.Infrastructure.Repositories
 {
     public class RouteActionRepository : RepositoryBase<SegmentDeliveryRoute>, IRouteActionRepository
     {
-        public RouteActionRepository(DeliveryVHGP_DBContext context) : base(context)
+        private readonly IFirestoreService firestoreService;
+        public RouteActionRepository(DeliveryVHGP_DBContext context, IFirestoreService firestoreService) : base(context)
         {
-
+            this.firestoreService = firestoreService;
         }
         public async Task<List<RouteModel>> GetCurrentAvalableRoute()
         {
             List<RouteModel> listRouteModel = new List<RouteModel>();
             var listRoute = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
-                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign).ToListAsync();
+                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign || x.Status == (int)RouteStatusEnum.ToDo).ToListAsync();
             if (listRoute.Count() > 0)
             {
                 foreach (var route in listRoute)
@@ -26,7 +28,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     RouteModel routeModel = new RouteModel() { RouteId = route.Id, EdgeNum = route.RouteEdges.Count(), ShipperId = route.ShipperId, Status = route.Status };
                     routeModel.FirstEdge = route.RouteEdges.Where(x => x.Priority == 1).Select(x => x.ToBuildingId).FirstOrDefault();
                     routeModel.LastEdge = route.RouteEdges.OrderByDescending(x => x.Priority).Select(x => x.ToBuildingId).FirstOrDefault();
-                    int orderCount = 0;
 
                     List<OrderAction> orderActions = new List<OrderAction>();
                     foreach (var edge in route.RouteEdges)
@@ -63,15 +64,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task CreateRoute(List<SegmentDeliveryRoute> route, List<SegmentModel> listSegments)
         {
-            //SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Distance = 10, Status = 1 };
-            //route.RouteEdges = new List<RouteEdge>() {
-            //    new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = route.Id, Priority = 3},
-            //    new RouteEdge() { Id = Guid.NewGuid().ToString(), RouteId = route.Id, Priority = 4}
-            //};
-            //var action = route.Select(x => x.RouteEdges);
             await context.AddRangeAsync(route);
             await context.SaveChangesAsync();
-
         }
         public async Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments)
         {
@@ -146,6 +140,48 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 context.RemoveRange(listAction);
                 await context.SaveChangesAsync();
             }
+        }
+        public async Task AcceptRouteByShipper(string routeId, string shipperId)
+        {
+            var route = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
+                .Where(x => x.Id == routeId && x.ShipperId == null && x.Status == (int)RouteStatusEnum.NotAssign).FirstOrDefaultAsync();
+            route.ShipperId = shipperId;
+            route.Status = (int)RouteStatusEnum.ToDo;
+            List<OrderAction> orderActions = new List<OrderAction>();
+            foreach (var edge in route.RouteEdges)
+            {
+                orderActions.AddRange(edge.OrderActions);
+                if (edge.Priority == 1)
+                {
+                    edge.Status = (int)EdgeStatusEnum.ToDo;
+                }
+            }
+            var listOrderAction = orderActions.GroupBy(x => x.OrderId).Select(x => x.First()).ToList();
+            var listOrderId = listOrderAction.Select(x => x.OrderId).ToList();
+            var listOrderCache = await context.OrderCaches.Where(x => listOrderId.Contains(x.OrderId)).ToListAsync();
+            listOrderCache.ForEach(x => x.IsReady = false);
+            await firestoreService.UpdateRoute(routeId, new RouteUpdateModel { ShipperId = shipperId, Status = (int)RouteStatusEnum.ToDo });
+            await context.SaveChangesAsync();
+        }
+        public async Task<List<EdgeModel>> GetListEdgeInRoute(string routeId)
+        {
+            var listEdgeModel = new List<EdgeModel>();
+            var listEdge = await context.RouteEdges.Include(x => x.OrderActions).Where(x => x.RouteId == routeId).ToListAsync();
+            foreach (var edge in listEdge)
+            {
+                var buildingName = await context.Buildings.Where(x => x.Id == edge.ToBuildingId).Select(x => x.Name).FirstOrDefaultAsync();
+                var edgeModel = new EdgeModel()
+                {
+                    Id = edge.Id,
+                    BuildingId = edge.ToBuildingId,
+                    BuildingName = buildingName,
+                    OrderNum = edge.OrderActions.Count,
+                    Priority = edge.Priority,
+                    Staus = edge.Status
+                };
+                listEdgeModel.Add(edgeModel);
+            }
+            return listEdgeModel;
         }
     }
 }

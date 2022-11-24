@@ -4,11 +4,6 @@ using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Infrastructure.Services;
 using DeliveryVHGP.WebApi.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeliveryVHGP.Infrastructure.Repositories.Common
 {
@@ -17,12 +12,14 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
         private DeliveryVHGP_DBContext _context;
         private readonly IFileService _fileService;
         private readonly ITimeStageService _timeStageService;
+        private readonly IFirestoreService _firestoreService;
 
-        public RepositoryWrapper(DeliveryVHGP_DBContext context, IFileService fileService, ITimeStageService timeStageService)
+        public RepositoryWrapper(DeliveryVHGP_DBContext context, IFileService fileService, ITimeStageService timeStageService, IFirestoreService firestoreService)
         {
             _context = context;
             _fileService = fileService;
             _timeStageService = timeStageService;
+            _firestoreService = firestoreService;
             Menu = new MenuRepository(_context);
             Account = new AccountRepository(_context);
             Area = new AreaRepositore(_context);
@@ -33,13 +30,13 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             Collection = new CollectionRepository(_context);
             Customer = new CustomerRepository(_fileService, _context);
             Order = new OrdersRepository(_context);
-            Product = new ProductRepository( _timeStageService, _fileService, _context);
+            Product = new ProductRepository(_timeStageService, _fileService, _context);
             Shipper = new ShipperRepository(_timeStageService, _fileService, _context);
             Store = new StoreRepository(_timeStageService, _fileService, _context);
             StoreCategory = new StoreCategoryRepository(_context);
             Segment = new SegmentRepository(_context);
             Cache = new CacheRepository(_context);
-            RouteAction = new RouteActionRepository(_context);
+            RouteAction = new RouteActionRepository(_context, _firestoreService);
         }
         public IMenuRepository Menu { get; private set; }
 
