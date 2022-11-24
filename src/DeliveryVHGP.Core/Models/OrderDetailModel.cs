@@ -15,7 +15,7 @@
 
         //public string? BuildingId { get; set; }
         public string? BuildingName { get; set; }
-        //public string? StoreId { get; set; }
+        public string? ServiceId { get; set; }
         public string? StoreName { get; set; }
         public string? StoreBuilding { get; set; }
         public string? ShipperName { get; set; } = "";
