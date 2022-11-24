@@ -76,10 +76,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             var result = await context.Buildings.FindAsync(buildingId);
             result.Name = building.Name;
+            result.HubId = building.HubId;
             result.Longitude = building.Longitude;
             result.Latitude = building.Latitude;
 
-        
             try
             {
                 context.Entry(result).State = EntityState.Modified;

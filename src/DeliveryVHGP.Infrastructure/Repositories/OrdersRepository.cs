@@ -37,7 +37,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
                                   where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   && p.Type.ToString().Contains(request.SearchByPayment)
-                                  && order.Status.ToString().Contains(request.SearchByStatus)
+                                  && (request.SearchByStatus == -1 || order.Status == request.SearchByStatus)
                                   && m.SaleMode.Contains(request.SearchByMode)
                                   //&& order.Status == request.SearchByStatus
                                   select new OrderAdminDto()
@@ -63,6 +63,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+           
             return lstOrder;
         }
         public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
@@ -335,6 +336,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                .Count() + 1;
             order.Id = refixOrderCode + "-" + orderCount.ToString().PadLeft(6, '0');
             var odCOde = await context.Orders.Where(o => o.Id == order.Id).ToListAsync();
+            var service = context.Services.FirstOrDefault(s => s.Id == order.ServiceId);
             if (odCOde.Any())
             {
                 order.Id = refixOrderCode + "-" + orderCount.ToString().PadLeft(7, '0');
@@ -359,7 +361,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 ServiceId = order.ServiceId,
                 Status = (int)OrderStatusEnum.New
             };
-            
+            Console.WriteLine(order.ServiceId);
             //await context.SaveChangesAsync();
             foreach (var ord in order.OrderDetail)
             {

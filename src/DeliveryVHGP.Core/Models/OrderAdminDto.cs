@@ -30,7 +30,7 @@ namespace DeliveryVHGP.Core.Models
         {
             public string? DateFilter { get; set; } = "";
             public string? SearchByPayment { get; set; } = "";
-            public string? SearchByStatus { get; set; } = "";
+            public int SearchByStatus { get; set; } = -1;
             public string? SearchByMode { get; set; } = "";
         }
         public class OrderAdminDtoInStore
