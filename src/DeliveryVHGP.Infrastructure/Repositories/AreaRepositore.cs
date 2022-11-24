@@ -59,6 +59,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       {
                                           Id = b.Id,
                                           Name = b.Name,
+                                          HubId = b.HubId,
                                           Longitude = b.Longitude,
                                           Latitude = b.Latitude,
                                       }

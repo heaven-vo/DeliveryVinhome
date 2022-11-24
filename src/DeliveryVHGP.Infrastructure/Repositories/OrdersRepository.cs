@@ -36,7 +36,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
                                   where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   && p.Type.ToString().Contains(request.SearchByPayment)
-                                  && order.Status.ToString().Contains(request.SearchByStatus)
+                                  && (request.SearchByStatus == -1 || order.Status == request.SearchByStatus)
                                   && m.SaleMode.Contains(request.SearchByMode)
                                   //&& order.Status == request.SearchByStatus
                                   select new OrderAdminDto()
@@ -286,6 +286,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    StoreBuilding = bs.Name,
                                    //ShipperName = ship.FullName,
                                    //ShipperPhone = ship.Phone,
+                                   ServiceId = o.ServiceId,
                                    ModeId = m.SaleMode,
                                    BuildingName = b.Name,
                                    Note = o.Note,
