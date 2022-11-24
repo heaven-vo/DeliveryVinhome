@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "CorePush/3.1.1": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "Portable.BouncyCastle": "1.9.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/CorePush.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/CorePush.dll": {}
+        }
+      },
       "Firebase.Auth/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -41,6 +54,277 @@
         },
         "runtime": {
           "lib/netstandard1.1/Firebase.Storage.dll": {}
+        }
+      },
+      "Google.Api.CommonProtos/2.6.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Protobuf": "[3.21.0, 4.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Api.CommonProtos.dll": {}
+        }
+      },
+      "Google.Api.Gax/4.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.Api.Gax.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.Api.Gax.dll": {}
+        }
+      },
+      "Google.Api.Gax.Grpc/4.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Api.CommonProtos": "2.6.0",
+          "Google.Api.Gax": "4.0.0",
+          "Google.Apis.Auth": "[1.56.0, 2.0.0)",
+          "Grpc.Auth": "[2.46.3, 3.0.0)",
+          "Grpc.Core.Api": "[2.46.3, 3.0.0)",
+          "Grpc.Net.Client": "[2.46.0, 3.0.0)",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.Api.Gax.Grpc.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.Api.Gax.Grpc.dll": {}
+        }
+      },
+      "Google.Apis/1.56.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Apis.Core": "1.56.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.dll": {}
+        }
+      },
+      "Google.Apis.Auth/1.56.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Apis": "1.56.0",
+          "Google.Apis.Core": "1.56.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll": {},
+          "lib/netstandard2.0/Google.Apis.Auth.dll": {}
+        }
+      },
+      "Google.Apis.Core/1.56.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Cloud.Firestore/3.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Cloud.Firestore.V1": "3.0.0",
+          "System.Collections.Immutable": "6.0.0",
+          "System.Linq.Async": "6.0.1"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.Cloud.Firestore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.Cloud.Firestore.dll": {}
+        }
+      },
+      "Google.Cloud.Firestore.V1/3.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Api.Gax.Grpc": "[4.0.0, 5.0.0)",
+          "Google.Cloud.Location": "2.0.0",
+          "Google.LongRunning": "3.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.Cloud.Firestore.V1.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.Cloud.Firestore.V1.dll": {}
+        }
+      },
+      "Google.Cloud.Location/2.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Api.Gax.Grpc": "[4.0.0, 5.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.Cloud.Location.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.Cloud.Location.dll": {}
+        }
+      },
+      "Google.LongRunning/3.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Google.Api.Gax.Grpc": "[4.0.0, 5.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.1/Google.LongRunning.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Google.LongRunning.dll": {}
+        }
+      },
+      "Google.OrTools/9.4.1874": {
+        "type": "package",
+        "dependencies": {
+          "Google.OrTools.runtime.linux-arm64": "9.4.1874",
+          "Google.OrTools.runtime.linux-x64": "9.4.1874",
+          "Google.OrTools.runtime.osx-arm64": "9.4.1874",
+          "Google.OrTools.runtime.osx-x64": "9.4.1874",
+          "Google.OrTools.runtime.win-x64": "9.4.1874",
+          "Google.Protobuf": "3.19.4"
+        },
+        "compile": {
+          "lib/net6.0/Google.OrTools.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Google.OrTools.dll": {}
+        }
+      },
+      "Google.OrTools.runtime.linux-arm64/9.4.1874": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-arm64/native/google-ortools-native.so": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          },
+          "runtimes/linux-arm64/native/libortools.so.9": {
+            "assetType": "native",
+            "rid": "linux-arm64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.linux-x64/9.4.1874": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/google-ortools-native.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/linux-x64/native/libortools.so.9": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.osx-arm64/9.4.1874": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/osx-arm64/native/google-ortools-native.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          },
+          "runtimes/osx-arm64/native/libortools.9.dylib": {
+            "assetType": "native",
+            "rid": "osx-arm64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.osx-x64/9.4.1874": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/osx-x64/native/google-ortools-native.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/osx-x64/native/libortools.9.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          }
+        }
+      },
+      "Google.OrTools.runtime.win-x64/9.4.1874": {
+        "type": "package",
+        "runtimeTargets": {
+          "runtimes/win-x64/native/google-ortools-native.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          }
+        }
+      },
+      "Google.Protobuf/3.21.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Google.Protobuf.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/Google.Protobuf.dll": {}
+        }
+      },
+      "Grpc.Auth/2.46.3": {
+        "type": "package",
+        "dependencies": {
+          "Google.Apis.Auth": "1.46.0",
+          "Grpc.Core.Api": "2.46.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/Grpc.Auth.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Grpc.Auth.dll": {}
+        }
+      },
+      "Grpc.Core.Api/2.46.3": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.3"
+        },
+        "compile": {
+          "lib/netstandard2.1/Grpc.Core.Api.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/Grpc.Core.Api.dll": {}
+        }
+      },
+      "Grpc.Net.Client/2.46.0": {
+        "type": "package",
+        "dependencies": {
+          "Grpc.Net.Common": "2.46.0",
+          "Microsoft.Extensions.Logging.Abstractions": "3.0.3"
+        },
+        "compile": {
+          "lib/net6.0/Grpc.Net.Client.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Grpc.Net.Client.dll": {}
+        }
+      },
+      "Grpc.Net.Common/2.46.0": {
+        "type": "package",
+        "dependencies": {
+          "Grpc.Core.Api": "2.46.1"
+        },
+        "compile": {
+          "lib/net6.0/Grpc.Net.Common.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Grpc.Net.Common.dll": {}
         }
       },
       "Humanizer.Core/2.8.26": {
@@ -160,7 +444,7 @@
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.Language.dll": {}
         }
       },
-      "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
+      "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {}
@@ -1133,23 +1417,25 @@
           "lib/netstandard2.0/Microsoft.Extensions.Caching.Memory.dll": {}
         }
       },
-      "Microsoft.Extensions.Configuration.Abstractions/6.0.0": {
+      "Microsoft.Extensions.Configuration.Abstractions/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "6.0.0"
+          "Microsoft.Extensions.Primitives": "7.0.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Configuration.Abstractions.dll": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.DependencyInjection/6.0.0": {
+      "Microsoft.Extensions.DependencyInjection/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0"
         },
         "compile": {
           "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll": {}
@@ -1158,10 +1444,10 @@
           "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll": {}
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/7.0.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
@@ -1170,38 +1456,60 @@
           "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.FileProviders.Abstractions/2.2.0": {
+      "Microsoft.Extensions.FileProviders.Abstractions/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "2.2.0"
+          "Microsoft.Extensions.Primitives": "7.0.0"
         },
         "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+          "lib/net6.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+          "lib/net6.0/Microsoft.Extensions.FileProviders.Abstractions.dll": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Logging/6.0.0": {
+      "Microsoft.Extensions.Hosting.Abstractions/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "6.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Options": "6.0.0",
-          "System.Diagnostics.DiagnosticSource": "6.0.0"
+          "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "7.0.0"
         },
         "compile": {
-          "lib/netstandard2.1/Microsoft.Extensions.Logging.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Hosting.Abstractions.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/Microsoft.Extensions.Logging.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Hosting.Abstractions.dll": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
+      "Microsoft.Extensions.Logging/7.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "7.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Options": "7.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Microsoft.Extensions.Logging.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/Microsoft.Extensions.Logging.dll": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
         "type": "package",
         "compile": {
           "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {}
@@ -1210,23 +1518,26 @@
           "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll": {}
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
         }
       },
-      "Microsoft.Extensions.Options/6.0.0": {
+      "Microsoft.Extensions.Options/7.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Primitives": "6.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Primitives": "7.0.0"
         },
         "compile": {
-          "lib/netstandard2.1/Microsoft.Extensions.Options.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Options.dll": {}
         },
         "runtime": {
-          "lib/netstandard2.1/Microsoft.Extensions.Options.dll": {}
+          "lib/net6.0/Microsoft.Extensions.Options.dll": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Primitives/6.0.0": {
+      "Microsoft.Extensions.Primitives/7.0.0": {
         "type": "package",
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
@@ -1238,7 +1549,7 @@
           "lib/net6.0/Microsoft.Extensions.Primitives.dll": {}
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/_._": {}
         }
       },
       "Microsoft.Identity.Client/4.21.1": {
@@ -1769,6 +2080,15 @@
         },
         "runtime": {
           "lib/netstandard2.0/NuGet.Versioning.dll": {}
+        }
+      },
+      "Portable.BouncyCastle/1.9.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {}
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -2463,6 +2783,18 @@
         },
         "runtime": {
           "lib/netstandard1.6/System.Linq.dll": {}
+        }
+      },
+      "System.Linq.Async/6.0.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0"
+        },
+        "compile": {
+          "ref/net6.0/System.Linq.Async.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/System.Linq.Async.dll": {}
         }
       },
       "System.Linq.Expressions/4.3.0": {
@@ -3335,8 +3667,10 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "Google.Cloud.Firestore": "3.0.0",
           "Microsoft.EntityFrameworkCore": "6.0.9",
-          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9"
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.9",
+          "Newtonsoft.Json": "13.0.1"
         },
         "compile": {
           "bin/placeholder/DeliveryVHGP.Core.dll": {}
@@ -3345,13 +3679,31 @@
           "bin/placeholder/DeliveryVHGP.Core.dll": {}
         }
       },
+      "DeliveryVHGP.DeliveryAlgorithm/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "DeliveryVHGP.Infrastructure": "1.0.0",
+          "Google.OrTools": "9.4.1874",
+          "Microsoft.Extensions.Hosting.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging": "7.0.0"
+        },
+        "compile": {
+          "bin/placeholder/DeliveryVHGP.DeliveryAlgorithm.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/DeliveryVHGP.DeliveryAlgorithm.dll": {}
+        }
+      },
       "DeliveryVHGP.Infrastructure/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
+          "CorePush": "3.1.1",
           "DeliveryVHGP.Core": "1.0.0",
           "FirebaseDatabase.net": "4.1.0",
           "FirebaseStorage.net": "1.0.3",
+          "Google.Cloud.Firestore": "3.0.0",
           "Microsoft.AspNetCore.Http.Features": "2.2.0",
           "Microsoft.EntityFrameworkCore": "6.0.9"
         },
@@ -3365,6 +3717,20 @@
     }
   },
   "libraries": {
+    "CorePush/3.1.1": {
+      "sha512": "hJcLlEIJ7DqyuRHIxBEBiBxTuMQM4ZOir7Pq2qckNvaFb5wRmShF3/a6Q6uoPIudylqMzRkxX8Ryl6kHmeSa1Q==",
+      "type": "package",
+      "path": "corepush/3.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "README.md",
+        "corepush.3.1.1.nupkg.sha512",
+        "corepush.nuspec",
+        "lib/netstandard2.0/CorePush.dll"
+      ]
+    },
     "Firebase.Auth/1.0.0": {
       "sha512": "MRAGIRDXqB0jRvtJx0yRmTMjZInQcUSyHN7LuOwxL/nfyceDEA+Gfiimn7HtI2ntHw3hdUAoeeCA6BCc3qg0/A==",
       "type": "package",
@@ -3400,6 +3766,433 @@
         "firebasestorage.net.1.0.3.nupkg.sha512",
         "firebasestorage.net.nuspec",
         "lib/netstandard1.1/Firebase.Storage.dll"
+      ]
+    },
+    "Google.Api.CommonProtos/2.6.0": {
+      "sha512": "GuxkKnM6Ok9f1CV2CpQatTQ04g3RAuUUStM1McHK4O8XopJTdih0nwgI1ESrgVi9LpExxzx7OhxDXivE2Ua8Ig==",
+      "type": "package",
+      "path": "google.api.commonprotos/2.6.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.api.commonprotos.2.6.0.nupkg.sha512",
+        "google.api.commonprotos.nuspec",
+        "lib/net461/Google.Api.CommonProtos.dll",
+        "lib/net461/Google.Api.CommonProtos.pdb",
+        "lib/net461/Google.Api.CommonProtos.xml",
+        "lib/netstandard2.0/Google.Api.CommonProtos.dll",
+        "lib/netstandard2.0/Google.Api.CommonProtos.pdb",
+        "lib/netstandard2.0/Google.Api.CommonProtos.xml"
+      ]
+    },
+    "Google.Api.Gax/4.0.0": {
+      "sha512": "2Q4RruOjUawrtjTazANpp+MNB1M2E8nj2A1kweU1zF0OoNDKUnAIlMbDXs3d+kgcuj/zUVa89/nYot5UZICBWA==",
+      "type": "package",
+      "path": "google.api.gax/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.api.gax.4.0.0.nupkg.sha512",
+        "google.api.gax.nuspec",
+        "lib/net462/Google.Api.Gax.dll",
+        "lib/net462/Google.Api.Gax.pdb",
+        "lib/net462/Google.Api.Gax.xml",
+        "lib/netstandard2.1/Google.Api.Gax.dll",
+        "lib/netstandard2.1/Google.Api.Gax.pdb",
+        "lib/netstandard2.1/Google.Api.Gax.xml"
+      ]
+    },
+    "Google.Api.Gax.Grpc/4.0.0": {
+      "sha512": "055+cKSTnMdPj7X3PhYaC2KmnDLGuOhcNwhZcT1ZfT9ba3CeleNsHvONNvl17mCW6XgWj6sv2DKOxFuut0gJKw==",
+      "type": "package",
+      "path": "google.api.gax.grpc/4.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.api.gax.grpc.4.0.0.nupkg.sha512",
+        "google.api.gax.grpc.nuspec",
+        "lib/net462/Google.Api.Gax.Grpc.dll",
+        "lib/net462/Google.Api.Gax.Grpc.pdb",
+        "lib/net462/Google.Api.Gax.Grpc.xml",
+        "lib/netstandard2.1/Google.Api.Gax.Grpc.dll",
+        "lib/netstandard2.1/Google.Api.Gax.Grpc.pdb",
+        "lib/netstandard2.1/Google.Api.Gax.Grpc.xml"
+      ]
+    },
+    "Google.Apis/1.56.0": {
+      "sha512": "Oi/M8PmtmXo+3gBX0ZxaijQULuZKnNjDNIceRA+OcUUn3pmYhljGSAWcsWUY64KgdzurM9kF5MoCSWqevzR/UA==",
+      "type": "package",
+      "path": "google.apis/1.56.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.apis.1.56.0.nupkg.sha512",
+        "google.apis.nuspec",
+        "lib/net45/Google.Apis.PlatformServices.dll",
+        "lib/net45/Google.Apis.dll",
+        "lib/net45/Google.Apis.pdb",
+        "lib/net45/Google.Apis.xml",
+        "lib/netstandard1.3/Google.Apis.dll",
+        "lib/netstandard1.3/Google.Apis.pdb",
+        "lib/netstandard1.3/Google.Apis.xml",
+        "lib/netstandard2.0/Google.Apis.dll",
+        "lib/netstandard2.0/Google.Apis.pdb",
+        "lib/netstandard2.0/Google.Apis.xml"
+      ]
+    },
+    "Google.Apis.Auth/1.56.0": {
+      "sha512": "/TXElJg0lP47/MdYKtzWnrf2suwovKmeHslyUbyITQ9SGby4yj7Aj07QOufc9FjdciA8MrNZXsEqExID7LKblw==",
+      "type": "package",
+      "path": "google.apis.auth/1.56.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.apis.auth.1.56.0.nupkg.sha512",
+        "google.apis.auth.nuspec",
+        "lib/net45/Google.Apis.Auth.PlatformServices.dll",
+        "lib/net45/Google.Apis.Auth.dll",
+        "lib/net45/Google.Apis.Auth.pdb",
+        "lib/net45/Google.Apis.Auth.xml",
+        "lib/net461/Google.Apis.Auth.PlatformServices.dll",
+        "lib/net461/Google.Apis.Auth.dll",
+        "lib/net461/Google.Apis.Auth.pdb",
+        "lib/net461/Google.Apis.Auth.xml",
+        "lib/netstandard1.3/Google.Apis.Auth.PlatformServices.dll",
+        "lib/netstandard1.3/Google.Apis.Auth.dll",
+        "lib/netstandard1.3/Google.Apis.Auth.pdb",
+        "lib/netstandard1.3/Google.Apis.Auth.xml",
+        "lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll",
+        "lib/netstandard2.0/Google.Apis.Auth.dll",
+        "lib/netstandard2.0/Google.Apis.Auth.pdb",
+        "lib/netstandard2.0/Google.Apis.Auth.xml"
+      ]
+    },
+    "Google.Apis.Core/1.56.0": {
+      "sha512": "mhntBSe9/bXVP6EeB2g+Db6N4dzVYL12t+nkVcNTZzaI6fEFIp1l5BggmMMk6vY1Q/HUpZ5iHA/+h7j2pWWX5w==",
+      "type": "package",
+      "path": "google.apis.core/1.56.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.apis.core.1.56.0.nupkg.sha512",
+        "google.apis.core.nuspec",
+        "lib/net45/Google.Apis.Core.dll",
+        "lib/net45/Google.Apis.Core.pdb",
+        "lib/net45/Google.Apis.Core.xml",
+        "lib/netstandard1.3/Google.Apis.Core.dll",
+        "lib/netstandard1.3/Google.Apis.Core.pdb",
+        "lib/netstandard1.3/Google.Apis.Core.xml",
+        "lib/netstandard2.0/Google.Apis.Core.dll",
+        "lib/netstandard2.0/Google.Apis.Core.pdb",
+        "lib/netstandard2.0/Google.Apis.Core.xml"
+      ]
+    },
+    "Google.Cloud.Firestore/3.0.0": {
+      "sha512": "BI02SNHcreMHqkErVK8XYs65dDOBIxYUjk5n86MgOkZSXYSYXT6iXwYQLhDWvScFX9asEsjINS7hovRI/L+LLA==",
+      "type": "package",
+      "path": "google.cloud.firestore/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.cloud.firestore.3.0.0.nupkg.sha512",
+        "google.cloud.firestore.nuspec",
+        "lib/net462/Google.Cloud.Firestore.dll",
+        "lib/net462/Google.Cloud.Firestore.pdb",
+        "lib/net462/Google.Cloud.Firestore.xml",
+        "lib/netstandard2.1/Google.Cloud.Firestore.dll",
+        "lib/netstandard2.1/Google.Cloud.Firestore.pdb",
+        "lib/netstandard2.1/Google.Cloud.Firestore.xml"
+      ]
+    },
+    "Google.Cloud.Firestore.V1/3.0.0": {
+      "sha512": "jX+Z9ik+yRjoJjMnm2s2jAEbejBsVsyaKkN7sW4r/tWQk34GKbJCOB8FI2YyXTmV75MAQI/OzMO8sjdFuOXTYQ==",
+      "type": "package",
+      "path": "google.cloud.firestore.v1/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.cloud.firestore.v1.3.0.0.nupkg.sha512",
+        "google.cloud.firestore.v1.nuspec",
+        "lib/net462/Google.Cloud.Firestore.V1.dll",
+        "lib/net462/Google.Cloud.Firestore.V1.pdb",
+        "lib/net462/Google.Cloud.Firestore.V1.xml",
+        "lib/netstandard2.1/Google.Cloud.Firestore.V1.dll",
+        "lib/netstandard2.1/Google.Cloud.Firestore.V1.pdb",
+        "lib/netstandard2.1/Google.Cloud.Firestore.V1.xml"
+      ]
+    },
+    "Google.Cloud.Location/2.0.0": {
+      "sha512": "qxJ6dATru5XYQzuE8f3izGKPE14Zpc5mEBEROMM/FXYzMug+3ezoRktcD00l2nmMeJ7CIwWZjx9uRpDIiZTLEA==",
+      "type": "package",
+      "path": "google.cloud.location/2.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.cloud.location.2.0.0.nupkg.sha512",
+        "google.cloud.location.nuspec",
+        "lib/net462/Google.Cloud.Location.dll",
+        "lib/net462/Google.Cloud.Location.pdb",
+        "lib/net462/Google.Cloud.Location.xml",
+        "lib/netstandard2.1/Google.Cloud.Location.dll",
+        "lib/netstandard2.1/Google.Cloud.Location.pdb",
+        "lib/netstandard2.1/Google.Cloud.Location.xml"
+      ]
+    },
+    "Google.LongRunning/3.0.0": {
+      "sha512": "8+ctm1v0P90BX1fqQqyTaIrc/5zTTou3kyOsiLUJ6b1vfS/VtzF+L5onJoUDRAY0NWARSQBe73tewFm3ijWpYw==",
+      "type": "package",
+      "path": "google.longrunning/3.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "NuGetIcon.png",
+        "google.longrunning.3.0.0.nupkg.sha512",
+        "google.longrunning.nuspec",
+        "lib/net462/Google.LongRunning.dll",
+        "lib/net462/Google.LongRunning.pdb",
+        "lib/net462/Google.LongRunning.xml",
+        "lib/netstandard2.1/Google.LongRunning.dll",
+        "lib/netstandard2.1/Google.LongRunning.pdb",
+        "lib/netstandard2.1/Google.LongRunning.xml"
+      ]
+    },
+    "Google.OrTools/9.4.1874": {
+      "sha512": "jqRoI+pYlym+fhoU25u+13oti5h+772bllQ9zDitTVMclDXVTiG6pxzvmYO74wnADBMdpb2SQlgiNQxoNk5dlA==",
+      "type": "package",
+      "path": "google.ortools/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/bop/bop_parameters.proto",
+        "content/constraint_solver/assignment.proto",
+        "content/constraint_solver/demon_profiler.proto",
+        "content/constraint_solver/routing_enums.proto",
+        "content/constraint_solver/routing_parameters.proto",
+        "content/constraint_solver/search_limit.proto",
+        "content/constraint_solver/search_stats.proto",
+        "content/constraint_solver/solver_parameters.proto",
+        "content/glop/parameters.proto",
+        "content/graph/flow_problem.proto",
+        "content/linear_solver/linear_solver.proto",
+        "content/orLogo.png",
+        "content/pdlp/solve_log.proto",
+        "content/pdlp/solvers.proto",
+        "content/sat/boolean_problem.proto",
+        "content/sat/cp_model.proto",
+        "content/sat/cp_model_service.proto",
+        "content/sat/sat_parameters.proto",
+        "content/util/optional_boolean.proto",
+        "google.ortools.9.4.1874.nupkg.sha512",
+        "google.ortools.nuspec",
+        "lib/net6.0/Google.OrTools.dll",
+        "lib/net6.0/Google.OrTools.xml",
+        "lib/netcoreapp3.1/Google.OrTools.dll",
+        "lib/netcoreapp3.1/Google.OrTools.xml"
+      ]
+    },
+    "Google.OrTools.runtime.linux-arm64/9.4.1874": {
+      "sha512": "Z46ndZcZa2Lt5b76xU9kxVYbPLg/LfuMufhUVsu3Qo3L7Bibf7WXd9j7RRldjnuv8RIHWTqb0b+2FwwMxs0c5A==",
+      "type": "package",
+      "path": "google.ortools.runtime.linux-arm64/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/orLogo.png",
+        "google.ortools.runtime.linux-arm64.9.4.1874.nupkg.sha512",
+        "google.ortools.runtime.linux-arm64.nuspec",
+        "runtimes/linux-arm64/native/google-ortools-native.so",
+        "runtimes/linux-arm64/native/libortools.so.9"
+      ]
+    },
+    "Google.OrTools.runtime.linux-x64/9.4.1874": {
+      "sha512": "zGeDb8FuvP9HXjrsU7krVXtSDFpR+DUGNEsH51k94jL9tzf2vWYI8+WUBRHZ/cGe50dpLr+vIjfcNo3gFyOpkQ==",
+      "type": "package",
+      "path": "google.ortools.runtime.linux-x64/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/orLogo.png",
+        "google.ortools.runtime.linux-x64.9.4.1874.nupkg.sha512",
+        "google.ortools.runtime.linux-x64.nuspec",
+        "runtimes/linux-x64/native/google-ortools-native.so",
+        "runtimes/linux-x64/native/libortools.so.9"
+      ]
+    },
+    "Google.OrTools.runtime.osx-arm64/9.4.1874": {
+      "sha512": "Wo0ZfDaH6DhiQw0jZm4HWJm/oPGPpWNwOLUz+EYaoH3MLtocSxItHGQj/Ta3HyhXnYNOv+TliAH8L+8RCXu/2w==",
+      "type": "package",
+      "path": "google.ortools.runtime.osx-arm64/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/orLogo.png",
+        "google.ortools.runtime.osx-arm64.9.4.1874.nupkg.sha512",
+        "google.ortools.runtime.osx-arm64.nuspec",
+        "runtimes/osx-arm64/native/google-ortools-native.dylib",
+        "runtimes/osx-arm64/native/libortools.9.dylib"
+      ]
+    },
+    "Google.OrTools.runtime.osx-x64/9.4.1874": {
+      "sha512": "IAfGgKR1og6vU87axK1d37Ak/4jy8B4NMoElovG/KZc/2UY+cJEAQDA709UMegtI4lBhuxTWFNUiHQYmRIB9yQ==",
+      "type": "package",
+      "path": "google.ortools.runtime.osx-x64/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/orLogo.png",
+        "google.ortools.runtime.osx-x64.9.4.1874.nupkg.sha512",
+        "google.ortools.runtime.osx-x64.nuspec",
+        "runtimes/osx-x64/native/google-ortools-native.dylib",
+        "runtimes/osx-x64/native/libortools.9.dylib"
+      ]
+    },
+    "Google.OrTools.runtime.win-x64/9.4.1874": {
+      "sha512": "fUs5qDnZA6itygolcX6nPuachQkY9CVvQbakIzIiRAWKcaj8umQAbFdGwbkyzp3qp34BKW5mtPVsmMyfQBBjOQ==",
+      "type": "package",
+      "path": "google.ortools.runtime.win-x64/9.4.1874",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/orLogo.png",
+        "google.ortools.runtime.win-x64.9.4.1874.nupkg.sha512",
+        "google.ortools.runtime.win-x64.nuspec",
+        "runtimes/win-x64/native/google-ortools-native.dll"
+      ]
+    },
+    "Google.Protobuf/3.21.0": {
+      "sha512": "LKtDRauLeBFzwhK7JKpzvyNCvIxYRPX9mHjeuTj3gtG9F6JnSVqF1X2h+UZnQB47Ihi4+EipvbU1fEG7XNa30A==",
+      "type": "package",
+      "path": "google.protobuf/3.21.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "google.protobuf.3.21.0.nupkg.sha512",
+        "google.protobuf.nuspec",
+        "lib/net45/Google.Protobuf.dll",
+        "lib/net45/Google.Protobuf.pdb",
+        "lib/net45/Google.Protobuf.xml",
+        "lib/net5.0/Google.Protobuf.dll",
+        "lib/net5.0/Google.Protobuf.pdb",
+        "lib/net5.0/Google.Protobuf.xml",
+        "lib/netstandard1.1/Google.Protobuf.dll",
+        "lib/netstandard1.1/Google.Protobuf.pdb",
+        "lib/netstandard1.1/Google.Protobuf.xml",
+        "lib/netstandard2.0/Google.Protobuf.dll",
+        "lib/netstandard2.0/Google.Protobuf.pdb",
+        "lib/netstandard2.0/Google.Protobuf.xml"
+      ]
+    },
+    "Grpc.Auth/2.46.3": {
+      "sha512": "w1DZFiqOSayiNBRc4Nuhw+A4ctx4WhJK+dn24ihY8w3HY2LAb1SfCLKnhce5ufZ3eYmDOmna9iJT/L3pbp+AKg==",
+      "type": "package",
+      "path": "grpc.auth/2.46.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.auth.2.46.3.nupkg.sha512",
+        "grpc.auth.nuspec",
+        "lib/net45/Grpc.Auth.dll",
+        "lib/net45/Grpc.Auth.pdb",
+        "lib/net45/Grpc.Auth.xml",
+        "lib/netstandard1.5/Grpc.Auth.dll",
+        "lib/netstandard1.5/Grpc.Auth.pdb",
+        "lib/netstandard1.5/Grpc.Auth.xml",
+        "lib/netstandard2.0/Grpc.Auth.dll",
+        "lib/netstandard2.0/Grpc.Auth.pdb",
+        "lib/netstandard2.0/Grpc.Auth.xml",
+        "packageIcon.png"
+      ]
+    },
+    "Grpc.Core.Api/2.46.3": {
+      "sha512": "uy1oe5baVa4V+C8ZyMiA8xYdNIx5A3PiacQL0f1zWDjF2z64Cb1MMXXRTs3GX+jeKpoK/RtOZg8UnJSm2KC/pQ==",
+      "type": "package",
+      "path": "grpc.core.api/2.46.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.core.api.2.46.3.nupkg.sha512",
+        "grpc.core.api.nuspec",
+        "lib/net45/Grpc.Core.Api.dll",
+        "lib/net45/Grpc.Core.Api.pdb",
+        "lib/net45/Grpc.Core.Api.xml",
+        "lib/netstandard1.5/Grpc.Core.Api.dll",
+        "lib/netstandard1.5/Grpc.Core.Api.pdb",
+        "lib/netstandard1.5/Grpc.Core.Api.xml",
+        "lib/netstandard2.0/Grpc.Core.Api.dll",
+        "lib/netstandard2.0/Grpc.Core.Api.pdb",
+        "lib/netstandard2.0/Grpc.Core.Api.xml",
+        "lib/netstandard2.1/Grpc.Core.Api.dll",
+        "lib/netstandard2.1/Grpc.Core.Api.pdb",
+        "lib/netstandard2.1/Grpc.Core.Api.xml",
+        "packageIcon.png"
+      ]
+    },
+    "Grpc.Net.Client/2.46.0": {
+      "sha512": "iHx39bGsvtxVgaMkmVlxyNtjZETq9N8vxUA8Kc7dT2WBz+SXvBSOu0yPZxlcnFIOM5JyOuM/Dszg9GFGANrDPQ==",
+      "type": "package",
+      "path": "grpc.net.client/2.46.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "grpc.net.client.2.46.0.nupkg.sha512",
+        "grpc.net.client.nuspec",
+        "lib/net5.0/Grpc.Net.Client.dll",
+        "lib/net5.0/Grpc.Net.Client.pdb",
+        "lib/net5.0/Grpc.Net.Client.xml",
+        "lib/net6.0/Grpc.Net.Client.dll",
+        "lib/net6.0/Grpc.Net.Client.pdb",
+        "lib/net6.0/Grpc.Net.Client.xml",
+        "lib/netstandard2.0/Grpc.Net.Client.dll",
+        "lib/netstandard2.0/Grpc.Net.Client.pdb",
+        "lib/netstandard2.0/Grpc.Net.Client.xml",
+        "lib/netstandard2.1/Grpc.Net.Client.dll",
+        "lib/netstandard2.1/Grpc.Net.Client.pdb",
+        "lib/netstandard2.1/Grpc.Net.Client.xml",
+        "packageIcon.png"
+      ]
+    },
+    "Grpc.Net.Common/2.46.0": {
+      "sha512": "RjVHthmxrD7pK7kVIiIiSfGEkf1wxVy5nKyqDMKJAwy8vn6YZ/XOZLHZKil0s7VDkrO+HNqd6uC9LiIhL7o0ow==",
+      "type": "package",
+      "path": "grpc.net.common/2.46.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "grpc.net.common.2.46.0.nupkg.sha512",
+        "grpc.net.common.nuspec",
+        "lib/net5.0/Grpc.Net.Common.dll",
+        "lib/net5.0/Grpc.Net.Common.pdb",
+        "lib/net5.0/Grpc.Net.Common.xml",
+        "lib/net6.0/Grpc.Net.Common.dll",
+        "lib/net6.0/Grpc.Net.Common.pdb",
+        "lib/net6.0/Grpc.Net.Common.xml",
+        "lib/netstandard2.0/Grpc.Net.Common.dll",
+        "lib/netstandard2.0/Grpc.Net.Common.pdb",
+        "lib/netstandard2.0/Grpc.Net.Common.xml",
+        "lib/netstandard2.1/Grpc.Net.Common.dll",
+        "lib/netstandard2.1/Grpc.Net.Common.pdb",
+        "lib/netstandard2.1/Grpc.Net.Common.xml",
+        "packageIcon.png"
       ]
     },
     "Humanizer.Core/2.8.26": {
@@ -3549,10 +4342,10 @@
         "microsoft.aspnetcore.razor.language.nuspec"
       ]
     },
-    "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
-      "sha512": "W8DPQjkMScOMTtJbPwmPyj9c3zYSFGawDW3jwlBOOsnY+EzZFLgNQ/UMkK35JmkNOVPdCyPr2Tw7Vv9N+KA3ZQ==",
+    "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
+      "sha512": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg==",
       "type": "package",
-      "path": "microsoft.bcl.asyncinterfaces/5.0.0",
+      "path": "microsoft.bcl.asyncinterfaces/6.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3565,10 +4358,9 @@
         "lib/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.xml",
         "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
         "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.xml",
-        "microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512",
+        "microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
         "microsoft.bcl.asyncinterfaces.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
+        "useSharedDesignerContext.txt"
       ]
     },
     "Microsoft.Build/17.0.0": {
@@ -4653,113 +5445,180 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Configuration.Abstractions/6.0.0": {
-      "sha512": "qWzV9o+ZRWq+pGm+1dF+R7qTgTYoXvbyowRoBxQJGfqTpqDun2eteerjRQhq5PQ/14S+lqto3Ft4gYaRyl4rdQ==",
+    "Microsoft.Extensions.Configuration.Abstractions/7.0.0": {
+      "sha512": "f34u2eaqIjNO9YLHBz8rozVZ+TcFiFs0F3r7nUJd7FRkVSxk8u4OpoK226mi49MwexHOR2ibP9MFvRUaLilcQQ==",
       "type": "package",
-      "path": "microsoft.extensions.configuration.abstractions/6.0.0",
+      "path": "microsoft.extensions.configuration.abstractions/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/Microsoft.Extensions.Configuration.Abstractions.dll",
-        "lib/net461/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "buildTransitive/net461/Microsoft.Extensions.Configuration.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Configuration.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.Configuration.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.Configuration.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Configuration.Abstractions.xml",
-        "microsoft.extensions.configuration.abstractions.6.0.0.nupkg.sha512",
+        "microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
         "microsoft.extensions.configuration.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection/6.0.0": {
-      "sha512": "k6PWQMuoBDGGHOQTtyois2u4AwyVcIwL2LaSLlTZQm2CYcJ1pxbt6jfAnpWmzENA/wfrYRI/X9DTLoUkE4AsLw==",
+    "Microsoft.Extensions.DependencyInjection/7.0.0": {
+      "sha512": "elNeOmkeX3eDVG6pYVeV82p29hr+UKDaBhrZyWvWLw/EVZSYEkZlQdkp0V39k/Xehs2Qa0mvoCvkVj3eQxNQ1Q==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection/6.0.0",
+      "path": "microsoft.extensions.dependencyinjection/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Extensions.DependencyInjection.dll",
-        "lib/net461/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.xml",
         "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll",
         "lib/net6.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.xml",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml",
-        "microsoft.extensions.dependencyinjection.6.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/6.0.0": {
-      "sha512": "xlzi2IYREJH3/m6+lUrQlujzX8wDitm4QGnUu6kUXTQAWPuZY8i+ticFJbzfqaetLA6KR/rO6Ew/HuYD+bxifg==",
+    "Microsoft.Extensions.DependencyInjection.Abstractions/7.0.0": {
+      "sha512": "h3j/QfmFN4S0w4C2A6X7arXij/M/OVw3uQHSOFxnND4DyAzO1F9eMX7Eti7lU/OkSthEE0WzRsfT/Dmx86jzCw==",
       "type": "package",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/6.0.0",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/net461/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.FileProviders.Abstractions/2.2.0": {
-      "sha512": "EcnaSsPTqx2MGnHrmWOD0ugbuuqVT8iICqSqPzi45V5/MA1LjUNb0kwgcxBGqizV1R+WeBK7/Gw25Jzkyk9bIw==",
+    "Microsoft.Extensions.FileProviders.Abstractions/7.0.0": {
+      "sha512": "NyawiW9ZT/liQb34k9YqBSNPLuuPkrjMgQZ24Y/xXX1RoiBkLUdPMaQTmxhZ5TYu8ZKZ9qayzil75JX95vGQUg==",
       "type": "package",
-      "path": "microsoft.extensions.fileproviders.abstractions/2.2.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
-        "microsoft.extensions.fileproviders.abstractions.2.2.0.nupkg.sha512",
-        "microsoft.extensions.fileproviders.abstractions.nuspec"
-      ]
-    },
-    "Microsoft.Extensions.Logging/6.0.0": {
-      "sha512": "eIbyj40QDg1NDz0HBW0S5f3wrLVnKWnDJ/JtZ+yJDFnDj90VoPuoPmFkeaXrtu+0cKm5GRAwoDf+dBWXK0TUdg==",
-      "type": "package",
-      "path": "microsoft.extensions.logging/6.0.0",
+      "path": "microsoft.extensions.fileproviders.abstractions/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/Microsoft.Extensions.Logging.dll",
-        "lib/net461/Microsoft.Extensions.Logging.xml",
+        "buildTransitive/net461/Microsoft.Extensions.FileProviders.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.FileProviders.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.FileProviders.Abstractions.xml",
+        "microsoft.extensions.fileproviders.abstractions.7.0.0.nupkg.sha512",
+        "microsoft.extensions.fileproviders.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Hosting.Abstractions/7.0.0": {
+      "sha512": "43n9Je09z0p/7ViPxfRqs5BUItRLNVh5b6JH40F2Agkh2NBsY/jpNYTtbCcxrHCsA3oRmbR6RJBzUutB4VZvNQ==",
+      "type": "package",
+      "path": "microsoft.extensions.hosting.abstractions/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Hosting.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Hosting.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Hosting.Abstractions.xml",
+        "microsoft.extensions.hosting.abstractions.7.0.0.nupkg.sha512",
+        "microsoft.extensions.hosting.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Logging/7.0.0": {
+      "sha512": "Nw2muoNrOG5U5qa2ZekXwudUn2BJcD41e65zwmDHb1fQegTX66UokLWZkJRpqSSHXDOWZ5V0iqhbxOEky91atA==",
+      "type": "package",
+      "path": "microsoft.extensions.logging/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Logging.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets",
+        "lib/net462/Microsoft.Extensions.Logging.dll",
+        "lib/net462/Microsoft.Extensions.Logging.xml",
+        "lib/net6.0/Microsoft.Extensions.Logging.dll",
+        "lib/net6.0/Microsoft.Extensions.Logging.xml",
+        "lib/net7.0/Microsoft.Extensions.Logging.dll",
+        "lib/net7.0/Microsoft.Extensions.Logging.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.xml",
         "lib/netstandard2.1/Microsoft.Extensions.Logging.dll",
         "lib/netstandard2.1/Microsoft.Extensions.Logging.xml",
-        "microsoft.extensions.logging.6.0.0.nupkg.sha512",
+        "microsoft.extensions.logging.7.0.0.nupkg.sha512",
         "microsoft.extensions.logging.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
-      "sha512": "/HggWBbTwy8TgebGSX5DBZ24ndhzi93sHUBDvP1IxbZD7FDokYzdAr6+vbWGjw2XAfR2EJ1sfKUotpjHnFWPxA==",
+    "Microsoft.Extensions.Logging.Abstractions/7.0.0": {
+      "sha512": "kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw==",
       "type": "package",
-      "path": "microsoft.extensions.logging.abstractions/6.0.0",
+      "path": "microsoft.extensions.logging.abstractions/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4794,62 +5653,90 @@
         "analyzers/dotnet/roslyn4.0/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
         "analyzers/dotnet/roslyn4.0/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
         "analyzers/dotnet/roslyn4.0/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
-        "build/Microsoft.Extensions.Logging.Abstractions.targets",
+        "analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn4.4/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net6.0/Microsoft.Extensions.Logging.Abstractions.targets",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/net461/Microsoft.Extensions.Logging.Abstractions.xml",
+        "buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/net6.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
-        "microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Options/6.0.0": {
-      "sha512": "dzXN0+V1AyjOe2xcJ86Qbo233KHuLEY0njf/P2Kw8SfJU+d45HNS2ctJdnEnrWbM9Ye2eFgaC5Mj9otRMU6IsQ==",
+    "Microsoft.Extensions.Options/7.0.0": {
+      "sha512": "lP1yBnTTU42cKpMozuafbvNtQ7QcBjr/CcK3bYOGEMH55Fjt+iecXjT6chR7vbgCMqy3PG3aNQSZgo/EuY/9qQ==",
       "type": "package",
-      "path": "microsoft.extensions.options/6.0.0",
+      "path": "microsoft.extensions.options/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/Microsoft.Extensions.Options.dll",
-        "lib/net461/Microsoft.Extensions.Options.xml",
+        "buildTransitive/net461/Microsoft.Extensions.Options.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.targets",
+        "lib/net462/Microsoft.Extensions.Options.dll",
+        "lib/net462/Microsoft.Extensions.Options.xml",
+        "lib/net6.0/Microsoft.Extensions.Options.dll",
+        "lib/net6.0/Microsoft.Extensions.Options.xml",
+        "lib/net7.0/Microsoft.Extensions.Options.dll",
+        "lib/net7.0/Microsoft.Extensions.Options.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Options.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Options.xml",
         "lib/netstandard2.1/Microsoft.Extensions.Options.dll",
         "lib/netstandard2.1/Microsoft.Extensions.Options.xml",
-        "microsoft.extensions.options.6.0.0.nupkg.sha512",
+        "microsoft.extensions.options.7.0.0.nupkg.sha512",
         "microsoft.extensions.options.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Primitives/6.0.0": {
-      "sha512": "9+PnzmQFfEFNR9J2aDTfJGGupShHjOuGw4VUv+JB044biSHrnmCIMD+mJHmb2H7YryrfBEXDurxQ47gJZdCKNQ==",
+    "Microsoft.Extensions.Primitives/7.0.0": {
+      "sha512": "um1KU5kxcRp3CNuI8o/GrZtD4AIOXDk+RLsytjZ9QPok3ttLUelLKpilVPuaFT3TFjOhSibUAso0odbOaCDj3Q==",
       "type": "package",
-      "path": "microsoft.extensions.primitives/6.0.0",
+      "path": "microsoft.extensions.primitives/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Primitives.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets",
-        "buildTransitive/netcoreapp3.1/_._",
-        "lib/net461/Microsoft.Extensions.Primitives.dll",
-        "lib/net461/Microsoft.Extensions.Primitives.xml",
+        "lib/net462/Microsoft.Extensions.Primitives.dll",
+        "lib/net462/Microsoft.Extensions.Primitives.xml",
         "lib/net6.0/Microsoft.Extensions.Primitives.dll",
         "lib/net6.0/Microsoft.Extensions.Primitives.xml",
-        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.dll",
-        "lib/netcoreapp3.1/Microsoft.Extensions.Primitives.xml",
+        "lib/net7.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net7.0/Microsoft.Extensions.Primitives.xml",
         "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
         "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
-        "microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+        "microsoft.extensions.primitives.7.0.0.nupkg.sha512",
         "microsoft.extensions.primitives.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -6082,6 +6969,21 @@
         "lib/netstandard2.0/NuGet.Versioning.xml",
         "nuget.versioning.6.2.1.nupkg.sha512",
         "nuget.versioning.nuspec"
+      ]
+    },
+    "Portable.BouncyCastle/1.9.0": {
+      "sha512": "eZZBCABzVOek+id9Xy04HhmgykF0wZg9wpByzrWN7q8qEI0Qen9b7tfd7w8VA3dOeesumMG7C5ZPy0jk7PSRHw==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.9.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.9.0.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -7610,6 +8512,34 @@
         "ref/xamarinwatchos10/_._",
         "system.linq.4.3.0.nupkg.sha512",
         "system.linq.nuspec"
+      ]
+    },
+    "System.Linq.Async/6.0.1": {
+      "sha512": "0YhHcaroWpQ9UCot3Pizah7ryAzQhNvobLMSxeDIGmnXfkQn8u5owvpOH0K6EVB+z9L7u6Cc4W17Br/+jyttEQ==",
+      "type": "package",
+      "path": "system.linq.async/6.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Logo.png",
+        "lib/net48/System.Linq.Async.dll",
+        "lib/net48/System.Linq.Async.xml",
+        "lib/net6.0/System.Linq.Async.dll",
+        "lib/net6.0/System.Linq.Async.xml",
+        "lib/netstandard2.0/System.Linq.Async.dll",
+        "lib/netstandard2.0/System.Linq.Async.xml",
+        "lib/netstandard2.1/System.Linq.Async.dll",
+        "lib/netstandard2.1/System.Linq.Async.xml",
+        "ref/net48/System.Linq.Async.dll",
+        "ref/net48/System.Linq.Async.xml",
+        "ref/net6.0/System.Linq.Async.dll",
+        "ref/net6.0/System.Linq.Async.xml",
+        "ref/netstandard2.0/System.Linq.Async.dll",
+        "ref/netstandard2.0/System.Linq.Async.xml",
+        "ref/netstandard2.1/System.Linq.Async.dll",
+        "ref/netstandard2.1/System.Linq.Async.xml",
+        "system.linq.async.6.0.1.nupkg.sha512",
+        "system.linq.async.nuspec"
       ]
     },
     "System.Linq.Expressions/4.3.0": {
@@ -10238,6 +11168,11 @@
       "path": "../DeliveryVHGP.Core/DeliveryVHGP.Core.csproj",
       "msbuildProject": "../DeliveryVHGP.Core/DeliveryVHGP.Core.csproj"
     },
+    "DeliveryVHGP.DeliveryAlgorithm/1.0.0": {
+      "type": "project",
+      "path": "../DeliveryVHGP.DeliveryAlgorithm/DeliveryVHGP.DeliveryAlgorithm.csproj",
+      "msbuildProject": "../DeliveryVHGP.DeliveryAlgorithm/DeliveryVHGP.DeliveryAlgorithm.csproj"
+    },
     "DeliveryVHGP.Infrastructure/1.0.0": {
       "type": "project",
       "path": "../DeliveryVHGP.Infrastructure/DeliveryVHGP.Infrastructure.csproj",
@@ -10247,6 +11182,7 @@
   "projectFileDependencyGroups": {
     "net6.0": [
       "DeliveryVHGP.Core >= 1.0.0",
+      "DeliveryVHGP.DeliveryAlgorithm >= 1.0.0",
       "DeliveryVHGP.Infrastructure >= 1.0.0",
       "Firebase.Auth >= 1.0.0",
       "FirebaseDatabase.net >= 4.1.0",
@@ -10256,6 +11192,8 @@
       "Microsoft.EntityFrameworkCore.Design >= 6.0.9",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.9",
+      "Microsoft.Extensions.Hosting.Abstractions >= 7.0.0",
+      "Microsoft.Extensions.Logging >= 7.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.9",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
@@ -10289,6 +11227,9 @@
           "projectReferences": {
             "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj": {
               "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Core\\DeliveryVHGP.Core.csproj"
+            },
+            "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.DeliveryAlgorithm\\DeliveryVHGP.DeliveryAlgorithm.csproj": {
+              "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.DeliveryAlgorithm\\DeliveryVHGP.DeliveryAlgorithm.csproj"
             },
             "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj": {
               "projectPath": "C:\\Users\\DUONGAS\\Desktop\\DeliveryVGP\\DeliveryVHGP-Solution\\src\\DeliveryVHGP.Infrastructure\\DeliveryVHGP.Infrastructure.csproj"
@@ -10342,6 +11283,14 @@
             "target": "Package",
             "version": "[6.0.9, )"
           },
+          "Microsoft.Extensions.Hosting.Abstractions": {
+            "target": "Package",
+            "version": "[7.0.0, )"
+          },
+          "Microsoft.Extensions.Logging": {
+            "target": "Package",
+            "version": "[7.0.0, )"
+          },
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[6.0.9, )"
@@ -10369,7 +11318,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.305\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   }

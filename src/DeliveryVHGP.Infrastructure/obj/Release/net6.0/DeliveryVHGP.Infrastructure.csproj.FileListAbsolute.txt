@@ -1,0 +1,15 @@
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\bin\Release\net6.0\DeliveryVHGP.Infrastructure.deps.json
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\bin\Release\net6.0\DeliveryVHGP.Infrastructure.dll
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\bin\Release\net6.0\DeliveryVHGP.Infrastructure.pdb
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\bin\Release\net6.0\DeliveryVHGP.Core.dll
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\bin\Release\net6.0\DeliveryVHGP.Core.pdb
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.AssemblyInfo.cs
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.csproj.CopyComplete
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.dll
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\refint\DeliveryVHGP.Infrastructure.dll
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\DeliveryVHGP.Infrastructure.pdb
+C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\src\DeliveryVHGP.Infrastructure\obj\Release\net6.0\ref\DeliveryVHGP.Infrastructure.dll

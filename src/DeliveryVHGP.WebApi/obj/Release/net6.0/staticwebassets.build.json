@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "8MyfVqOBlvU/m1YviihxKRXqluChPCKQ+OmUOSiAYpU=",
-  "Source": "DeliveryVHGP-WebApi",
-  "BasePath": "_content/DeliveryVHGP-WebApi",
+  "Hash": "woOiEiYXuEgrhHQ+x+PTtQB+7pmJu+5jpHmRl+JRfPc=",
+  "Source": "DeliveryVHGP.WebApi",
+  "BasePath": "_content/DeliveryVHGP.WebApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
