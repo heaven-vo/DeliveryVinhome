@@ -185,7 +185,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     BuildingName = buildingName,
                     OrderNum = edge.OrderActions.Count,
                     Priority = edge.Priority,
-                    Staus = edge.Status
+                    Status = edge.Status
                 };
                 listEdgeModel.Add(edgeModel);
             }
