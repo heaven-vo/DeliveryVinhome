@@ -36,6 +36,13 @@ namespace DeliveryVHGP.WebApi.Controllers
         //    await repository.RouteAction.CreateRoute(list);
         //    return Ok();
         //}
+        [HttpGet("remove")]
+        public async Task<ActionResult> RemoveAllRoute()
+        {
+            await repository.RouteAction.RemoveAllRouteAction();
+            return Ok();
+            //return Ok(await repository.Order.CheckAvailableOrder());
+        }
         [HttpGet("check")]
         public async Task<ActionResult> CheckOrder()
         {

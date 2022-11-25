@@ -19,6 +19,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             var hubId = await context.Buildings.Where(x => x.Id == storeBuildingId).Select(x => x.HubId).FirstOrDefaultAsync();
             if (order.ServiceId == "2")
             {
+                List<Segment> listSegment = new List<Segment>();
                 Segment toHubSegment = new Segment()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -39,7 +40,9 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     SegmentMode = (int)SegmentModeEnum.HubToCus,
                     Status = (int)SegmentStatusEnum.Unviable
                 };
-                await context.Segments.AddRangeAsync(toHubSegment, toCusSegment);
+                listSegment.Add(toHubSegment);
+                listSegment.Add(toCusSegment);
+                await context.Segments.AddRangeAsync(listSegment);
             }
             if (order.ServiceId == "1")
             {

@@ -141,6 +141,28 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
+        public async Task RemoveAllRouteAction()
+        {
+            List<RouteEdge> listEdge = new List<RouteEdge>();
+            List<OrderAction> listAction = new List<OrderAction>();
+            var listRouteAction = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
+                .ToListAsync();
+            if (listRouteAction.Count > 0)
+            {
+                foreach (var route in listRouteAction)
+                {
+                    listEdge.AddRange(route.RouteEdges.ToList());
+                }
+                foreach (var edge in listEdge)
+                {
+                    listAction.AddRange(edge.OrderActions.ToList());
+                }
+                context.RemoveRange(listRouteAction);
+                context.RemoveRange(listEdge);
+                context.RemoveRange(listAction);
+                await context.SaveChangesAsync();
+            }
+        }
         public async Task AcceptRouteByShipper(string routeId, string shipperId)
         {
             var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId && x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
