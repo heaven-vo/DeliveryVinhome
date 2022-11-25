@@ -20,12 +20,16 @@ namespace DeliveryVHGP.WebApi.Repositories
             _fileService = fileService;
             _timeStageService = timeStageService;
         }
-        public async Task<IEnumerable<StoreModel>> GetListStore(int pageIndex, int pageSize)
+        public async Task<IEnumerable<StoreModel>> GetListStore(int pageIndex, int pageSize , FilterRequestInStore request)
         {
             var listStore = await (from store in context.Stores
                                    join b in context.Brands on store.BrandId equals b.Id
                                    join building in context.Buildings on store.BuildingId equals building.Id
                                    join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                   where store.Name.Contains(request.SearchByStoreName)
+                                   where b.Name.Contains(request.SearchByBrand)
+                                   where building.Name.Contains(request.SearchByBuilding)
+                                   where sc.Name.Contains(request.SearchByStoreCategory)
                                    select new StoreModel()
                                    {
                                        Id = store.Id,
