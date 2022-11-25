@@ -143,7 +143,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task AcceptRouteByShipper(string routeId, string shipperId)
         {
-            var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId || x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
+            var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId && x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
             if (routeTodo != null)
             {
                 throw new Exception("Shipper can only accept 1 route ");
