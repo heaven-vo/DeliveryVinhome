@@ -26,9 +26,13 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 foreach (var route in listRoute)
                 {
                     RouteModel routeModel = new RouteModel() { RouteId = route.Id, EdgeNum = route.RouteEdges.Count(), ShipperId = route.ShipperId, Status = route.Status };
-                    routeModel.FirstEdge = route.RouteEdges.Where(x => x.Priority == 1).Select(x => x.ToBuildingId).FirstOrDefault();
-                    routeModel.LastEdge = route.RouteEdges.OrderByDescending(x => x.Priority).Select(x => x.ToBuildingId).FirstOrDefault();
+                    var first = route.RouteEdges.Where(x => x.Priority == 1).Select(x => x.ToBuildingId).FirstOrDefault();
+                    var last = route.RouteEdges.OrderByDescending(x => x.Priority).Select(x => x.ToBuildingId).FirstOrDefault();
+                    var buildingNameFirst = await context.Buildings.Where(x => x.Id == first).Select(x => x.Name).FirstOrDefaultAsync();
+                    var buildingNameLast = await context.Buildings.Where(x => x.Id == last).Select(x => x.Name).FirstOrDefaultAsync();
 
+                    routeModel.FirstEdge = buildingNameFirst;
+                    routeModel.LastEdge = buildingNameLast;
                     List<OrderAction> orderActions = new List<OrderAction>();
                     foreach (var edge in route.RouteEdges)
                     {
@@ -222,11 +226,15 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public async Task<List<OrderActionModel>> GetListOrderAction(string edgeId)
         {
             var listAction = await context.OrderActions.Include(x => x.Order).ThenInclude(x => x.Payments).Where(x => x.RouteEdgeId == edgeId).ToListAsync();
-            if (listAction.Count == 0) { throw new Exception(); }
+            if (listAction.Count == 0)
+            {
+                Console.WriteLine("listAction null");
+                throw new Exception("Not foud egde id");
+            }
             List<OrderActionModel> listOrderActions = new List<OrderActionModel>();
             foreach (var action in listAction)
             {
-                OrderActionModel orderActionModel = new OrderActionModel() { OrderId = action.OrderId, Note = action.Order.Note, PaymentType = action.Order.Payments.First().Type, ShipCost = action.Order.ShipCost, ActionType = action.OrderActionType, ActionStatus = action.Status };
+                OrderActionModel orderActionModel = new OrderActionModel() { ActionId = action.Id, OrderId = action.OrderId, Note = action.Order.Note, PaymentType = action.Order.Payments.First().Type, ShipCost = action.Order.ShipCost, ActionType = action.OrderActionType, ActionStatus = action.Status };
                 if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
                 {
                     orderActionModel.Total = action.Order.Total;

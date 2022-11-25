@@ -12,6 +12,8 @@ namespace DeliveryVHGP.Core.Entities
             OrderDetails = new HashSet<OrderDetail>();
             Payments = new HashSet<Payment>();
             Segments = new HashSet<Segment>();
+            ShipperHistories = new HashSet<ShipperHistory>();
+            Transactions = new HashSet<Transaction>();
         }
 
         public string Id { get; set; } = null!;
@@ -29,7 +31,6 @@ namespace DeliveryVHGP.Core.Entities
         public int? Status { get; set; }
 
         public virtual Building? Building { get; set; }
-        public virtual Customer? Customer { get; set; }
         public virtual DeliveryTimeFrame? DeliveryTime { get; set; }
         public virtual Menu? Menu { get; set; }
         public virtual Service? Service { get; set; }
@@ -40,5 +41,7 @@ namespace DeliveryVHGP.Core.Entities
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<Segment> Segments { get; set; }
+        public virtual ICollection<ShipperHistory> ShipperHistories { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

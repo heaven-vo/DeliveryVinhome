@@ -22,12 +22,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 var listAction = await repository.RouteAction.GetListOrderAction(edgeId);
                 return Ok(new { StatusCode = "Successful", data = listAction });
             }
-            catch
+            catch (Exception ex)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "NotFound"
+                    message = ex.Message
                 });
             }
         }

@@ -426,7 +426,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return order;
         }
-        public async Task<OrderStatusModel> OrderUpdateStatus(string orderId, OrderStatusModel order)
+        public async Task<OrderStatusModel> OrderUpdateStatus(string orderId, int status)
         {
             var orderUpdate = await context.Orders.FindAsync(orderId);
             if (orderUpdate == null)
@@ -434,7 +434,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 return null;
             }
             int oldStatus = (int)orderUpdate.Status;
-            orderUpdate.Status = order.StatusId;
+            orderUpdate.Status = status;
             context.Entry(orderUpdate).State = EntityState.Modified;
 
             string time = await GetTime();
@@ -443,14 +443,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Id = Guid.NewGuid().ToString(),
                 OrderId = orderId,
                 FromStatus = oldStatus,
-                ToStatus = order.StatusId,
+                ToStatus = status,
                 CreateDate = DateTime.UtcNow.AddHours(7),
                 TypeId = "1"
             };
             await context.OrderActionHistories.AddAsync(actionHistory);
             await context.SaveChangesAsync();
 
-            return order;
+            return new OrderStatusModel() { OrderId = orderId, StatusId = status };
         }
         public async Task<List<string>> GetListProInMenu(string orderDetailId)
         {
@@ -607,6 +607,97 @@ namespace DeliveryVHGP.WebApi.Repositories
             //Console.WriteLine("Order date: " + listOrder[0].OrderActionHistories.First().CreateDate.ToString());
             var list = listOrder.Where(x => x.OrderCache == null).Select(x => x.Id).ToList();
             return list;
+        }
+        public async Task CompleteOrder(string orderActionId, string shipperId, int actionType)
+        {
+            var orderAction = await context.OrderActions.FindAsync(orderActionId);
+            if (orderAction == null)
+            {
+                throw new Exception("Order action Id not valid");
+            }
+            if (actionType == (int)OrderActionEnum.PickupStore)
+            {
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.HubDelivery);
+            }
+            if (actionType == (int)OrderActionEnum.PickupHub)
+            {
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.CustomerDelivery);
+            }
+            if (actionType == (int)OrderActionEnum.DeliveryHub) // creat shipper history
+            {
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.AtHub);
+                if (order != null)
+                {
+                    //turn on order in cache and segment 
+                    var orderCache = await context.OrderCaches.FindAsync(orderAction.OrderId);
+                    orderCache.IsReady = true;
+                    var listSegment = await context.Segments.Where(
+                        x => x.OrderId == orderAction.OrderId).ToListAsync();
+                    foreach (var segment in listSegment)
+                    {
+                        if (segment.SegmentMode == (int)SegmentModeEnum.StoreToHub)
+                        {
+                            segment.Status = (int)SegmentStatusEnum.Done;
+                        }
+                        if (segment.SegmentMode == (int)SegmentModeEnum.HubToCus)
+                        {
+                            segment.Status = (int)SegmentStatusEnum.Viable;
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                }
+            }
+            if (actionType == (int)OrderActionEnum.DeliveryCus) // creat shipper history
+            {
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)OrderStatusEnum.Completed);
+                await RemoveOrderFromCache(orderAction.OrderId);
+            }
+            //Create transaction after complete a order action
+            await CreateTransaction(shipperId, orderAction.OrderId, actionType);
+        }
+        public async Task CancelOrder(string orderActionId, string shipperId, int actionType)
+        {
+            if (actionType == (int)OrderActionEnum.PickupStore)
+            {
+
+            }
+            if (actionType == (int)OrderActionEnum.PickupHub)
+            {
+
+            }
+            if (actionType == (int)OrderActionEnum.DeliveryHub)
+            {
+
+            }
+            if (actionType == (int)OrderActionEnum.DeliveryCus)
+            {
+
+            }
+        }
+        public async Task RemoveOrderFromCache(string orderId)
+        {
+            var orderCache = await context.OrderCaches.FindAsync(orderId);
+            context.Remove(orderCache);
+            await context.SaveChangesAsync();
+
+        }
+        public async Task CreateTransaction(string shipperId, string orderId, int actionType)
+        {
+            var order = await context.Orders.Include(x => x.Payments).Where(x => x.Id == orderId).FirstOrDefaultAsync();
+            if (order == null)
+                throw new Exception("Order id is not valid");
+            else
+            {
+                if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.VNPay)
+                {
+
+                }
+                if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash)
+                {
+
+                }
+            }
+
         }
     }
 }

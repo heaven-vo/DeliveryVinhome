@@ -6,5 +6,13 @@ namespace DeliveryVHGP.Core.Entities
     public partial class ShipperHistory
     {
         public string Id { get; set; } = null!;
+        public string? ShipperId { get; set; }
+        public string? OrderId { get; set; }
+        public int? Type { get; set; }
+        public string? Status { get; set; }
+        public DateTime? CreateDate { get; set; }
+
+        public virtual Order? Order { get; set; }
+        public virtual Shipper? Shipper { get; set; }
     }
 }

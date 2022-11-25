@@ -11,6 +11,7 @@
     }
     public class OrderActionModel
     {
+        public string ActionId { get; set; }
         public string OrderId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }

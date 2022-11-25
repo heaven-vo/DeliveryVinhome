@@ -10,6 +10,7 @@ namespace DeliveryVHGP.Core.Entities
             DeliveryShiftOfShippers = new HashSet<DeliveryShiftOfShipper>();
             SegmentDeliveryRoutes = new HashSet<SegmentDeliveryRoute>();
             SegmentTasks = new HashSet<SegmentTask>();
+            ShipperHistories = new HashSet<ShipperHistory>();
         }
 
         public string Id { get; set; } = null!;
@@ -28,5 +29,6 @@ namespace DeliveryVHGP.Core.Entities
         public virtual ICollection<DeliveryShiftOfShipper> DeliveryShiftOfShippers { get; set; }
         public virtual ICollection<SegmentDeliveryRoute> SegmentDeliveryRoutes { get; set; }
         public virtual ICollection<SegmentTask> SegmentTasks { get; set; }
+        public virtual ICollection<ShipperHistory> ShipperHistories { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
-using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Infrastructure.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -41,7 +41,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet("stores/byStoreId/status/ByStatusId")]
-        public async Task<ActionResult> GetOrderByStoreByStatus(int statusId ,string storeId, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrderByStoreByStatus(int statusId, string storeId, int pageIndex, int pageSize)
         {
             var listOder = await repository.Order.GetListOrdersByStoreByStatus(storeId, statusId, pageIndex, pageSize);
             if (storeId == null)
@@ -63,7 +63,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             catch
             {
                 return NotFound();
-            }          
+            }
         }
         /// <summary>
         /// Create a order (customer web)
@@ -75,17 +75,18 @@ namespace DeliveryVHGP.WebApi.Controllers
             try
             {
                 var result = await repository.Order.CreatNewOrder(order);
-                if(result != null)
+                if (result != null)
                 {
                     await repository.Segment.CreatSegment(result);
                 }
-                return Ok( new { StatusCode = "Successful" , data = result });
+                return Ok(new { StatusCode = "Successful", data = result });
             }
             catch
             {
                 return Ok(new
                 {
-                    StatusCode = "Fail", message = "Hiện tại cửa hàng đã ngưng hoạt động !!" +
+                    StatusCode = "Fail",
+                    message = "Hiện tại cửa hàng đã ngưng hoạt động !!" +
                                               "Vui lòng đặt lại đơn hàng "
                 });
             }
@@ -111,7 +112,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             try
             {
-                await repository.Order.OrderUpdateStatus(orderId, order);
+                await repository.Order.OrderUpdateStatus(orderId, order.StatusId);
             }
             catch (Exception ex)
             {
@@ -229,8 +230,8 @@ namespace DeliveryVHGP.WebApi.Controllers
                 }
 
             }
-            
-            
+
+
             string vnp_SecureHash = Request.Query["vnp_SecureHash"]; //hash của dữ liệu trả về
 
             string hashRaw = "vnp_Amount=" + vnp_Amount + "&" + "vnp_BankCode=" + vnp_BankCode + "&" + "vnp_BankTranNo=" + vnp_BankTranNo + "&" + "vnp_CardType=" +
@@ -252,7 +253,7 @@ namespace DeliveryVHGP.WebApi.Controllers
                 {
                     //Thanh toán thành công
                     var order = await repository.Order.PaymentOrderSuccessfull(vnp_TxnRef);
-                    string Successfull = "https://foodd-delivery.netlify.app/order/"+ vnp_TxnRef;
+                    string Successfull = "https://foodd-delivery.netlify.app/order/" + vnp_TxnRef;
                     return Redirect(Successfull);
                 }
                 else
@@ -269,6 +270,18 @@ namespace DeliveryVHGP.WebApi.Controllers
                 string Failed = "https://foodd-delivery.netlify.app/order/payment/failed";
                 return Redirect(Failed);
             }
+            return Ok();
+        }
+        [HttpGet("complete")]
+        public async Task<ActionResult> CompleteOrder(string orderActionId, string shipperId, int actionType)
+        {
+
+            return Ok();
+        }
+        [HttpGet("cancel")]
+        public async Task<ActionResult> CancelOrder(string orderActionId, string shipperId, int actionType)
+        {
+
             return Ok();
         }
 

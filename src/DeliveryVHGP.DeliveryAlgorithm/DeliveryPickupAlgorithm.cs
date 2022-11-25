@@ -63,7 +63,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
             // Add Distance constraint.
-            routing.AddDimension(transitCallbackIndex, 0, 20000,
+            routing.AddDimension(transitCallbackIndex, 0, 50000,
                                  true, // start cumul to zero
                                  "Distance");
             RoutingDimension distanceDimension = routing.GetMutableDimension("Distance");
@@ -106,7 +106,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 List<SegmentDeliveryRoute> listRoute = new List<SegmentDeliveryRoute>();
                 List<NodeModel> NodeAction = new List<NodeModel>();                     // check fake node(delivery, >n)
                 Console.WriteLine("Matrix lenght {0}:", data.DistanceMatrixData.Length);
-                for (int i = 0; i < 4; ++i) //data.VehicleNumber = 4
+                for (int i = 0; i < data.VehicleNumber; ++i)
                 {
                     long totalRouteDistance = 0;
                     Console.WriteLine("Route for Vehicle {0}:", i);
