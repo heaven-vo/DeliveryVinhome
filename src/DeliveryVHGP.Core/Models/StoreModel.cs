@@ -19,4 +19,11 @@
         public string? UpdateAt { get; set; }
         public AccountInRole Account { get; set; }
     }
+    public class FilterRequestInStore
+    {
+        public string? SearchByStoreName { get; set; } = "";
+        public string? SearchByBuilding { get; set; } = "";
+        public string? SearchByStoreCategory { get; set; } = "";
+        public string? SearchByBrand { get; set; } = "";
+    }
 }

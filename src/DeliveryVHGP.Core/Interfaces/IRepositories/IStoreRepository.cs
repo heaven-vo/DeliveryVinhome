@@ -8,7 +8,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
 {
     public interface IStoreRepository : IRepositoryBase<Store>
     {
-        Task<IEnumerable<StoreModel>> GetListStore( int pageIndex, int pageSize);
+        Task<IEnumerable<StoreModel>> GetListStore( int pageIndex, int pageSize, FilterRequestInStore request);
         Task<SystemReportModelInStore> GetListOrdersReport(string storeId, DateFilterRequest request);
         Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize);
         Task<IEnumerable<StoreModel>> GetListStoreByName(string storeName, int pageIndex, int pageSize);
