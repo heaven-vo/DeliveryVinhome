@@ -33,12 +33,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 await repository.RouteAction.AcceptRouteByShipper(routeId, shipperId);
                 return Ok(new { StatusCode = "Successful", data = 1 });
             }
-            catch
+            catch (Exception e)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "NotFound"
+                    message = e.ToString()
                 });
             }
 

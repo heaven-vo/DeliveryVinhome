@@ -608,5 +608,6 @@ namespace DeliveryVHGP.WebApi.Repositories
             var list = listOrder.Where(x => x.OrderCache == null).Select(x => x.Id).ToList();
             return list;
         }
+        //VnPay: service: 1
     }
 }

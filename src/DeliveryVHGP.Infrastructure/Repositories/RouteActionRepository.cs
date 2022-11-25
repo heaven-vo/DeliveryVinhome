@@ -143,11 +143,16 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task AcceptRouteByShipper(string routeId, string shipperId)
         {
+            var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId || x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
+            if (routeTodo != null)
+            {
+                throw new Exception("Shipper can only accept 1 route ");
+            }
             var route = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
                 .Where(x => x.Id == routeId && x.ShipperId == null && x.Status == (int)RouteStatusEnum.NotAssign).FirstOrDefaultAsync();
             if (route == null)
             {
-                throw new Exception("Not correct");
+                throw new Exception("The route is not avalable");
             }
             route.ShipperId = shipperId;
             route.Status = (int)RouteStatusEnum.ToDo;
@@ -189,6 +194,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 };
                 listEdgeModel.Add(edgeModel);
             }
+            listEdgeModel = listEdgeModel.OrderBy(x => x.Priority).ToList();
             return listEdgeModel;
         }
         public async Task<List<OrderActionModel>> GetListOrderAction(string edgeId)
@@ -198,7 +204,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<OrderActionModel> listOrderActions = new List<OrderActionModel>();
             foreach (var action in listAction)
             {
-                OrderActionModel orderActionModel = new OrderActionModel() { OrderId = action.OrderId, PaymentType = action.Order.Payments.First().Type, ActionType = action.OrderActionType, ActionStatus = action.Status };
+                OrderActionModel orderActionModel = new OrderActionModel() { OrderId = action.OrderId, Note = action.Order.Note, PaymentType = action.Order.Payments.First().Type, ShipCost = action.Order.ShipCost, ActionType = action.OrderActionType, ActionStatus = action.Status };
                 if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
                 {
                     orderActionModel.Total = action.Order.Total;
@@ -213,14 +219,25 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 }
                 if (orderActionModel.ActionType == (int)OrderActionEnum.PickupHub || orderActionModel.ActionType == (int)OrderActionEnum.DeliveryHub)
                 {
+#pragma warning disable CS8601 // Possible null reference assignment.
                     orderActionModel.Name = await context.Orders.Include(x => x.Store).ThenInclude(x => x.Building).ThenInclude(x => x.Hub)
                         .Where(x => x.Id == action.OrderId).Select(x => x.Store.Building.Hub.Name).FirstOrDefaultAsync();
+#pragma warning restore CS8601 // Possible null reference assignment.
                 }
                 if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
                 {
                     orderActionModel.Name = action.Order.FullName;
-                    orderActionModel.Total += action.Order.ShipCost; // giao cho cus phai lay ship cost
+                    orderActionModel.Phone = action.Order.PhoneNumber;
+
                 }
+                var orderDetails = await context.OrderDetails.Where(x => x.OrderId == action.OrderId)
+                    .Select(x => new OrderDetailActionModel
+                    {
+                        Quantity = int.Parse(x.Quantity),
+                        ProductName = x.ProductName,
+                        Price = x.Price
+                    }).ToListAsync();
+                orderActionModel.OrderDetailActions = orderDetails;
                 listOrderActions.Add(orderActionModel);
             }
             return listOrderActions;

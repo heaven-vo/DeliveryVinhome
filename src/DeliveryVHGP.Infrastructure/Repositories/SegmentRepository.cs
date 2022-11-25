@@ -17,7 +17,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         {
             var storeBuildingId = await context.Stores.Where(x => x.Id == order.StoreId).Select(x => x.BuildingId).FirstOrDefaultAsync();
             var hubId = await context.Buildings.Where(x => x.Id == storeBuildingId).Select(x => x.HubId).FirstOrDefaultAsync();
-            if (order.ServiceId == "0")
+            if (order.ServiceId == "2")
             {
                 Segment toHubSegment = new Segment()
                 {
