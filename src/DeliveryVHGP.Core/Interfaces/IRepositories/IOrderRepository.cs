@@ -24,5 +24,6 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<Object> PaymentOrderFalse(string orderId);
         Task<List<string>> CheckAvailableOrder();
         Task CompleteOrder(string orderActionId, string shipperId, int actionType);
+        Task<Object> DeleteOrder();
     }
 }

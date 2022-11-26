@@ -14,10 +14,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
 
         }
-        public async Task<IEnumerable<HubModels>> GetlistHub(int pageIndex, int pageSize)
+        public async Task<IEnumerable<HubModels>> GetlistHub(int pageIndex, int pageSize , FilterRequestInHub request)
         {
-            var newHub = await context.Hubs.
-                Select(x => new HubModels
+            var newHub = await context.Hubs.Where(hub => hub.Name.Contains(request.SearchByName))
+                .Select(x => new HubModels
                 {
                     Id = x.Id,
                     Name = x.Name,
