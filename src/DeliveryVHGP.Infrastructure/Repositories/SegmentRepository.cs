@@ -16,7 +16,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public async Task CreatSegment(OrderDto order)
         {
             var storeBuildingId = await context.Stores.Where(x => x.Id == order.StoreId).Select(x => x.BuildingId).FirstOrDefaultAsync();
-            var hubId = await context.Buildings.Where(x => x.Id == storeBuildingId).Select(x => x.HubId).FirstOrDefaultAsync();
+            //Select hub from store
+            var store = await context.Buildings.Include(x => x.Hub).Where(x => x.Id == storeBuildingId).FirstOrDefaultAsync();
             if (order.ServiceId == "2")
             {
                 List<Segment> listSegment = new List<Segment>();
@@ -24,8 +25,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     FromBuildingId = storeBuildingId,
-                    ToBuildingId = hubId,
-                    HubId = hubId,
+                    ToBuildingId = store.Hub.BuildingId,
+                    HubId = store.HubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.StoreToHub,
                     Status = (int)SegmentStatusEnum.Viable
@@ -33,9 +34,9 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 Segment toCusSegment = new Segment()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    FromBuildingId = hubId,
+                    FromBuildingId = store.Hub.BuildingId,
                     ToBuildingId = order.BuildingId,
-                    HubId = hubId,
+                    HubId = store.HubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.HubToCus,
                     Status = (int)SegmentStatusEnum.Unviable
@@ -51,7 +52,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     Id = Guid.NewGuid().ToString(),
                     FromBuildingId = storeBuildingId,
                     ToBuildingId = order.BuildingId,
-                    HubId = hubId,
+                    HubId = store.HubId,
                     OrderId = order.Id,
                     SegmentMode = (int)SegmentModeEnum.StoreToCus,
                     Status = (int)SegmentStatusEnum.Viable

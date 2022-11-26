@@ -167,7 +167,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
-        public async Task AcceptRouteByShipper(string routeId, string shipperId)
+        public async Task AcceptRouteByShipper(string routeId, string shipperId) // quen tạo action history
         {
             var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId && x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
             if (routeTodo != null)
