@@ -14,10 +14,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
         }
 
-        public async Task<IEnumerable<BrandModels>> GetAll(int pageIndex, int pageSize)
+        public async Task<IEnumerable<BrandModels>> GetAll(int pageIndex, int pageSize, FilterRequestInBrand request) 
         {
-            var listbrand = await context.Brands.
-                Select(x => new BrandModels
+            var listbrand = await context.Brands.Where(b => b.Name.Contains(request.SearchByName))
+                .Select(x => new BrandModels
             {
                 Id = x.Id,
                 Name = x.Name,

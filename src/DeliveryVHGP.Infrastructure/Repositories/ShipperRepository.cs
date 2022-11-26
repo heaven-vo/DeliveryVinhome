@@ -18,10 +18,11 @@ namespace DeliveryVHGP.WebApi.Repositories
             _fileService = fileService;
             _timeStageService = timeStageService;
         }
-        public async Task<IEnumerable<ShipperModel>> GetListShipper(int pageIndex, int pageSize)
+        public async Task<IEnumerable<ShipperModel>> GetListShipper(int pageIndex, int pageSize, FilterRequestInShipper request)
         {
             var listShipper = await (from ship in context.Shippers
                                      join acc in context.Accounts on ship.Id equals acc.Id
+                                     where ship.FullName.Contains(request.SearchByName)
                                      select new ShipperModel()
                                    {
                                        Id = ship.Id,

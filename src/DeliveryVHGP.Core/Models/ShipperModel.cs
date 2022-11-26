@@ -17,4 +17,8 @@
         public string? UpdateAt { get; set; }
        
     }
+    public class FilterRequestInShipper
+    {
+        public string? SearchByName { get; set; } = "";
+    }
 }

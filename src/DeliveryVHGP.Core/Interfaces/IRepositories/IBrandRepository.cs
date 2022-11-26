@@ -6,7 +6,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
 {
     public interface IBrandRepository : IRepositoryBase<Brand>
     {
-        Task<IEnumerable<BrandModels>> GetAll(int pageIndex, int pageSize);
+        Task<IEnumerable<BrandModels>> GetAll(int pageIndex, int pageSize, FilterRequestInBrand request);
         Task<BrandModels> GetById(string Id);
         Task<BrandModels> CreateBrand(BrandModels brand);
         Task<Object> DeleteById(string proId);

@@ -478,18 +478,31 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return lsrDuration;
         }
-        public async Task<Object> DeleteOrderById(string orderId)
+        public async Task<Object> DeleteOrder()
         {
-            var order = await context.Orders.FindAsync(orderId);
-            var orderHistory = context.OrderActionHistories.FirstOrDefault(d => d.OrderId == order.Id);
-            var payment = context.Payments.FirstOrDefault(p => p.OrderId == order.Id);
-            var orderDetail = context.OrderDetails.FirstOrDefault(od => od.OrderId == order.Id);
+            var orderHistory = await context.OrderActionHistories.ToListAsync();
+            var payment = await context.Payments.ToListAsync();
+            var orderDetail = await context.OrderDetails.ToListAsync();
+            var orderCache = await context.OrderCaches.ToListAsync();
+            var segment = await context.Segments.ToListAsync();
+            var orderAction = await context.OrderActions.ToListAsync();
+
+            context.OrderActionHistories.RemoveRange(orderHistory);
+            await context.SaveChangesAsync();
+            context.Payments.RemoveRange(payment);
+            await context.SaveChangesAsync();
+            context.OrderDetails.RemoveRange(orderDetail);
+            await context.SaveChangesAsync();
+            context.OrderCaches.RemoveRange(orderCache);
+            await context.SaveChangesAsync();
+            context.Segments.RemoveRange(segment);
+            await context.SaveChangesAsync();
+            context.OrderActions.RemoveRange(orderAction);
+            await context.SaveChangesAsync();
 
 
-            context.Orders.Remove(order);
-            context.OrderActionHistories.Remove(orderHistory);
-            context.Payments.Remove(payment);
-            context.OrderDetails.Remove(orderDetail);
+            var order = await context.Orders.ToListAsync();
+            context.Orders.RemoveRange(order);
             await context.SaveChangesAsync();
 
             return order;

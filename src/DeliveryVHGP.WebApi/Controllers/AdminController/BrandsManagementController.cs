@@ -19,9 +19,9 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //GET: api/v1/Brand?pageIndex=1&pageSize=3
         [HttpGet]
-        public async Task<ActionResult> GetAll(int pageIndex, int pageSize)
+        public async Task<ActionResult> GetAll(int pageIndex, int pageSize, [FromQuery] FilterRequestInBrand request)
         {
-            return Ok(await repository.Brand.GetAll(pageIndex, pageSize));
+            return Ok(await repository.Brand.GetAll(pageIndex, pageSize, request));
         }
 
         /// <summary>
