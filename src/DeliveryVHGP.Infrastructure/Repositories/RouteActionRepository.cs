@@ -235,10 +235,11 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             foreach (var action in listAction)
             {
                 OrderActionModel orderActionModel = new OrderActionModel() { ActionId = action.Id, OrderId = action.OrderId, Note = action.Order.Note, PaymentType = action.Order.Payments.First().Type, ShipCost = action.Order.ShipCost, ActionType = action.OrderActionType, ActionStatus = action.Status };
-                if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
-                {
-                    orderActionModel.Total = action.Order.Total;
-                }
+                orderActionModel.Total = action.Order.Total;
+                //if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
+                //{
+                //    orderActionModel.Total = action.Order.Total;
+                //}
                 if (orderActionModel.PaymentType == (int)PaymentEnum.VNPay && orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
                 {
                     orderActionModel.Total = 0;

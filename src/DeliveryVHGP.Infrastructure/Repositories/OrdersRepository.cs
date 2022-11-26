@@ -643,7 +643,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 if (order != null)
                 {
                     //turn on order in cache and segment 
-                    var orderCache = await context.OrderCaches.FindAsync(orderAction.OrderId);
+                    var orderCache = await context.OrderCaches.Where(x => x.OrderId == orderAction.OrderId).FirstOrDefaultAsync();
                     orderCache.IsReady = true;
                     var listSegment = await context.Segments.Where(
                         x => x.OrderId == orderAction.OrderId).ToListAsync();
@@ -694,7 +694,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task RemoveOrderFromCache(string orderId)
         {
-            var orderCache = await context.OrderCaches.FindAsync(orderId);
+            var orderCache = await context.OrderCaches.Where(x => x.OrderId == orderId).FirstOrDefaultAsync();
             context.Remove(orderCache);
             await context.SaveChangesAsync();
 
