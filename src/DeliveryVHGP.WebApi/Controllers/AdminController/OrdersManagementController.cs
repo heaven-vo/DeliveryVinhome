@@ -74,5 +74,22 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return NotFound();
             }
         }
+        /// <summary>
+        /// Clear order 
+        /// </summary>
+        //DELETE: api/v1/buildingg/{id}
+        [HttpDelete]
+        public async Task<ActionResult> DeleteOrder()
+        {
+            try
+            {
+                var result = await repository.Order.DeleteOrder();
+                return Ok(new { StatusCode = "Delete Successful", data = result });
+            }
+            catch
+            {
+                return NotFound(); ;
+            }
+        }
     }
 }
