@@ -239,7 +239,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 {
                     orderActionModel.Total = action.Order.Total;
                 }
-                if (orderActionModel.PaymentType == (int)PaymentEnum.VNPay)
+                if (orderActionModel.PaymentType == (int)PaymentEnum.VNPay && orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
                 {
                     orderActionModel.Total = 0;
                 }
@@ -260,6 +260,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     orderActionModel.Phone = action.Order.PhoneNumber;
 
                 }
+                orderActionModel.ServiceName = await context.Services.Where(x => x.Id == action.Order.ServiceId).Select(x => x.Name).FirstOrDefaultAsync();
                 var orderDetails = await context.OrderDetails.Where(x => x.OrderId == action.OrderId)
                     .Select(x => new OrderDetailActionModel
                     {

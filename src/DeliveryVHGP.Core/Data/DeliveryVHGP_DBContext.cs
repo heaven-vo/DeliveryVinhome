@@ -860,8 +860,6 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.ShipperId).HasMaxLength(50);
 
-                entity.Property(e => e.Status).HasMaxLength(50);
-
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.ShipperHistories)
                     .HasForeignKey(d => d.OrderId)

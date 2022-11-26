@@ -9,7 +9,7 @@ namespace DeliveryVHGP.Core.Entities
         public string? ShipperId { get; set; }
         public string? OrderId { get; set; }
         public int? Type { get; set; }
-        public string? Status { get; set; }
+        public int? Status { get; set; }
         public DateTime? CreateDate { get; set; }
 
         public virtual Order? Order { get; set; }

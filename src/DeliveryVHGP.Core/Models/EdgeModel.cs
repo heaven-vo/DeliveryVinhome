@@ -19,6 +19,7 @@
         public int? PaymentType { get; set; }
         public double? ShipCost { get; set; }
         public double? Total { get; set; }
+        public string ServiceName { get; set; }
         public int? ActionType { get; set; }
         public int? ActionStatus { get; set; }
 

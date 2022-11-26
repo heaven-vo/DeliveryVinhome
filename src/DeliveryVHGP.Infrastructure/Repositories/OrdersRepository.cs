@@ -615,6 +615,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 throw new Exception("Order action Id not valid");
             }
+            orderAction.Status = (int)OrderActionStatusEnum.Done;
             if (actionType == (int)OrderActionEnum.PickupStore)
             {
                 var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.HubDelivery);
@@ -652,8 +653,11 @@ namespace DeliveryVHGP.WebApi.Repositories
                 var order = await OrderUpdateStatus(orderAction.OrderId, (int)OrderStatusEnum.Completed);
                 await RemoveOrderFromCache(orderAction.OrderId);
             }
-            //Create transaction after complete a order action
+
+            await CheckDoneRoute(orderActionId);
+            //Create transaction, history after complete a order action
             await CreateTransaction(shipperId, orderAction.OrderId, actionType);
+            await CreateShipperHistory(shipperId, orderAction.OrderId, actionType, (int)StatusEnum.success);
         }
         public async Task CancelOrder(string orderActionId, string shipperId, int actionType)
         {
@@ -673,6 +677,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
 
             }
+
         }
         public async Task RemoveOrderFromCache(string orderId)
         {
@@ -688,16 +693,116 @@ namespace DeliveryVHGP.WebApi.Repositories
                 throw new Exception("Order id is not valid");
             else
             {
+                var wallet = await context.Wallets.Where(x => x.AccountId == shipperId).FirstOrDefaultAsync();
+                Transaction tran = new Transaction()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    WalletId = wallet.Id,
+                    OrderId = orderId,
+                    CreateAt = DateTime.UtcNow.AddHours(7),
+                    Status = (int)StatusEnum.success
+                };
                 if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.VNPay)
                 {
-
+                    if (order.ServiceId == "1")
+                    {
+                        if (actionType == (int)OrderActionEnum.DeliveryCus)
+                        {
+                            tran.Amount = order.Total;
+                            tran.Action = (int)TransactionActionEnum.plus;
+                            tran.Type = (int)TransactionTypeEnum.refund;
+                            await context.AddAsync(tran);
+                        }
+                    }
+                    if (order.ServiceId == "2")
+                    {
+                        if (actionType == (int)OrderActionEnum.DeliveryHub)
+                        {
+                            tran.Amount = order.Total;
+                            tran.Action = (int)TransactionActionEnum.plus;
+                            tran.Type = (int)TransactionTypeEnum.refund;
+                            await context.AddAsync(tran);
+                        }
+                    }
                 }
                 if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash)
                 {
-
+                    if (order.ServiceId == "1")
+                    {
+                        if (actionType == (int)OrderActionEnum.DeliveryCus)
+                        {
+                            tran.Amount = order.ShipCost;
+                            tran.Action = (int)TransactionActionEnum.minus;
+                            tran.Type = (int)TransactionTypeEnum.shippingcost;
+                            await context.AddAsync(tran);
+                        }
+                    }
+                    if (order.ServiceId == "2")
+                    {
+                        if (actionType == (int)OrderActionEnum.DeliveryHub)
+                        {
+                            tran.Amount = order.Total;
+                            tran.Action = (int)TransactionActionEnum.plus;
+                            tran.Type = (int)TransactionTypeEnum.refund;
+                            await context.AddAsync(tran);
+                        }
+                        if (actionType == (int)OrderActionEnum.PickupHub)
+                        {
+                            tran.Amount = order.Total + order.ShipCost;
+                            tran.Action = (int)TransactionActionEnum.minus;
+                            tran.Type = (int)TransactionTypeEnum.cod;
+                            await context.AddAsync(tran);
+                        }
+                    }
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+        public async Task CreateShipperHistory(string shipperId, string orderId, int actionType, int status)
+        {
+            if (status == (int)StatusEnum.success && (actionType == (int)OrderActionEnum.DeliveryHub || actionType == (int)OrderActionEnum.DeliveryCus))
+            {
+                ShipperHistory history = new ShipperHistory()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OrderId = orderId,
+                    ShipperId = shipperId,
+                    Type = actionType,
+                    Status = status,
+                    CreateDate = DateTime.UtcNow.AddHours(7)
+                };
+            }
+            if (status == (int)StatusEnum.fail)
+            {
+                ShipperHistory history = new ShipperHistory()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OrderId = orderId,
+                    ShipperId = shipperId,
+                    Type = actionType,
+                    Status = status,
+                    CreateDate = DateTime.UtcNow.AddHours(7)
+                };
+            }
+        }
+        public async Task CheckDoneRoute(string orderActionId)
+        {
+            var action = await context.OrderActions.Include(x => x.RouteEdge).Where(x => x.Id == orderActionId).FirstOrDefaultAsync();
+            var actionTodo = await context.OrderActions
+                .Where(x => x.RouteEdgeId == action.RouteEdgeId && x.Status == (int)OrderActionStatusEnum.Todo)
+                .ToListAsync();
+            if (!actionTodo.Any())
+            {
+                action.RouteEdge.Status = (int)EdgeStatusEnum.Done;
+                var lastEdge = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
+                    .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
+                if (action.RouteEdge.Priority == lastEdge)
+                {
+                    var route = await context.SegmentDeliveryRoutes.FindAsync(action.RouteEdge.RouteId);
+                    route.Status = (int)RouteStatusEnum.Done;
                 }
             }
-
+            await context.SaveChangesAsync();
         }
     }
 }
