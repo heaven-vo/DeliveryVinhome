@@ -69,5 +69,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
         public ICacheRepository Cache { get; private set; }
         public IRouteActionRepository RouteAction { get; private set; }
         public IShipperHistoryRepository ShipperHistory { get; private set; }
+        public ITransactionRepository Transaction { get; private set; }
     }
 }

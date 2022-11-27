@@ -16,7 +16,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public async Task<List<ShipperHistoryModel>> GetShipperHistories(string shipperId, int status, int page, int pageSize)
         {
             List<ShipperHistoryModel> shipperHistoryModels = new List<ShipperHistoryModel>();
-            var listHistory = await context.ShipperHistories.Where(x => x.ShipperId == shipperId && x.Status == status)
+            var listHistory = await context.ShipperHistories.Where(x => x.ShipperId == shipperId && x.Status == status).OrderByDescending(x => x.CreateDate)
                 .Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var history in listHistory)
             {
@@ -93,7 +93,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories
 
                 }
             }
-
             return detail;
         }
     }

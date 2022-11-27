@@ -23,5 +23,6 @@ namespace DeliveryVHGP.Core.Interfaces
         ICacheRepository Cache { get; }
         IRouteActionRepository RouteAction { get; }
         IShipperHistoryRepository ShipperHistory { get; }
+        ITransactionRepository Transaction { get; }
     }
 }

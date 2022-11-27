@@ -821,14 +821,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                     route.Status = (int)RouteStatusEnum.Done;
                     await firestoreService.DeleteEm(route.Id);
                 }
-            }
-            else
-            {
-                var index = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
-                    .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
-                var nextEdge = await context.RouteEdges
-                    .Where(x => x.RouteId == action.RouteEdge.RouteId && x.Priority == (index + 1)).FirstOrDefaultAsync();
-                nextEdge.Status = (int)EdgeStatusEnum.ToDo;
+                else
+                {
+                    var index = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
+                        .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
+                    var nextEdge = await context.RouteEdges
+                        .Where(x => x.RouteId == action.RouteEdge.RouteId && x.Priority == (index + 1)).FirstOrDefaultAsync();
+                    nextEdge.Status = (int)EdgeStatusEnum.ToDo;
+                }
             }
             await context.SaveChangesAsync();
         }

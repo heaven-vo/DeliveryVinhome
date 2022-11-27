@@ -38,7 +38,7 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = e.ToString()
+                    message = e.Message
                 });
             }
 
