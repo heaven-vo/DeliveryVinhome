@@ -38,6 +38,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             Cache = new CacheRepository(_context);
             RouteAction = new RouteActionRepository(_context, _firestoreService);
             ShipperHistory = new ShipperHistoryRepository(context);
+            Transaction = new TransactionRepository(context);
         }
         public IMenuRepository Menu { get; private set; }
 

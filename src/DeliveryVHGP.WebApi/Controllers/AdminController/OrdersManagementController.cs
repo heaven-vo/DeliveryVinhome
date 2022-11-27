@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DeliveryVHGP.Core.Interfaces;
+﻿using DeliveryVHGP.Core.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Controllers
@@ -83,8 +83,8 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                var result = await repository.Order.DeleteOrder();
-                return Ok(new { StatusCode = "Delete Successful", data = result });
+                await repository.Order.DeleteOrder();
+                return Ok(new { StatusCode = "Delete Successful" });
             }
             catch
             {

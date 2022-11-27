@@ -488,26 +488,25 @@ namespace DeliveryVHGP.WebApi.Repositories
             var orderCache = await context.OrderCaches.ToListAsync();
             var segment = await context.Segments.ToListAsync();
             var orderAction = await context.OrderActions.ToListAsync();
+            var Transactions = await context.Transactions.ToListAsync();
+            var ShipperHistory = await context.ShipperHistories.ToListAsync();
 
             context.OrderActionHistories.RemoveRange(orderHistory);
-            await context.SaveChangesAsync();
             context.Payments.RemoveRange(payment);
-            await context.SaveChangesAsync();
             context.OrderDetails.RemoveRange(orderDetail);
-            await context.SaveChangesAsync();
             context.OrderCaches.RemoveRange(orderCache);
-            await context.SaveChangesAsync();
             context.Segments.RemoveRange(segment);
-            await context.SaveChangesAsync();
             context.OrderActions.RemoveRange(orderAction);
+            context.Transactions.RemoveRange(Transactions);
+            context.ShipperHistories.RemoveRange(ShipperHistory);
+
             await context.SaveChangesAsync();
-
-
             var order = await context.Orders.ToListAsync();
             context.Orders.RemoveRange(order);
             await context.SaveChangesAsync();
 
             return order;
+
 
         }
         public async Task<string> GetTime()
