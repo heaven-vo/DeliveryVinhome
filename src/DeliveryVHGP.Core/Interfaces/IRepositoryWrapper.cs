@@ -1,10 +1,5 @@
 ﻿using DeliveryVHGP.Core.Interface.IRepositories;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeliveryVHGP.Core.Interfaces
 {
@@ -27,5 +22,6 @@ namespace DeliveryVHGP.Core.Interfaces
         ISegmentRepository Segment { get; }
         ICacheRepository Cache { get; }
         IRouteActionRepository RouteAction { get; }
+        IShipperHistoryRepository ShipperHistory { get; }
     }
 }

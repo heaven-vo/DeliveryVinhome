@@ -295,6 +295,40 @@ namespace DeliveryVHGP.WebApi.Controllers
 
             return Ok();
         }
+        [HttpGet("history")]
+        public async Task<ActionResult<List<ShipperHistoryModel>>> GetShipperHistory(string shipperId, int status, int page, int pageSize)
+        {
+            try
+            {
+                var histories = await repository.ShipperHistory.GetShipperHistories(shipperId, status, page, pageSize);
+                return Ok(new { StatusCode = "Successful", data = histories });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
+        [HttpGet("history/detail")]
+        public async Task<ActionResult<HistoryDetail>> GetShipperHistoryDetail(string shipperHistoryId)
+        {
+            try
+            {
+                var histories = await repository.ShipperHistory.GetShipperHistoryDetail(shipperHistoryId);
+                return Ok(new { StatusCode = "Successful", data = histories });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
 
     }
 }

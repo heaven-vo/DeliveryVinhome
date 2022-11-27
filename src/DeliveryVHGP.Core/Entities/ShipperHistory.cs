@@ -8,7 +8,7 @@ namespace DeliveryVHGP.Core.Entities
         public string Id { get; set; } = null!;
         public string? ShipperId { get; set; }
         public string? OrderId { get; set; }
-        public int? Type { get; set; }
+        public int? ActionType { get; set; }
         public int? Status { get; set; }
         public DateTime? CreateDate { get; set; }
 

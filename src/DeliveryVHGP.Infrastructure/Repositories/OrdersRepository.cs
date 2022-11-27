@@ -780,10 +780,12 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Id = Guid.NewGuid().ToString(),
                     OrderId = orderId,
                     ShipperId = shipperId,
-                    Type = actionType,
+                    ActionType = actionType,
                     Status = status,
                     CreateDate = DateTime.UtcNow.AddHours(7)
                 };
+                await context.AddAsync(history);
+                await context.SaveChangesAsync();
             }
             if (status == (int)StatusEnum.fail)
             {
@@ -792,10 +794,12 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Id = Guid.NewGuid().ToString(),
                     OrderId = orderId,
                     ShipperId = shipperId,
-                    Type = actionType,
+                    ActionType = actionType,
                     Status = status,
                     CreateDate = DateTime.UtcNow.AddHours(7)
                 };
+                await context.AddAsync(history);
+                await context.SaveChangesAsync();
             }
         }
         public async Task CheckDoneRoute(string orderActionId)
@@ -817,5 +821,6 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             await context.SaveChangesAsync();
         }
+
     }
 }
