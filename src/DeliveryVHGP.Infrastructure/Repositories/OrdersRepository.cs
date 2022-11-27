@@ -12,8 +12,10 @@ namespace DeliveryVHGP.WebApi.Repositories
 {
     public class OrdersRepository : RepositoryBase<Order>, IOrderRepository
     {
-        public OrdersRepository(DeliveryVHGP_DBContext context) : base(context)
+        private readonly IFirestoreService firestoreService;
+        public OrdersRepository(DeliveryVHGP_DBContext context, IFirestoreService firestoreService) : base(context)
         {
+            this.firestoreService = firestoreService;
         }
         //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, FilterRequest request)
@@ -817,7 +819,16 @@ namespace DeliveryVHGP.WebApi.Repositories
                 {
                     var route = await context.SegmentDeliveryRoutes.FindAsync(action.RouteEdge.RouteId);
                     route.Status = (int)RouteStatusEnum.Done;
+                    await firestoreService.DeleteEm(route.Id);
                 }
+            }
+            else
+            {
+                var index = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
+                    .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
+                var nextEdge = await context.RouteEdges
+                    .Where(x => x.RouteId == action.RouteEdge.RouteId && x.Priority == (index + 1)).FirstOrDefaultAsync();
+                nextEdge.Status = (int)EdgeStatusEnum.ToDo;
             }
             await context.SaveChangesAsync();
         }

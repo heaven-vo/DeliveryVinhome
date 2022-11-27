@@ -59,6 +59,19 @@ namespace DeliveryVHGP.Infrastructure.Services
                 throw;
             }
         }
+        public async Task DeleteEm(string id)
+        {
+            try
+            {
+                CollectionReference collectionReference = fireStoreDb.Collection("employees");
+                DocumentReference empRef = fireStoreDb.Collection("employees").Document(id);
+                await empRef.DeleteAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public async Task DeleteAllRoutes()
         {
             try
