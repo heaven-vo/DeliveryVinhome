@@ -806,14 +806,19 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task CheckDoneRoute(string orderActionId)
         {
             var action = await context.OrderActions.Include(x => x.RouteEdge).Where(x => x.Id == orderActionId).FirstOrDefaultAsync();
+            if (action == null)
+            {
+                throw new Exception("action null");
+            }
             var actionTodo = await context.OrderActions
                 .Where(x => x.RouteEdgeId == action.RouteEdgeId && x.Status == (int)OrderActionStatusEnum.Todo)
                 .ToListAsync();
-            if (!actionTodo.Any())
+            if (!actionTodo.Any() || actionTodo == null)
             {
                 action.RouteEdge.Status = (int)EdgeStatusEnum.Done;
                 var lastEdge = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
                     .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
+                //Console.WriteLine("Last edge: " + lastEdge);
                 if (action.RouteEdge.Priority == lastEdge)
                 {
                     var route = await context.SegmentDeliveryRoutes.FindAsync(action.RouteEdge.RouteId);
@@ -822,10 +827,15 @@ namespace DeliveryVHGP.WebApi.Repositories
                 }
                 else
                 {
-                    var index = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
-                        .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
+                    var index = await context.RouteEdges.Where(x => x.Id == action.RouteEdgeId)
+                        .Select(x => x.Priority).FirstOrDefaultAsync();
+                    //Console.WriteLine("index: " + index);
                     var nextEdge = await context.RouteEdges
                         .Where(x => x.RouteId == action.RouteEdge.RouteId && x.Priority == (index + 1)).FirstOrDefaultAsync();
+                    if (nextEdge == null)
+                    {
+                        throw new Exception("nextEdge null");
+                    }
                     nextEdge.Status = (int)EdgeStatusEnum.ToDo;
                 }
             }
