@@ -64,7 +64,20 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return lstOrder;
+            foreach (var order in lstOrder)
+            {
+               var listShipper = await (from od in context.ShipperHistories
+                                     join o in context.Orders on od.OrderId equals o.Id
+                                     join s in context.Shippers on od.ShipperId equals s.Id
+                                     where o.Id == order.Id 
+                                        select new ViewListShipper()
+                                     {
+                                            ShipperId = od.ShipperId,
+                                            ShipperName = s.FullName
+                                     }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
+                return lstOrder;
         }
         public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
         {
@@ -122,6 +135,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Dayfilter = m.DayFilter.ToString()
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+           
             return lstOrder;
         }
         public async Task<List<OrderAdminDto>> GetOrderByStatus(int status, int pageIndex, int pageSize)
@@ -488,21 +502,19 @@ namespace DeliveryVHGP.WebApi.Repositories
             var orderCache = await context.OrderCaches.ToListAsync();
             var segment = await context.Segments.ToListAsync();
             var orderAction = await context.OrderActions.ToListAsync();
+            var Transactions = await context.Transactions.ToListAsync();
+            var ShipperHistory = await context.ShipperHistories.ToListAsync();
 
             context.OrderActionHistories.RemoveRange(orderHistory);
-            await context.SaveChangesAsync();
             context.Payments.RemoveRange(payment);
-            await context.SaveChangesAsync();
             context.OrderDetails.RemoveRange(orderDetail);
-            await context.SaveChangesAsync();
             context.OrderCaches.RemoveRange(orderCache);
-            await context.SaveChangesAsync();
             context.Segments.RemoveRange(segment);
-            await context.SaveChangesAsync();
             context.OrderActions.RemoveRange(orderAction);
+            context.Transactions.RemoveRange(Transactions);
+            context.ShipperHistories.RemoveRange(ShipperHistory);
+
             await context.SaveChangesAsync();
-
-
             var order = await context.Orders.ToListAsync();
             context.Orders.RemoveRange(order);
             await context.SaveChangesAsync();

@@ -22,9 +22,15 @@ namespace DeliveryVHGP.Core.Models
         public string? ToHour { get; set; }
         public string? Dayfilter { get; set; }
         //public TimeCreateOrder TimeCreate{ get; set; }
+        public List<ViewListShipper> ListShipper { get; set; }
         public class DateFilterRequest
         {
             public string? DateFilter { get; set; } = "";
+        }
+        public class ViewListShipper
+        {
+            public string? ShipperId { get; set; }
+            public string? ShipperName { get; set; }
         }
         public class FilterRequest
         {
