@@ -66,18 +66,18 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var order in lstOrder)
             {
-               var listShipper = await (from od in context.ShipperHistories
-                                     join o in context.Orders on od.OrderId equals o.Id
-                                     join s in context.Shippers on od.ShipperId equals s.Id
-                                     where o.Id == order.Id 
-                                        select new ViewListShipper()
-                                     {
-                                            ShipperId = od.ShipperId,
-                                            ShipperName = s.FullName
-                                     }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
             }
-                return lstOrder;
+            return lstOrder;
         }
         public async Task<List<OrderCountModels>> GetAllOrder()
         {
@@ -131,14 +131,14 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
                 TotalShipFree = (double)lstOrder.Sum(o => o.ShipCost), // tổng tiền ship
-                TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Count()*10000, // tổng tiền service
+                TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
                 TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount),// tổng tiền thanh toán VnPay
                 TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount),// tổng tiền thanh toán Cash
                 TotalOrder = (double)lstOrder.Sum(o => o.Total), // tổng tiền order
                 TotalRevenueOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Sum(o => o.Total), // Doanh thu
                 TotalProfitOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // Lợi nhuận
             };
-             return report;
+            return report;
         }
         public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
@@ -171,7 +171,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Dayfilter = m.DayFilter.ToString()
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-           
+
             return lstOrder;
         }
         public async Task<List<OrderAdminDto>> GetOrderByStatus(int status, int pageIndex, int pageSize)
@@ -809,6 +809,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             tran.Action = (int)TransactionActionEnum.plus;
                             tran.Type = (int)TransactionTypeEnum.refund;
                             await context.AddAsync(tran);
+                            wallet.Amount += order.Total;
                         }
                     }
                     if (order.ServiceId == "2")
@@ -819,6 +820,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             tran.Action = (int)TransactionActionEnum.plus;
                             tran.Type = (int)TransactionTypeEnum.refund;
                             await context.AddAsync(tran);
+                            wallet.Amount += order.Total;
                         }
                     }
                 }
@@ -832,6 +834,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             tran.Action = (int)TransactionActionEnum.minus;
                             tran.Type = (int)TransactionTypeEnum.shippingcost;
                             await context.AddAsync(tran);
+                            wallet.Amount -= order.ShipCost;
                         }
                     }
                     if (order.ServiceId == "2")
@@ -842,6 +845,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             tran.Action = (int)TransactionActionEnum.plus;
                             tran.Type = (int)TransactionTypeEnum.refund;
                             await context.AddAsync(tran);
+                            wallet.Amount += order.Total;
                         }
                         if (actionType == (int)OrderActionEnum.PickupHub)
                         {
@@ -849,6 +853,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             tran.Action = (int)TransactionActionEnum.minus;
                             tran.Type = (int)TransactionTypeEnum.cod;
                             await context.AddAsync(tran);
+                            wallet.Amount -= (order.Total + order.ShipCost);
                         }
                     }
                 }
