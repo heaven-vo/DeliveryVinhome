@@ -23,8 +23,8 @@ namespace DeliveryVHGP.WebApi.Controllers
             try
             {
                 var pro = await repository.Order.GetAll(pageIndex, pageSize, request);
-                var order = await repository.Order.GetAllOrder();
-                int total = order.Count();  
+                //var order = await repository.Order.GetAllOrder();
+                int total = pro.Count();  
                 return Ok(new { TotalOrder = total, data = pro });
 
             }

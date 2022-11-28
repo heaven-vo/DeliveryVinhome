@@ -124,9 +124,15 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             var lstOrder = await (from orderr in context.Orders
                                   join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                  join p in context.Payments on orderr.Id equals p.OrderId
                                   where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   select orderr).ToListAsync();
-            var lstPayment = await context.Payments.ToListAsync();
+            var lstPayment = await (from pay in context.Payments
+                                    join o in context.Orders on pay.OrderId equals o.Id
+                                    join h in context.OrderActionHistories on o.Id equals h.OrderId
+                                    where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                    select pay)
+                                    .ToListAsync();
             PriceReportModel report = new PriceReportModel()
             {
                 //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
