@@ -1,4 +1,5 @@
 ﻿using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.Core.Models.Noti;
 using Google.Cloud.Firestore;
 using Newtonsoft.Json;
 
@@ -52,6 +53,29 @@ namespace DeliveryVHGP.Infrastructure.Services
                 else
                 {
                     return new RouteModel();
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public async Task<UsersFcm> GetUserData(string id)
+        {
+            try
+            {
+                DocumentReference docRef = fireStoreDb.Collection("users").Document(id);
+                DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
+
+                if (snapshot.Exists)
+                {
+                    UsersFcm user = snapshot.ConvertTo<UsersFcm>();
+                    user.email = snapshot.Id;
+                    return user;
+                }
+                else
+                {
+                    return new UsersFcm();
                 }
             }
             catch

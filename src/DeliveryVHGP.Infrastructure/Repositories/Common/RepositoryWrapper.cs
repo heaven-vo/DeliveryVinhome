@@ -13,13 +13,15 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
         private readonly IFileService _fileService;
         private readonly ITimeStageService _timeStageService;
         private readonly IFirestoreService _firestoreService;
+        private readonly INotificationService _notificationService;
 
-        public RepositoryWrapper(DeliveryVHGP_DBContext context, IFileService fileService, ITimeStageService timeStageService, IFirestoreService firestoreService)
+        public RepositoryWrapper(DeliveryVHGP_DBContext context, IFileService fileService, ITimeStageService timeStageService, IFirestoreService firestoreService, INotificationService notificationService)
         {
             _context = context;
             _fileService = fileService;
             _timeStageService = timeStageService;
             _firestoreService = firestoreService;
+            _notificationService = notificationService;
             Menu = new MenuRepository(_context);
             Account = new AccountRepository(_context);
             Area = new AreaRepositore(_context);
@@ -36,9 +38,10 @@ namespace DeliveryVHGP.Infrastructure.Repositories.Common
             StoreCategory = new StoreCategoryRepository(_context);
             Segment = new SegmentRepository(_context);
             Cache = new CacheRepository(_context);
-            RouteAction = new RouteActionRepository(_context, _firestoreService);
+            RouteAction = new RouteActionRepository(_context, _firestoreService, _notificationService);
             ShipperHistory = new ShipperHistoryRepository(_context);
             Transaction = new TransactionRepository(_context);
+            _notificationService = notificationService;
         }
         public IMenuRepository Menu { get; private set; }
 

@@ -1,12 +1,7 @@
 ﻿using CorePush.Google;
 using DeliveryVHGP.Core.Models.Noti;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using static DeliveryVHGP.Core.Models.Noti.GoogleNotification;
 
 namespace DeliveryVHGP.Infrastructure.Services
@@ -40,7 +35,7 @@ namespace DeliveryVHGP.Infrastructure.Services
                     HttpClient httpClient = new HttpClient();
 
                     string authorizationKey = string.Format("keyy={0}", settings.ServerKey);
-                    string deviceToken = notificationModel.DeviceId;
+                    List<string> ListDeviceToken = notificationModel.DeviceId;
 
                     httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authorizationKey);
                     httpClient.DefaultRequestHeaders.Accept
@@ -55,20 +50,14 @@ namespace DeliveryVHGP.Infrastructure.Services
                     notification.Notification = dataPayload;
 
                     var fcm = new FcmSender(settings, httpClient);
-                    var fcmSendResponse = await fcm.SendAsync(deviceToken, notification);
+                    foreach (var deviceToken in ListDeviceToken)
+                    {
+                        var fcmSendResponse = await fcm.SendAsync(deviceToken, notification);
+                    }
 
-                    if (fcmSendResponse.IsSuccess())
-                    {
-                        response.IsSuccess = true;
-                        response.Message = "Notification sent successfully";
-                        return response;
-                    }
-                    else
-                    {
-                        response.IsSuccess = false;
-                        response.Message = fcmSendResponse.Results[0].Error;
-                        return response;
-                    }
+                    response.IsSuccess = true;
+                    response.Message = "Notification sent successfully";
+                    return response;
                 }
                 else
                 {

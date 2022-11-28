@@ -3,6 +3,7 @@ using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.Core.Models.Noti;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,11 @@ namespace DeliveryVHGP.Infrastructure.Repositories
     public class RouteActionRepository : RepositoryBase<SegmentDeliveryRoute>, IRouteActionRepository
     {
         private readonly IFirestoreService firestoreService;
-        public RouteActionRepository(DeliveryVHGP_DBContext context, IFirestoreService firestoreService) : base(context)
+        private readonly INotificationService _notificationService;
+        public RouteActionRepository(DeliveryVHGP_DBContext context, IFirestoreService firestoreService, INotificationService notificationService) : base(context)
         {
             this.firestoreService = firestoreService;
+            _notificationService = notificationService;
         }
         public async Task<List<RouteModel>> GetCurrentAvalableRoute()
         {
@@ -193,10 +196,48 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             var listOrderAction = orderActions.GroupBy(x => x.OrderId).Select(x => x.First()).ToList();
             var listOrderId = listOrderAction.Select(x => x.OrderId).ToList();
+
+            var listOrder = await context.Orders.Where(x => listOrderId.Contains(x.Id)).ToListAsync();
             var listOrderCache = await context.OrderCaches.Where(x => listOrderId.Contains(x.OrderId)).ToListAsync();
             listOrderCache.ForEach(x => x.IsReady = false);
-            await firestoreService.UpdateRoute(routeId, new RouteUpdateModel { ShipperId = shipperId, Status = (int)RouteStatusEnum.ToDo });
+            foreach (var order in listOrder)
+            {
+                order.Status = (int)OrderStatusEnum.Accepted;
+                var actionHistory = new OrderActionHistory()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OrderId = order.Id,
+                    FromStatus = (int)OrderStatusEnum.Assigning,
+                    ToStatus = (int)OrderStatusEnum.Accepted,
+                    CreateDate = DateTime.UtcNow.AddHours(7),
+                    TypeId = "1"
+                };
+                await context.OrderActionHistories.AddAsync(actionHistory);
+            }
             await context.SaveChangesAsync();
+
+            var listStore = listOrder.GroupBy(x => x.StoreId).Select(x => x.First()).ToList();
+            var listStoreId = listStore.Select(x => x.StoreId).ToList();
+            List<string> tokens = new List<string>();
+            foreach (var id in listStoreId)
+            {
+                var user = await firestoreService.GetUserData(id);
+                if (user.fcmToken != null)
+                {
+                    tokens.Add(user.fcmToken);
+                }
+            }
+            NotificationModel notificationModel = new NotificationModel()
+            {
+                DeviceId = tokens,
+                IsAndroiodDevice = true,
+                Title = "Đơn mới",
+                Body = "Dậy đi ông cháu, có đơn mới này <3" +
+                " Đơn này chắc không giòn đâu!"
+            };
+            await _notificationService.SendNotification(notificationModel);
+            await firestoreService.UpdateRoute(routeId, new RouteUpdateModel { ShipperId = shipperId, Status = (int)RouteStatusEnum.ToDo });
+
         }
         public async Task<List<EdgeModel>> GetListEdgeInRoute(string routeId)
         {
