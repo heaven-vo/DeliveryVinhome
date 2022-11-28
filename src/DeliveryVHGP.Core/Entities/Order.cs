@@ -29,6 +29,7 @@ namespace DeliveryVHGP.Core.Entities
         public double? ShipCost { get; set; }
         public string? DeliveryTimeId { get; set; }
         public int? Status { get; set; }
+        public string? MessageFail { get; set; }
 
         public virtual Building? Building { get; set; }
         public virtual DeliveryTimeFrame? DeliveryTime { get; set; }

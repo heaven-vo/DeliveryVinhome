@@ -604,16 +604,16 @@ namespace DeliveryVHGP.WebApi.Repositories
             await context.SaveChangesAsync();
             return order;
         }
-        public async Task<List<string>> CheckAvailableOrder()
+        public async Task<List<string>> CheckAvailableOrder() // Remove mode 1
         {
             var time = Double.Parse(DateTime.UtcNow.AddHours(7).ToString("HH.mm"));
             DateTime date = DateTime.UtcNow.AddHours(7).Date;
             var listOrder = await context.Orders.Include(x => x.OrderCache)//.Include(x => x.OrderActionHistories)
-                .Where(x => (x.Menu.SaleMode == "1" && x.Status == (int)OrderStatusEnum.Received)
+                .Where(x => x.Status == (int)OrderStatusEnum.Received && (x.Menu.SaleMode == "1"
                              || (x.Menu.SaleMode == "2" && x.DeliveryTime.FromHour <= time)
                              || (x.Menu.SaleMode == "3" && x.Menu.DayFilter == date && x.DeliveryTime.FromHour <= time)
-                             && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash
-                                || (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash && x.Payments.FirstOrDefault().Status == (int)PaymentStatusEnum.successful)
+                             ) && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash
+                                || (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.VNPay && x.Payments.FirstOrDefault().Status == (int)PaymentStatusEnum.successful)
                                 )
                              //&& x.OrderCache != null
                              )
@@ -625,6 +625,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task CompleteOrder(string orderActionId, string shipperId, int actionType)
         {
             var orderAction = await context.OrderActions.FindAsync(orderActionId);
+            var service = await context.Orders.Where(x => x.Id == orderAction.OrderId).Select(x => x.ServiceId).FirstOrDefaultAsync();
             if (orderAction == null)
             {
                 throw new Exception("Order action Id not valid");
@@ -632,7 +633,15 @@ namespace DeliveryVHGP.WebApi.Repositories
             orderAction.Status = (int)OrderActionStatusEnum.Done;
             if (actionType == (int)OrderActionEnum.PickupStore)
             {
-                var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.HubDelivery);
+                //thieu cus delivery
+                if (service == "1")
+                {
+                    var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.CustomerDelivery);
+                }
+                if (service == "2")
+                {
+                    var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.HubDelivery);
+                }
             }
             if (actionType == (int)OrderActionEnum.PickupHub)
             {
@@ -673,25 +682,38 @@ namespace DeliveryVHGP.WebApi.Repositories
             await CreateTransaction(shipperId, orderAction.OrderId, actionType);
             await CreateShipperHistory(shipperId, orderAction.OrderId, actionType, (int)StatusEnum.success);
         }
-        public async Task CancelOrder(string orderActionId, string shipperId, int actionType)
+        public async Task CancelOrder(string orderActionId, string shipperId, int actionType, string messageFail)
         {
+            var orderAction = await context.OrderActions.Include(x => x.RouteEdge).Where(x => x.Id == orderActionId).FirstOrDefaultAsync();
+            var orderFail = await context.Orders.FindAsync(orderAction.OrderId);
+            orderFail.MessageFail = messageFail;
+            orderAction.Status = (int)OrderActionStatusEnum.Fail;
+            var listAction = await context.OrderActions.Where(x => x.OrderId == orderAction.OrderId && x.Status == (int)OrderActionStatusEnum.Todo).ToListAsync();
+            if (listAction.Any())
+            {
+                listAction.ForEach(x => x.Status = (int)OrderActionStatusEnum.Fail);
+            }
+
+            await context.SaveChangesAsync();
             if (actionType == (int)OrderActionEnum.PickupStore)
             {
-
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)FailStatus.StoreFail);
             }
             if (actionType == (int)OrderActionEnum.PickupHub)
             {
-
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)FailStatus.ShipperFail);
             }
             if (actionType == (int)OrderActionEnum.DeliveryHub)
             {
-
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)FailStatus.ShipperFail);
             }
             if (actionType == (int)OrderActionEnum.DeliveryCus)
             {
-
+                var order = await OrderUpdateStatus(orderAction.OrderId, (int)FailStatus.CustomerFail);
             }
-
+            await CheckDoneRoute(orderActionId);
+            await CreateShipperHistory(shipperId, orderAction.OrderId, actionType, (int)StatusEnum.fail);
+            await RemoveOrderFromCache(orderAction.OrderId);
         }
         public async Task RemoveOrderFromCache(string orderId)
         {
@@ -841,6 +863,5 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             await context.SaveChangesAsync();
         }
-
     }
 }

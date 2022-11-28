@@ -59,19 +59,31 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 Price = x.Price
 
             }).ToListAsync();
-            if (history.ActionType == (int)OrderActionEnum.DeliveryHub)
+            if (history.ActionType == (int)OrderActionEnum.DeliveryHub || history.ActionType == (int)OrderActionEnum.PickupStore)
             {
-                var segment = await context.Segments.Where(x => x.OrderId == history.OrderId && x.SegmentMode == (int)SegmentModeEnum.StoreToHub).FirstOrDefaultAsync();
-                var store = await context.Stores.Include(x => x.Building).Where(x => x.Id == history.Order.StoreId).FirstOrDefaultAsync();
-                var hub = await context.Hubs.FindAsync(segment.HubId);
+                if (history.Order.ServiceId == "1")
+                {
+                    var segment = await context.Segments.Where(x => x.OrderId == history.OrderId).FirstOrDefaultAsync();
+                    var store = await context.Stores.Include(x => x.Building).Where(x => x.Id == history.Order.StoreId).FirstOrDefaultAsync();
+                    detail.Start = store.Name;
+                    detail.End = history.Order.FullName;
+                    detail.StartBuilding = store.Building.Name;
+                    detail.EndBuilding = await context.Buildings.Where(x => x.Id == history.Order.BuildingId).Select(x => x.Name).FirstOrDefaultAsync();
+                }
+                if (history.Order.ServiceId == "2")
+                {
+                    var segment = await context.Segments.Where(x => x.OrderId == history.OrderId && x.SegmentMode == (int)SegmentModeEnum.StoreToHub).FirstOrDefaultAsync();
+                    var store = await context.Stores.Include(x => x.Building).Where(x => x.Id == history.Order.StoreId).FirstOrDefaultAsync();
+                    var hub = await context.Hubs.FindAsync(segment.HubId);
 
-                detail.Start = store.Name;
-                detail.End = hub.Name;
-                detail.StartBuilding = store.Building.Name;
-                detail.EndBuilding = await context.Buildings.Where(x => x.Id == hub.BuildingId).Select(x => x.Name).FirstOrDefaultAsync();
+                    detail.Start = store.Name;
+                    detail.End = hub.Name;
+                    detail.StartBuilding = store.Building.Name;
+                    detail.EndBuilding = await context.Buildings.Where(x => x.Id == hub.BuildingId).Select(x => x.Name).FirstOrDefaultAsync();
+                }
 
             }
-            if (history.ActionType == (int)OrderActionEnum.DeliveryCus)
+            if (history.ActionType == (int)OrderActionEnum.DeliveryCus || history.ActionType == (int)OrderActionEnum.PickupHub)
             {
                 if (history.Order.ServiceId == "1")
                 {

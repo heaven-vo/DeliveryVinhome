@@ -290,10 +290,21 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         [HttpGet("cancel")]
-        public async Task<ActionResult> CancelOrder(string orderActionId, string shipperId, int actionType)
+        public async Task<ActionResult> CancelOrder(string orderActionId, string shipperId, int actionType, string messageFail)
         {
-
-            return Ok();
+            try
+            {
+                await repository.Order.CancelOrder(orderActionId, shipperId, actionType, messageFail);
+                return Ok(new { StatusCode = "Successful" });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
         }
         [HttpGet("history")]
         public async Task<ActionResult<List<ShipperHistoryModel>>> GetShipperHistory(string shipperId, int status, int page, int pageSize)

@@ -401,6 +401,10 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.MenuId).HasMaxLength(50);
 
+                entity.Property(e => e.MessageFail)
+                    .HasMaxLength(350)
+                    .HasColumnName("messageFail");
+
                 entity.Property(e => e.Note).HasMaxLength(500);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(50);
