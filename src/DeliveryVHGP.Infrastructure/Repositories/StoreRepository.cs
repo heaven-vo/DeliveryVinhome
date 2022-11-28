@@ -59,6 +59,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join s in context.Stores on orderr.StoreId equals s.Id
                                   where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter) 
                                   select orderr).ToListAsync();
+
             SystemReportModelInStore report = new SystemReportModelInStore()
             {
                 TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received).Count(), //don hang moi
