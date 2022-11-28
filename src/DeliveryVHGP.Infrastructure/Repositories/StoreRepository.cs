@@ -167,6 +167,19 @@ namespace DeliveryVHGP.WebApi.Repositories
                 or.CountProduct = countpro.ToString();
 
             }
+            foreach (var order in lstOrder)
+            {
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
             return lstOrder;
         }
         public async Task<List<OrderAdminDtoInStore>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize)
@@ -208,6 +221,19 @@ namespace DeliveryVHGP.WebApi.Repositories
                 var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
                 or.CountProduct = countpro.ToString();
 
+            }
+            foreach (var order in lstOrder)
+            {
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
             }
             return lstOrder;
         }
@@ -253,6 +279,19 @@ namespace DeliveryVHGP.WebApi.Repositories
                 or.CountProduct = countpro.ToString();
 
             }
+            foreach (var order in lstOrder)
+            {
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
             return lstOrder;
         }
         public async Task<List<OrderAdminDtoInStore>> GetListOrderPreparingsByStore(string StoreId, int pageIndex, int pageSize)
@@ -296,6 +335,19 @@ namespace DeliveryVHGP.WebApi.Repositories
                 or.CountProduct = countpro.ToString();
                 
     }
+            foreach (var order in lstOrder)
+            {
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
             return lstOrder;
         }
         public async Task<Object> GetStoreById(string storeId)

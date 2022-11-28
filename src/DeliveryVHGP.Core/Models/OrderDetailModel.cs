@@ -29,6 +29,12 @@
 
         public List<ViewListDetail> ListProInMenu { get; set; }
         public List<ListStatusOrder> ListStatusOrder { get; set; }
+        public List<ViewListShipp> ListShipper { get; set; }
 
+    }
+    public class ViewListShipp
+    {
+        public string? ShipperId { get; set; }
+        public string? ShipperName { get; set; }
     }
 }
