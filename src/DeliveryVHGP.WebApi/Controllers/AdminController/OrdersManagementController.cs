@@ -22,7 +22,10 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                return Ok(await repository.Order.GetAll(pageIndex, pageSize, request));
+                var pro = await repository.Order.GetAll(pageIndex, pageSize, request);
+                var order = await repository.Order.GetAllOrder();
+                int total = order.Count();  
+                return Ok(new { TotalOrder = total, data = pro });
 
             }
             catch
@@ -38,6 +41,15 @@ namespace DeliveryVHGP.WebApi.Controllers
         public async Task<ActionResult> GetListOrdersReport([FromQuery] DateFilterRequest request)
         {
             return Ok(await repository.Order.GetListOrdersReport(request));
+        } 
+        /// <summary>
+        /// Get order reportPrice(admin web)
+        /// </summary>
+        //GET: api/v1/OrderReport?pageIndex=1&pageSize=3
+        [HttpGet("report-price")]
+        public async Task<ActionResult> GetListOrdersReportPrice([FromQuery] DateFilterRequest request)
+        {
+            return Ok(await repository.Order.GetPriceOrdersReport(request));
         }
         /// <summary>
         /// Get list all order by payment with pagination
