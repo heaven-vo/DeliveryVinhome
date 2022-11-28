@@ -22,7 +22,9 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                return Ok(await repository.Order.GetAll(pageIndex, pageSize, request));
+                var pro = await repository.Order.GetAll(pageIndex, pageSize, request);
+                int total = pro.Count;
+                return Ok(new { TotalOrder = total, data = pro });
 
             }
             catch

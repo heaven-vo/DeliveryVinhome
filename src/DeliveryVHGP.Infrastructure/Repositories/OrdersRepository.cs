@@ -64,7 +64,20 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return lstOrder;
+            foreach (var order in lstOrder)
+            {
+               var listShipper = await (from od in context.ShipperHistories
+                                     join o in context.Orders on od.OrderId equals o.Id
+                                     join s in context.Shippers on od.ShipperId equals s.Id
+                                     where o.Id == order.Id 
+                                        select new ViewListShipper()
+                                     {
+                                            ShipperId = od.ShipperId,
+                                            ShipperName = s.FullName
+                                     }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
+                return lstOrder;
         }
         public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
         {
@@ -122,6 +135,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Dayfilter = m.DayFilter.ToString()
                                   }
                                 ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+           
             return lstOrder;
         }
         public async Task<List<OrderAdminDto>> GetOrderByStatus(int status, int pageIndex, int pageSize)
