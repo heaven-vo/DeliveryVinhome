@@ -75,6 +75,34 @@ namespace DeliveryVHGP.WebApi.Repositories
             };
             return report;
         }
+        public async Task<PriceReportModel> GetPriceOrdersReport(string storeId, DateFilterRequest request)
+        {
+            var lstOrder = await (from orderr in context.Orders
+                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                  join p in context.Payments on orderr.Id equals p.OrderId
+                                  join s in context.Stores on orderr.StoreId equals s.Id
+                                  where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                  select orderr).ToListAsync();
+            var lstPayment = await (from pay in context.Payments
+                                    join o in context.Orders on pay.OrderId equals o.Id
+                                    join h in context.OrderActionHistories on o.Id equals h.OrderId
+                                    join s in context.Stores on o.StoreId equals s.Id
+                                    where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                    select pay)
+                                    .ToListAsync();
+            PriceReportModel report = new PriceReportModel()
+            {
+                //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
+                TotalShipFree = (double)lstOrder.Sum(o => o.ShipCost), // tổng tiền ship
+                TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
+                TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount),// tổng tiền thanh toán VnPay
+                TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount),// tổng tiền thanh toán Cash
+                TotalOrder = (double)lstOrder.Sum(o => o.Total), // tổng tiền order
+                TotalRevenueOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Sum(o => o.Total), // Doanh thu
+                TotalProfitOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // Lợi nhuận
+            };
+            return report;
+        }
         public async Task<IEnumerable<StoreModel>> GetListStoreInBrand(string brandName, int pageIndex, int pageSize)
         {
             var listStore = await (from store in context.Stores
@@ -177,6 +205,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -232,6 +261,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -289,6 +319,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -345,6 +376,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
