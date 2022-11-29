@@ -438,7 +438,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                      join o in context.Orders on od.OrderId equals o.Id
                                      join s in context.Shippers on od.ShipperId equals s.Id
                                      where o.Id == order.Id
-                                     select new ViewListShipp()
+                                     select new ViewListShipp() 
                                      {
                                          ShipperId = od.ShipperId,
                                          ShipperName = s.FullName,
