@@ -1,11 +1,9 @@
-﻿using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Net;
+﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
+using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {

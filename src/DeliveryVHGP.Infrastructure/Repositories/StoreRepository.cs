@@ -205,7 +205,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
-                                             ShipperName = s.FullName
+                                             ShipperName = s.FullName,
+                                             Phone = s.Phone
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
             }
@@ -260,7 +261,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
-                                             ShipperName = s.FullName
+                                             ShipperName = s.FullName,
+                                             Phone = s.Phone
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
             }
@@ -317,7 +319,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
-                                             ShipperName = s.FullName
+                                             ShipperName = s.FullName,
+                                             Phone = s.Phone
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
             }
@@ -373,7 +376,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
-                                             ShipperName = s.FullName
+                                             ShipperName = s.FullName,
+                                             Phone = s.Phone
+
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
             }
