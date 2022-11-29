@@ -205,6 +205,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -260,6 +261,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -317,6 +319,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
@@ -373,6 +376,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                          select new ViewListShipper()
                                          {
                                              ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
                                              ShipperName = s.FullName
                                          }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
                 order.ListShipper = listShipper;
