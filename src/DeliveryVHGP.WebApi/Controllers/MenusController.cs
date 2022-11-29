@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DeliveryVHGP.Core.Interfaces;
+﻿using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -198,15 +192,27 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpPost("{menuId}/products/join")]
         public async Task<ActionResult<ProductsInMenuModel>> AddProductsToMenu(string menuId, ProductsInMenuModel listProduct)
         {
-            //try
-            //{
-            //    return Ok(await menuRepository.AddProductsToMenu(listProduct));
-            //}
-            //catch
-            //{
-            //    return BadRequest();
-            //}
-            return Ok(await repository.Menu.AddProductsToMenu(listProduct));
+            try
+            {
+                return Ok(repository.Menu.AddProductsToMenu(listProduct));
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
+        [HttpDelete("{menuId}/products")]
+        public async Task<ActionResult> DeleteProductsToMenu(string menuId, string productId)
+        {
+            try
+            {
+                return Ok(repository.Menu.DeleteProductsInMenu(menuId, productId));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

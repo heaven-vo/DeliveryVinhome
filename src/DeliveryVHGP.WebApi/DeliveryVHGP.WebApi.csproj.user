@@ -11,5 +11,9 @@
     <WebStackScaffolding_DbContextTypeFullName>DeliveryVHGP_WebApi.Models.DeliveryVHGP_DBContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
     <NameOfLastUsedPublishProfile>C:\Users\DUONGAS\Desktop\DeliveryVGP\DeliveryVHGP-Solution\.github\workflows\DeliveryVHGP-WebApi.yml</NameOfLastUsedPublishProfile>
+    <ActiveDebugProfile>DeliveryVHGP.WebApi</ActiveDebugProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

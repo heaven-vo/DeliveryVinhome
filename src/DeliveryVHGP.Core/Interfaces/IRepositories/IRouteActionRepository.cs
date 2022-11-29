@@ -12,6 +12,7 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
         Task RemoveAllRouteAction();
         Task AcceptRouteByShipper(string routeId, string shipperId);
         Task<List<EdgeModel>> GetListEdgeInRoute(string routeId);
+        Task<EdgeModel> GetCurrentEdgeInRoute(string shipperId);
         Task<List<OrderActionModel>> GetListOrderAction(string edgeId);
     }
 }

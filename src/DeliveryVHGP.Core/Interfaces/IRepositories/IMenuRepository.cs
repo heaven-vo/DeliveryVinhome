@@ -14,7 +14,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<StoreCategoryInMenuView>> GetListStoreCateInMenuNow(string modeId, int storeCateSize, int storeSize);
         Task<List<StoreInMenuView>> GetListStoreInMenuNow(string modeId, int page, int pageSize);
         Task<MenuView> GetMenuByModeAndGroupByStore(string modeId, int page, int pageSize);
-        Task<MenuView> GetMenuByModeAndGroupByCategory(string modeId, int page, int pageSize) ;
+        Task<MenuView> GetMenuByModeAndGroupByCategory(string modeId, int page, int pageSize);
         Task<List<MenuViewMode3>> GetListMenuInMode3(int pageSize); // mode 3
         Task<StoreInMenuViewMode3> GetListStoreInMenuMode3(string menuId, PagingRequest request);//a menu mode 3
         Task<List<CategoryStoreInMenu>> GetMenuByMenuIdAndStoreIdAndGroupByCategory(string menuId, string storeId, int page, int pageSize);
@@ -26,6 +26,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<ProductViewInList>> GetListProductInMenuByCategoryId(string categoryId, string menuId, int page, int pageSize);
         Task<List<ProductViewInList>> GetListProductNotInMenuByCategoryIdAndStoreId(string storeId, string menuId, int page, int pageSize);
         Task<ProductsInMenuModel> AddProductsToMenu(ProductsInMenuModel listProduct);
+        Task DeleteProductsInMenu(string menuId, string productId);
         Task<MenuDto> CreatNewMenu(MenuDto menu);
         Task<MenuDto> UpdateMenu(string menuId, MenuDto menu);
 

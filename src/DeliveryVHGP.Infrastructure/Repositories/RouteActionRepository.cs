@@ -264,6 +264,26 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             listEdgeModel = listEdgeModel.OrderBy(x => x.Priority).ToList();
             return listEdgeModel;
         }
+        public async Task<EdgeModel> GetCurrentEdgeInRoute(string shipperId)
+        {
+            var edge = await context.RouteEdges.Include(x => x.Route)
+                .Where(x => x.Route.ShipperId == shipperId && x.Status == (int)EdgeStatusEnum.ToDo && x.Route.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
+            if (edge == null)
+            {
+                return null;
+            }
+            var buildingName = await context.Buildings.Where(x => x.Id == edge.ToBuildingId).Select(x => x.Name).FirstOrDefaultAsync();
+            var edgeModel = new EdgeModel()
+            {
+                Id = edge.Id,
+                BuildingId = edge.ToBuildingId,
+                BuildingName = buildingName,
+                OrderNum = edge.OrderActions.Count,
+                Priority = edge.Priority,
+                Status = edge.Status
+            };
+            return edgeModel;
+        }
         public async Task<List<OrderActionModel>> GetListOrderAction(string edgeId)
         {
             var listAction = await context.OrderActions.Include(x => x.Order).ThenInclude(x => x.Payments).Where(x => x.RouteEdgeId == edgeId).ToListAsync();
