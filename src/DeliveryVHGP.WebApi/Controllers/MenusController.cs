@@ -194,7 +194,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                return Ok(repository.Menu.AddProductsToMenu(listProduct));
+                return Ok(await repository.Menu.AddProductsToMenu(listProduct));
             }
             catch
             {
@@ -206,7 +206,8 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                return Ok(repository.Menu.DeleteProductsInMenu(menuId, productId));
+                await repository.Menu.DeleteProductsInMenu(menuId, productId);
+                return Ok();
             }
             catch
             {

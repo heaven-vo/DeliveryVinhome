@@ -12,18 +12,58 @@ namespace DeliveryVHGP.WebApi.Repositories
         public MenuRepository(DeliveryVHGP_DBContext context) : base(context)
         {
         }
+        public async Task CreateMenuMode3()
+        {
+            //var dayString = DateTime.Parse("12/30/2022");
+
+            DateTime dateNow = DateTime.UtcNow.AddHours(7).Date;
+            List<DateTime> listDate = new List<DateTime>();
+            for (int i = 0; i <= 6; i++)
+            {
+                listDate.Add(dateNow.AddDays(i));
+            }
+            //string dateT = date.ToString("dd/MM/yyyy");
+            //var dateOfWeek = DateTime.UtcNow.AddHours(7).DayOfWeek.ToString();
+            foreach (var date in listDate)
+            {
+                var menu = await context.Menus.Where(x => x.DayFilter == date).FirstOrDefaultAsync();
+                if (menu == null)
+                {
+                    var dayOfWeek = await ConvertDayOfWeek(date);
+                    var newMenu = new Menu
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = dayOfWeek + ", " + date.ToString("dd/MM/yyyy"),
+                        Image = "Menu mode 3",
+                        DayFilter = date,
+                        StartHour = 0,
+                        EndHour = 24,
+                        SaleMode = "3",
+                        Active = true
+                    };
+                    await context.AddAsync(newMenu);
+                }
+                else
+                {
+                    Console.Write("Day: " + date);
+                }
+                await Save();
+            }
+
+
+        }
         public async Task<List<MenuView>> GetListMenuByModeId(string modeId)
         {
             if (modeId == "3")
             {
-                DateTime? date = DateTime.Now.Date;
+                DateTime? date = DateTime.UtcNow.AddHours(7).Date;
                 List<DateTime> listDate = new List<DateTime>();
-                for (int i = 0; i <= 7; i++)
+                for (int i = 0; i < 7; i++)
                 {
                     listDate.Add(date.Value.AddDays(i));
                 }
 
-                var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == modeId && listDate.Contains((DateTime)m.DayFilter)).OrderBy(x => x.DayFilter).Select(x => new MenuView
+                var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == modeId && listDate.Contains(m.DayFilter.Value.Date)).OrderBy(x => x.DayFilter).Select(x => new MenuView
                 {
                     Id = x.Id,
                     Image = x.Image,
@@ -327,7 +367,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime? date = DateTime.Now;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 listDate.Add(date.Value.AddDays(i));
             }
@@ -687,8 +727,12 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task DeleteProductsInMenu(string menuId, string productId)
         {
             var listPro = await context.ProductInMenus.Where(x => x.MenuId == menuId && x.ProductId == productId).ToListAsync();
-            context.RemoveRange(listPro);
-            await Save();
+            if (listPro == null)
+            {
+                Console.WriteLine("Product not in menu");
+            }
+            context.ProductInMenus.RemoveRange(listPro);
+            await context.SaveChangesAsync();
         }
         public async Task<MenuDto> CreatNewMenu(MenuDto menu)
         {
@@ -700,7 +744,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Image = menu.Image,
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
-                SaleMode = menu.ModeId
+                SaleMode = menu.ModeId,
+                Active = true
             };
             foreach (var category in menu.listCategory)
             {
@@ -729,6 +774,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 Image = menu.Image,
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
+                DayFilter = DateTime.Parse(menu.DayFilter),
                 SaleMode = menu.ModeId
             };
             List<String> listCate = (List<String>)await context.CategoryInMenus.Where(x => x.MenuId == menuId).Select(x => x.CategoryId).ToListAsync();
@@ -785,6 +831,39 @@ namespace DeliveryVHGP.WebApi.Repositories
             string time = TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, vnTimeZone).ToString("HH.mm");
             var time2 = Double.Parse(time);
             return time2;
+        }
+        public async Task<string> ConvertDayOfWeek(DateTime date)
+        {
+            string Vi = "";
+            var Eng = date.DayOfWeek.ToString();
+            switch (Eng)
+            {
+                case "Monday":
+                    Vi = "Thứ Hai";
+                    break;
+                case "Tuesday":
+                    Vi = "Thứ Ba";
+                    break;
+                case "Wednesday":
+                    Vi = "Thứ Tư";
+                    break;
+                case "Thursday":
+                    Vi = "Thứ Năm";
+                    break;
+                case "Friday":
+                    Vi = "Thứ Sáu";
+                    break;
+                case "Saturday":
+                    Vi = "Thứ Bảy";
+                    break;
+                case "Sunday":
+                    Vi = "Chủ Nhật";
+                    break;
+                default:
+                    Vi = "Thứ Chill";
+                    break;
+            }
+            return Vi;
         }
     }
 }

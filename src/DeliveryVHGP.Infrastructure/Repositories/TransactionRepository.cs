@@ -12,6 +12,16 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public TransactionRepository(DeliveryVHGP_DBContext context) : base(context)
         {
         }
+        public async Task<double> GetBalanceWallet(string accountId)
+        {
+            var wallet = await context.Wallets.Where(x => x.AccountId == accountId && x.Active == true).FirstOrDefaultAsync();
+            if (wallet == null)
+            {
+                throw new Exception("Account's wallet not avaliable");
+            }
+            var balance = (double)wallet.Amount;
+            return balance;
+        }
         public async Task<List<TransactionModel>> GetListTransactionByShipperId(string shipperId, int page, int pageSize)
         {
             var walletId = await context.Wallets.Where(x => x.AccountId == shipperId).Select(x => x.Id).FirstOrDefaultAsync();
