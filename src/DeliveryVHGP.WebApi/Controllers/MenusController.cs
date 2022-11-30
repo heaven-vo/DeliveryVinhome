@@ -214,6 +214,19 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpDelete("{menuId}/products")]
+        public async Task<ActionResult> UpdateProductsToMenu(ProductsInMenuUpdateModel product)
+        {
+            try
+            {
+                await repository.Menu.UpdateProductsInMenu(product);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

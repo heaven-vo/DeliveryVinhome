@@ -714,9 +714,17 @@ namespace DeliveryVHGP.WebApi.Repositories
             context.ProductInMenus.RemoveRange(listPro);
             await context.SaveChangesAsync();
         }
-        public async Task UpdateProductsInMenu(string menuId, string productId)
+        // update price and status for product in menu (store app)
+        public async Task UpdateProductsInMenu(ProductsInMenuUpdateModel product)
         {
-
+            var updateProduct = await context.ProductInMenus.Where(x => x.MenuId == product.menuId && x.ProductId == product.productId).FirstOrDefaultAsync();
+            if (updateProduct == null)
+            {
+                throw new Exception("Product in menu is null");
+            }
+            updateProduct.Price = product.price;
+            updateProduct.Status = product.status;
+            await Save();
         }
         public async Task<MenuDto> CreatNewMenu(MenuDto menu)
         {
