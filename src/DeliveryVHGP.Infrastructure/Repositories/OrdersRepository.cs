@@ -181,19 +181,19 @@ namespace DeliveryVHGP.WebApi.Repositories
             var lstPayment = await (from pay in context.Payments
                                     join o in context.Orders on pay.OrderId equals o.Id
                                     join h in context.OrderActionHistories on o.Id equals h.OrderId
-                                    where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
+                                    where o.Status == (int)OrderStatusEnum.Completed && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                     select pay)
                                     .ToListAsync();
             PriceReportModel report = new PriceReportModel()
             {
                 //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
-                TotalShipFree = (double)lstOrder.Sum(o => o.ShipCost), // tổng tiền ship
-                TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
+                TotalShipFree = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost), // tổng tiền ship
+                TotalSurcharge = lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
                 TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount),// tổng tiền thanh toán VnPay
                 TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount),// tổng tiền thanh toán Cash
-                TotalOrder = (double)lstOrder.Sum(o => o.Total), // tổng tiền order
-                TotalRevenueOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Sum(o => o.Total), // Doanh thu
-                TotalProfitOrder = (double)lstOrder.Sum(o => o.ShipCost) + lstOrder.Where(x => x.ServiceId == "1").Count() * 10000, // Lợi nhuận
+                TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total), // tổng tiền order
+                TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total), // Doanh thu
+                TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000, // Lợi nhuận
             };
             return report;
         }

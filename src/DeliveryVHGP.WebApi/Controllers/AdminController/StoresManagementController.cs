@@ -73,7 +73,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(store);
         }
         /// <summary>
-        /// Get list orders preparing by store ,status:0,1,2,3 (store app) 
+        /// Get list orders preparing by store ,status:3 (store app) 
         /// </summary>
         // GET: api/Orders
         [HttpGet("byStoreId/orders-preparing")]
