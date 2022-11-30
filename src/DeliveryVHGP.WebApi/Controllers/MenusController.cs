@@ -214,7 +214,7 @@ namespace DeliveryVHGP.WebApi.Controllers
                 return BadRequest();
             }
         }
-        [HttpDelete("{menuId}/products")]
+        [HttpPost("{menuId}/products")]
         public async Task<ActionResult> UpdateProductsToMenu(ProductsInMenuUpdateModel product)
         {
             try

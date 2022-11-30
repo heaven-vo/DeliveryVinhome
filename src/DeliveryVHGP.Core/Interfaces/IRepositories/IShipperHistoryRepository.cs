@@ -1,5 +1,6 @@
 ﻿using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Models;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.Core.Interfaces.IRepositories
 {
@@ -7,5 +8,6 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
     {
         Task<List<ShipperHistoryModel>> GetShipperHistories(string shipperId, int status, int page, int pageSize);
         Task<HistoryDetail> GetShipperHistoryDetail(string shipperHistoryId);
+        Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request);
     }
 }

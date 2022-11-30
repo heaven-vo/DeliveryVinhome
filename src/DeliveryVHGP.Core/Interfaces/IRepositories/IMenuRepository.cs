@@ -28,7 +28,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<ProductViewInList>> GetListProductNotInMenuByCategoryIdAndStoreId(string storeId, string menuId, int page, int pageSize);
         Task<ProductsInMenuModel> AddProductsToMenu(ProductsInMenuModel listProduct);
         Task DeleteProductsInMenu(string menuId, string productId);
-        Task UpdateProductsInMenu(ProductsInMenuUpdateModel product)
+        Task UpdateProductsInMenu(ProductsInMenuUpdateModel product);
         Task<MenuDto> CreatNewMenu(MenuDto menu);
         Task<MenuDto> UpdateMenu(string menuId, MenuDto menu);
 

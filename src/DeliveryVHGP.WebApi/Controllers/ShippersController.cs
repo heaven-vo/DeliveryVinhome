@@ -1,6 +1,7 @@
 ﻿using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Controllers
 {
@@ -37,6 +38,23 @@ namespace DeliveryVHGP.WebApi.Controllers
             {
                 var balance = repository.Transaction.GetBalanceWallet(shipperId).Result;
                 return Ok(new { StatusCode = "Successful", data = balance });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
+        [HttpGet("{shipperId}/report")]
+        public async Task<ActionResult<ShipperReportModel>> GetOrderReport(string shipperId, [FromQuery] DateFilterRequest request)
+        {
+            try
+            {
+                var report = repository.ShipperHistory.GetShipperReport(shipperId, request);
+                return Ok(new { StatusCode = "Successful", data = report });
             }
             catch (Exception e)
             {

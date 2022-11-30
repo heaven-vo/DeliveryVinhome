@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DeliveryVHGP.Core.Models
+﻿namespace DeliveryVHGP.Core.Models
 {
     public class OrderAdminDto
     {
@@ -18,7 +16,7 @@ namespace DeliveryVHGP.Core.Models
         public int? Status { get; set; }
         public DateTime? Time { get; set; }
         public string? TimeDuration { get; set; }
-        public string? FromHour { get; set; }  
+        public string? FromHour { get; set; }
         public string? ToHour { get; set; }
         public string? Dayfilter { get; set; }
         //public TimeCreateOrder TimeCreate{ get; set; }
@@ -26,6 +24,11 @@ namespace DeliveryVHGP.Core.Models
         public class DateFilterRequest
         {
             public string? DateFilter { get; set; } = "";
+        }
+        public class MonthFilterRequest
+        {
+            public int? Month { get; set; } = 0;
+            public int? Year { get; set; } = 0;
         }
         public class ViewListShipper
         {
@@ -61,7 +64,8 @@ namespace DeliveryVHGP.Core.Models
             public string? CountProduct { get; set; }
             public List<ViewListShipper> ListShipper { get; set; }
         }
-        public class CountProduct{
+        public class CountProduct
+        {
             public string? size { get; set; }
         }
         public class PriceReportModel
@@ -70,9 +74,9 @@ namespace DeliveryVHGP.Core.Models
             public double TotalShipFree { get; set; }
             public double TotalPaymentVNPay { get; set; }
             public double TotalPaymentCash { get; set; }
-            public double TotalSurcharge { get; set; } 
-            public double TotalRevenueOrder { get; set; } 
-            public double TotalProfitOrder { get; set; } 
+            public double TotalSurcharge { get; set; }
+            public double TotalRevenueOrder { get; set; }
+            public double TotalProfitOrder { get; set; }
         }
         public class SystemReportModel
         {
