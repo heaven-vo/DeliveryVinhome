@@ -5,6 +5,7 @@ using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
 using Microsoft.EntityFrameworkCore;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.Infrastructure.Repositories
 {
@@ -103,10 +104,32 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     detail.End = history.Order.FullName;
                     detail.StartBuilding = await context.Buildings.Where(x => x.Id == hub.BuildingId).Select(x => x.Name).FirstOrDefaultAsync();
                     detail.EndBuilding = await context.Buildings.Where(x => x.Id == history.Order.BuildingId).Select(x => x.Name).FirstOrDefaultAsync();
-
                 }
             }
             return detail;
+        }
+        public async Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request)
+        {
+            if (request.DateFilter != "")
+            {
+                ShipperReportModel report = new ShipperReportModel() { total = 0, success = 0, canceled = 0, customerFail = 0 };
+                DateTime dateTime = DateTime.Parse(request.DateFilter);
+                var nextDay = dateTime.AddDays(1);
+                var history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
+                && x.CreateDate > dateTime && x.CreateDate < nextDay).ToListAsync();
+                if (!history.Any())
+                {
+                    return report;
+                }
+                report.total = history.Count();
+                report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
+                report.canceled = history.Where(x => x.Status == (int)StatusEnum.fail
+                    && (x.Order.Status == (int)FailStatus.StoreFail || x.Order.Status == (int)FailStatus.ShipperFail)
+                    ).Count();
+                report.customerFail = history.Where(x => x.Status == (int)StatusEnum.fail && x.Order.Status == (int)FailStatus.CustomerFail).Count();
+                return report;
+            }
+            return null;
         }
     }
 }
