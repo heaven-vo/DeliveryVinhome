@@ -212,7 +212,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDtoInStore>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize, FilterRequest request)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -223,7 +223,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
-                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail)
+                                  where s.Id == StoreId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter) && (order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,

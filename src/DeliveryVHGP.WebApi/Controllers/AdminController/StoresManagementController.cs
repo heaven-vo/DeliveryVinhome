@@ -101,9 +101,9 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet("byStoreId/orders-completed")]
-        public async Task<ActionResult> GetOrderCompletedByStore(string storeId, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrderCompletedByStore(string storeId, int pageIndex, int pageSize, [FromQuery] FilterRequest request)
         {
-            var listOder = await repository.Store.GetListOrderCompletedByStore(storeId, pageIndex, pageSize);
+            var listOder = await repository.Store.GetListOrderCompletedByStore(storeId, pageIndex, pageSize, request);
             if (storeId == null)
                 return NotFound();
             return Ok(listOder);
