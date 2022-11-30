@@ -108,15 +108,31 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             return detail;
         }
-        public async Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request)
+        public async Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request, MonthFilterRequest monthFilter)
         {
+            ShipperReportModel report = new ShipperReportModel() { total = 0, success = 0, canceled = 0, customerFail = 0 };
             if (request.DateFilter != "")
             {
-                ShipperReportModel report = new ShipperReportModel() { total = 0, success = 0, canceled = 0, customerFail = 0 };
                 DateTime dateTime = DateTime.Parse(request.DateFilter);
                 var nextDay = dateTime.AddDays(1);
                 var history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
                 && x.CreateDate > dateTime && x.CreateDate < nextDay).ToListAsync();
+                if (!history.Any())
+                {
+                    return report;
+                }
+                report.total = history.Count();
+                report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
+                report.canceled = history.Where(x => x.Status == (int)StatusEnum.fail
+                    && (x.Order.Status == (int)FailStatus.StoreFail || x.Order.Status == (int)FailStatus.ShipperFail)
+                    ).Count();
+                report.customerFail = history.Where(x => x.Status == (int)StatusEnum.fail && x.Order.Status == (int)FailStatus.CustomerFail).Count();
+                return report;
+            }
+            else if (monthFilter.Month != 0)
+            {
+                var history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
+                && x.CreateDate.Value.Year == monthFilter.Year && x.CreateDate.Value.Month == monthFilter.Month).ToListAsync();
                 if (!history.Any())
                 {
                     return report;

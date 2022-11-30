@@ -36,7 +36,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             try
             {
-                var balance = repository.Transaction.GetBalanceWallet(shipperId).Result;
+                var balance = await repository.Transaction.GetBalanceWallet(shipperId);
                 return Ok(new { StatusCode = "Successful", data = balance });
             }
             catch (Exception e)
@@ -49,11 +49,11 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         [HttpGet("{shipperId}/report")]
-        public async Task<ActionResult<ShipperReportModel>> GetOrderReport(string shipperId, [FromQuery] DateFilterRequest request)
+        public async Task<ActionResult<ShipperReportModel>> GetOrderReport(string shipperId, [FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
             try
             {
-                var report = repository.ShipperHistory.GetShipperReport(shipperId, request);
+                var report = await repository.ShipperHistory.GetShipperReport(shipperId, request, monthFilter);
                 return Ok(new { StatusCode = "Successful", data = report });
             }
             catch (Exception e)
