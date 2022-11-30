@@ -47,6 +47,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 OrderId = history.OrderId,
                 Phone = history.Order.PhoneNumber,
                 Note = history.Order.Note,
+                messageFail = history.Order.MessageFail,
                 ServiceName = history.Order.Service.Name,
                 Total = history.Order.Total,
                 ShipCost = history.Order.ShipCost

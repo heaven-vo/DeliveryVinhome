@@ -1,10 +1,10 @@
-﻿using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using DeliveryVHGP.Infrastructure.Services;
+﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
+using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -12,7 +12,7 @@ namespace DeliveryVHGP.WebApi.Repositories
     {
         private readonly IFileService _fileService;
         private readonly ITimeStageService _timeStageService;
-        public ProductRepository(ITimeStageService timeStageService,IFileService fileService, DeliveryVHGP_DBContext context): base(context)
+        public ProductRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context) : base(context)
         {
             _fileService = fileService;
             _timeStageService = timeStageService;
@@ -52,7 +52,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return listproductdetail;
         }
-            public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId,int pageIndex, int pageSize)
+        public async Task<IEnumerable<ProductDetailsModel>> GetAll(string storeId, int pageIndex, int pageSize)
         {
             var listproductdetail = await (from p in context.Products
                                            join s in context.Stores on p.StoreId equals s.Id
@@ -123,15 +123,16 @@ namespace DeliveryVHGP.WebApi.Repositories
             string fileImg = "ImagesProducts";
             string time = await _timeStageService.GetTime();
             context.Products.Add(
-                new Product {
-                    Id = Guid.NewGuid().ToString(), 
+                new Product
+                {
+                    Id = Guid.NewGuid().ToString(),
                     Name = pro.Name,
-                    Image = await _fileService.UploadFile(fileImg,pro.Image),
+                    Image = await _fileService.UploadFile(fileImg, pro.Image),
                     Unit = pro.Unit,
-                    PricePerPack= pro.PricePerPack,
-                    PackDescription= pro.PackDescription,
-                    PackNetWeight= pro.PackNetWeight,
-                    MaximumQuantity= pro.MaximumQuantity,
+                    PricePerPack = pro.PricePerPack,
+                    PackDescription = pro.PackDescription,
+                    PackNetWeight = pro.PackNetWeight,
+                    MaximumQuantity = pro.MaximumQuantity,
                     MinimumQuantity = pro.MinimumQuantity,
                     MinimumDeIn = pro.MinimumDeIn,
                     StoreId = pro.StoreId,
@@ -139,13 +140,13 @@ namespace DeliveryVHGP.WebApi.Repositories
                     Rate = pro.Rate,
                     Description = pro.Description,
                     CreateAt = time
-                    });
+                });
             await context.SaveChangesAsync();
             return pro;
         }
         public async Task<Object> UpdateProductById(string proId, ProductDto product)
         {
-           
+
             string fileImg = "ImagesProducts";
             string time = await _timeStageService.GetTime();
             var pro = await context.Products.FindAsync(proId);
@@ -176,19 +177,19 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             //context.CategoryInMenus.RemoveRange(listCateInMenu);
 
-            context.Entry(pro).State = EntityState.Modified; 
+            context.Entry(pro).State = EntityState.Modified;
             try
-                {
-                    await context.SaveChangesAsync();
-                }
-                catch
-                {
-                    throw;
-                } 
-            return product;
+            {
+                await context.SaveChangesAsync();
             }
-        
-        public async Task<Object> DeleteProductById(string id)  
+            catch
+            {
+                throw;
+            }
+            return product;
+        }
+
+        public async Task<Object> DeleteProductById(string id)
         {
             var product = await context.Products.FindAsync(id);
             if (product == null)

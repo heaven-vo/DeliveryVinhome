@@ -451,6 +451,21 @@ namespace DeliveryVHGP.WebApi.Repositories
 
         public async Task<OrderDto> CreatNewOrder(OrderDto order)
         {
+            var listProductId = order.OrderDetail.Select(x => x.ProductId);
+            foreach (var proId in listProductId)
+            {
+                var pro = await (from menu in context.Menus
+                                 join pm in context.ProductInMenus on menu.Id equals pm.MenuId
+                                 join product in context.Products on pm.ProductId equals product.Id
+                                 join sto in context.Stores on product.StoreId equals sto.Id
+                                 where menu.Id == order.MenuId && product.Id == proId && sto.Status == true
+                                 select product.Id
+                                 ).FirstOrDefaultAsync();
+                if (pro == null)
+                {
+                    throw new Exception("Product not in menu");
+                }
+            }
             string refixOrderCode = "CDCC";
             var orderCount = context.Orders
                .Count() + 1;

@@ -14,16 +14,12 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task CreateMenuMode3()
         {
-            //var dayString = DateTime.Parse("12/30/2022");
-
             DateTime dateNow = DateTime.UtcNow.AddHours(7).Date;
             List<DateTime> listDate = new List<DateTime>();
             for (int i = 0; i <= 6; i++)
             {
                 listDate.Add(dateNow.AddDays(i));
             }
-            //string dateT = date.ToString("dd/MM/yyyy");
-            //var dateOfWeek = DateTime.UtcNow.AddHours(7).DayOfWeek.ToString();
             foreach (var date in listDate)
             {
                 var menu = await context.Menus.Where(x => x.DayFilter == date).FirstOrDefaultAsync();
@@ -43,13 +39,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                     };
                     await context.AddAsync(newMenu);
                 }
-                else
-                {
-                    Console.Write("Day: " + date);
-                }
                 await Save();
             }
-
 
         }
         public async Task<List<MenuView>> GetListMenuByModeId(string modeId)
@@ -72,14 +63,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                     StartTime = x.StartHour,
                     EndTime = x.EndHour
                 }).ToListAsync();
-                //var menuTest = await context.Menus.FindAsync("13c699e4-7e19-4ecb-ac99-1df0661f0e61");
-                //Console.WriteLine(listDate[0].ToString("dd-MM-yy"));
-                //Console.WriteLine(listMenuMode3[0].DayFilter);
-                //Console.WriteLine(menuTest.d);
-                //if (date == menuTest.DayFilter)
-                //{
-                //    Console.WriteLine("Equal");
-                //}
                 return listMenuMode3;
             }
             var listMenu = await context.Menus.Where(m => m.SaleMode == modeId).Select(x => new MenuView
@@ -129,7 +112,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 join m in context.Menus on sm.MenuId equals m.Id
                                 join bu in context.Buildings on store.BuildingId equals bu.Id
                                 join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
-                                where m.Id == menuId
+                                where m.Id == menuId && store.Status == true
                                 select new StoreInMenuView
                                 {
                                     Id = store.Id,
@@ -143,7 +126,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join store in context.Stores on product.StoreId equals store.Id
                                   join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                   join menu in context.Menus on pm.MenuId equals menu.Id
-                                  where menu.Id == menuId
+                                  where menu.Id == menuId && store.Status == true && pm.Status == true
                                   select new ProductViewInList
                                   {
                                       Id = product.Id,
@@ -169,7 +152,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on sm.MenuId equals m.Id
                                   join bu in context.Buildings on store.BuildingId equals bu.Id
                                   join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
-                                  where m.Id == menuId
+                                  where m.Id == menuId && store.Status == true
                                   select new ProductInStoreInMenuVieww
                                   {
                                       Id = store.Id,
@@ -183,7 +166,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         join s in context.Stores on product.StoreId equals s.Id
                                         join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                         join menu in context.Menus on pm.MenuId equals menu.Id
-                                        where s.Id == store.Id && menu.Id == menuId
+                                        where s.Id == store.Id && menu.Id == menuId && pm.Status == true
                                         select new ProductViewInList
                                         {
                                             Id = product.Id,
@@ -242,7 +225,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        join store in context.Stores on sm.StoreId equals store.Id
                                        join bu in context.Buildings on store.BuildingId equals bu.Id
                                        join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
-                                       where menu.Id == menuId && store.Status == true
+                                       where menu.Id == menuId //&& store.Status == true
                                        select new StoreCategoryInMenuView
                                        {
                                            Id = sc.Id,
@@ -406,7 +389,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime? date = DateTime.Now.Date;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 0; i <= 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 listDate.Add(date.Value.AddDays(i));
             }
@@ -489,7 +472,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 join store in context.Stores on product.StoreId equals store.Id
                                 join bu in context.Buildings on store.BuildingId equals bu.Id
                                 join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
-                                where menu.Id == menuId && cate.Id == categoryId
+                                where menu.Id == menuId && cate.Id == categoryId && store.Status == true
                                 select new StoreInMenuView
                                 {
                                     Id = store.Id,
@@ -575,36 +558,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
-        //public async Task<List<ProductViewInList>> GetListProductInMenuByCate(string menuId, int page, int pageSize, string CategoryId)
-        //{
-        //    var listProducts = await (from product in context.Products
-        //                              join cate in context.Categories on product.CategoryId equals cate.Id
-        //                              join store in context.Stores on product.StoreId equals store.Id
-        //                              join pm in context.ProductInMenus on product.Id equals pm.ProductId
-        //                              join menu in context.Menus on pm.MenuId equals menu.Id
-        //                              where menu.Id == menuId
-        //                              select new ProductViewInList
-        //                              {
-        //                                  Id = product.Id,
-        //                                  Image = product.Image,
-        //                                  Name = product.Name,
-        //                                  PricePerPack = pm.Price,
-        //                                  PackDes = product.PackDescription,
-        //                                  StoreId = store.Id,
-        //                                  StoreName = store.Name,
-        //                                  Unit = product.Unit,
-        //                                  MinimumDeIn = product.MinimumDeIn,
-        //                                  productMenuId = pm.Id
-        //                              }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-        //    return listProducts;
-        //}
+
         public async Task<List<ProductViewInList>> GetListProductInMenuByStoreId(string storeId, string menuId, int page, int pageSize)
         {
             var listProducts = await (from product in context.Products
                                       join store in context.Stores on product.StoreId equals store.Id
                                       join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                       join menu in context.Menus on pm.MenuId equals menu.Id
-                                      where store.Id == storeId && menu.Id == menuId
+                                      where store.Id == storeId && menu.Id == menuId && store.Status == true && pm.Status == true
                                       select new ProductViewInList
                                       {
                                           Id = product.Id,
@@ -616,7 +577,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                           StoreName = store.Name,
                                           Unit = product.Unit,
                                           MinimumDeIn = product.MinimumDeIn,
-                                          productMenuId = pm.Id
+                                          productMenuId = pm.Id,
+                                          Status = pm.Status
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -628,7 +590,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join category in context.Categories on product.CategoryId equals category.Id
                                       join pm in context.ProductInMenus on product.Id equals pm.ProductId
                                       join menu in context.Menus on pm.MenuId equals menu.Id
-                                      where category.Id == categoryId && menu.Id == menuId && store.Status == true
+                                      where category.Id == categoryId && menu.Id == menuId && store.Status == true && pm.Status == true
                                       select new ProductViewInList
                                       {
                                           Id = product.Id,
@@ -640,7 +602,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                           StoreName = store.Name,
                                           Unit = product.Unit,
                                           MinimumDeIn = product.MinimumDeIn,
-                                          productMenuId = pm.Id
+                                          productMenuId = pm.Id,
+                                          Status = pm.Status
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -662,7 +625,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                           PackDes = product.PackDescription,
                                           StoreId = store.Id,
                                           StoreName = store.Name,
-                                          productMenuId = pm.Id
+                                          productMenuId = pm.Id,
+                                          Status = pm.Status
                                       }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             return listProducts;
         }
@@ -703,7 +667,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             List<ProductInMenu> list = new List<ProductInMenu>();
             foreach (var product in listProduct.products)
             {
-                ProductInMenu pro = new ProductInMenu { Id = Guid.NewGuid().ToString(), Price = product.price, MenuId = listProduct.menuId, ProductId = product.id };
+                ProductInMenu pro = new ProductInMenu { Id = Guid.NewGuid().ToString(), Price = product.price, MenuId = listProduct.menuId, ProductId = product.id, Status = true };
                 list.Add(pro);
             }
             //Check storeId exist in StoreInMenu table
@@ -726,6 +690,22 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task DeleteProductsInMenu(string menuId, string productId)
         {
+            var storeId = await context.Products.Where(x => x.Id == productId).Select(x => x.StoreId).FirstOrDefaultAsync();
+            var pro = await (from menu in context.Menus
+                             join pm in context.ProductInMenus on menu.Id equals pm.MenuId
+                             join product in context.Products on pm.ProductId equals product.Id
+                             join sto in context.Stores on product.StoreId equals sto.Id
+                             where menu.Id == menuId && sto.Id == storeId && pm.ProductId != productId
+                             select product.Id
+                             ).ToListAsync();
+            if (!pro.Any())
+            {
+                var storeInMenu = await context.StoreInMenus.Where(x => x.MenuId == menuId && x.StoreId == storeId).ToListAsync();
+                if (storeInMenu.Any())
+                {
+                    context.StoreInMenus.RemoveRange(storeInMenu);
+                }
+            }
             var listPro = await context.ProductInMenus.Where(x => x.MenuId == menuId && x.ProductId == productId).ToListAsync();
             if (listPro == null)
             {
@@ -733,6 +713,10 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             context.ProductInMenus.RemoveRange(listPro);
             await context.SaveChangesAsync();
+        }
+        public async Task UpdateProductsInMenu(string menuId, string productId)
+        {
+
         }
         public async Task<MenuDto> CreatNewMenu(MenuDto menu)
         {

@@ -18,6 +18,7 @@
         public string EndBuilding { get; set; }
         public string Phone { get; set; }
         public string Note { get; set; }
+        public string messageFail { get; set; }
         public int? PaymentType { get; set; }
         public double? ShipCost { get; set; }
         public double? Total { get; set; }
