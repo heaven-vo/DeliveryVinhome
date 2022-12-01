@@ -19,6 +19,16 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = orderId, CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
                 list.Add(cache);
+                var actionHistory = new OrderActionHistory()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    OrderId = orderId,
+                    FromStatus = (int)OrderStatusEnum.Received,
+                    ToStatus = (int)OrderStatusEnum.Assigning,
+                    CreateDate = DateTime.UtcNow.AddHours(7),
+                    TypeId = "1"
+                };
+                await context.OrderActionHistories.AddAsync(actionHistory);
             }
             var listOrder = await context.Orders.Where(x => listOrderId.Contains(x.Id)).ToListAsync();
             listOrder.ForEach(x => x.Status = (int)OrderStatusEnum.Assigning);

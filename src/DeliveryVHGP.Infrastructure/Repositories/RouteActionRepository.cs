@@ -88,7 +88,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     {
                         if (segment.fromBuilding.Equals(node.ToBuildingId) && (segment.SegmentMode == (int)SegmentModeEnum.StoreToHub || segment.SegmentMode == (int)SegmentModeEnum.StoreToCus))
                         {
-                            //Console.WriteLine("segment: " + segment.fromBuilding + "  == edge: " + node.ToBuildingId + " compare: " + segment.fromBuilding.Equals(node.ToBuildingId));
                             //pickup store
                             action.OrderActionType = (int)OrderActionEnum.PickupStore;
                             listAction.Add(action);
@@ -96,7 +95,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                         if (segment.fromBuilding.Equals(node.ToBuildingId) && segment.SegmentMode == (int)SegmentModeEnum.HubToCus)
                         {
                             //pickup hub
-                            //Console.WriteLine("segment: " + segment.fromBuilding + "  == edge: " + node.ToBuildingId);
                             action.OrderActionType = (int)OrderActionEnum.PickupHub;
                             listAction.Add(action);
                         }
@@ -106,14 +104,12 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                         if (segment.toBuilding.Equals(node.ToBuildingId) && segment.SegmentMode == (int)SegmentModeEnum.StoreToHub)
                         {
                             //delivery hub
-                            //Console.WriteLine("segment: " + segment.toBuilding + "  == edge: " + node.ToBuildingId);
                             action.OrderActionType = (int)OrderActionEnum.DeliveryHub;
                             listAction.Add(action);
                         }
                         if (segment.toBuilding.Equals(node.ToBuildingId) && (segment.SegmentMode == (int)SegmentModeEnum.HubToCus || segment.SegmentMode == (int)SegmentModeEnum.StoreToCus))
                         {
                             //delivery customer
-                            //Console.WriteLine("segment: " + segment.toBuilding + "  == edge: " + node.ToBuildingId);
                             action.OrderActionType = (int)OrderActionEnum.DeliveryCus;
                             listAction.Add(action);
                         }
@@ -202,22 +198,39 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             listOrderCache.ForEach(x => x.IsReady = false);
             foreach (var order in listOrder)
             {
-                order.Status = (int)OrderStatusEnum.Accepted;
-                var actionHistory = new OrderActionHistory()
+                if (order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    OrderId = order.Id,
-                    FromStatus = (int)OrderStatusEnum.Assigning,
-                    ToStatus = (int)OrderStatusEnum.Accepted,
-                    CreateDate = DateTime.UtcNow.AddHours(7),
-                    TypeId = "1"
-                };
-                await context.OrderActionHistories.AddAsync(actionHistory);
+                    order.Status = (int)OrderStatusEnum.Accepted;
+                    var actionHistory = new OrderActionHistory()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        OrderId = order.Id,
+                        FromStatus = (int)OrderStatusEnum.Assigning,
+                        ToStatus = (int)OrderStatusEnum.Accepted,
+                        CreateDate = DateTime.UtcNow.AddHours(7),
+                        TypeId = "1"
+                    };
+                    await context.OrderActionHistories.AddAsync(actionHistory);
+                }
+                //if (order.Status == (int)InProcessStatus.AtHub)
+                //{
+                //    order.Status = (int)InProcessStatus.CustomerDelivery;
+                //    var actionHistory = new OrderActionHistory()
+                //    {
+                //        Id = Guid.NewGuid().ToString(),
+                //        OrderId = order.Id,
+                //        FromStatus = (int)InProcessStatus.AtHub,
+                //        ToStatus = (int)InProcessStatus.CustomerDelivery,
+                //        CreateDate = DateTime.UtcNow.AddHours(7),
+                //        TypeId = "1"
+                //    };
+                //    await context.OrderActionHistories.AddAsync(actionHistory);
+                //}
             }
             await context.SaveChangesAsync();
 
             var listStore = listOrder.GroupBy(x => x.StoreId).Select(x => x.First()).ToList();
-            var listStoreId = listStore.Select(x => x.StoreId).ToList();
+            var listStoreId = listStore.Where(x => x.Status == (int)OrderStatusEnum.Accepted || x.Status == (int)OrderStatusEnum.Assigning).Select(x => x.StoreId).ToList();
             List<string> tokens = new List<string>();
             foreach (var id in listStoreId)
             {
