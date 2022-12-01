@@ -232,8 +232,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 DeviceId = tokens,
                 IsAndroiodDevice = true,
                 Title = "Đơn mới",
-                Body = "Dậy đi ông cháu, có đơn mới này <3" +
-                " Đơn này chắc không giòn đâu!"
+                Body = "Bạn có đơn mới" +
+                ", hãy vào app để kiểm tra "
             };
             await _notificationService.SendNotification(notificationModel);
             await firestoreService.UpdateRoute(routeId, new RouteUpdateModel { ShipperId = shipperId, Status = (int)RouteStatusEnum.ToDo });

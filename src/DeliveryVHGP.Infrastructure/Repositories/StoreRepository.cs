@@ -1,12 +1,12 @@
-﻿using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using DeliveryVHGP.Infrastructure.Services;
+﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
-using DeliveryVHGP.Infrastructure.Repositories.Common;
-using DeliveryVHGP_WebApi.ViewModels;
 using DeliveryVHGP.Core.Enums;
+using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP.Infrastructure.Services;
+using DeliveryVHGP_WebApi.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
 namespace DeliveryVHGP.WebApi.Repositories
@@ -14,13 +14,13 @@ namespace DeliveryVHGP.WebApi.Repositories
     public class StoreRepository : RepositoryBase<Store>, IStoreRepository
     {
         private readonly IFileService _fileService;
-        private readonly ITimeStageService _timeStageService ;
-        public StoreRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context): base(context)
+        private readonly ITimeStageService _timeStageService;
+        public StoreRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context) : base(context)
         {
             _fileService = fileService;
             _timeStageService = timeStageService;
         }
-        public async Task<IEnumerable<StoreModel>> GetListStore(int pageIndex, int pageSize , FilterRequestInStore request)
+        public async Task<IEnumerable<StoreModel>> GetListStore(int pageIndex, int pageSize, FilterRequestInStore request)
         {
             var listStore = await (from store in context.Stores
                                    join b in context.Brands on store.BrandId equals b.Id
@@ -46,18 +46,18 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        UpdateAt = store.UpdateAt
 
                                    }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            foreach(var store in listStore)
+            foreach (var store in listStore)
             {
                 store.Account = await GetAccountInStore(store.Id);
-            }    
+            }
             return listStore;
         }
-        public async Task<SystemReportModelInStore> GetListOrdersReport(string storeId ,DateFilterRequest request)
+        public async Task<SystemReportModelInStore> GetListOrdersReport(string storeId, DateFilterRequest request)
         {
             var lstOrder = await (from orderr in context.Orders
                                   join h in context.OrderActionHistories on orderr.Id equals h.OrderId
                                   join s in context.Stores on orderr.StoreId equals s.Id
-                                  where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter) 
+                                  where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
                                   select orderr).ToListAsync();
 
             SystemReportModelInStore report = new SystemReportModelInStore()
@@ -94,7 +94,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
                 TotalShipFree = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost), // tổng tiền ship
-                TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Where(p => p.Status == (int)OrderStatusEnum.Completed).Count() * 10000, // tổng tiền service
+                //TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Where(p => p.Status == (int)OrderStatusEnum.Completed).Count() * 10000, // tổng tiền service
                 TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount),// tổng tiền thanh toán VnPay
                 TotalPaymentCash = (double)lstPayment.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount),// tổng tiền thanh toán Cash
                 TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total), // tổng tiền order
@@ -122,8 +122,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        StoreCateId = sc.Id,
                                        StoreCateName = sc.Name,
                                        Status = store.Status,
-                                       CreateAt= store.CreateAt,
-                                       UpdateAt= store.UpdateAt
+                                       CreateAt = store.CreateAt,
+                                       UpdateAt = store.UpdateAt
 
                                    }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStore;
@@ -167,7 +167,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
-                                  where s.Id == StoreId && h.ToStatus == 0  && (order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
+                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
@@ -268,7 +268,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return lstOrder;
         }
-        public async Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId,string modeId, DateFilterRequest request, int pageIndex, int pageSize)
+        public async Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId, string modeId, DateFilterRequest request, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -337,8 +337,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   join m in context.Menus on order.MenuId equals m.Id
                                   join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
                                   //join sp in context.Shippers on order.ShipperId equals sp.Id
-                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.Accepted) 
-                                  
+                                  where s.Id == StoreId && h.ToStatus == 0 && (order.Status == (int)OrderStatusEnum.Accepted)
+
                                   select new OrderAdminDtoInStore()
                                   {
                                       Id = order.Id,
@@ -365,8 +365,8 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 var countpro = context.OrderDetails.Where(o => o.OrderId == or.Id).Count();
                 or.CountProduct = countpro.ToString();
-                
-    }
+
+            }
             foreach (var order in lstOrder)
             {
                 var listShipper = await (from od in context.ShipperHistories
@@ -389,7 +389,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                join b in context.Brands on s.BrandId equals b.Id
                                join sc in context.StoreCategories on s.StoreCategoryId equals sc.Id
                                join bs in context.Buildings on s.BuildingId equals bs.Id
-                               where s.Id == storeId 
+                               where s.Id == storeId
                                select new ViewListStoreModel()
                                {
                                    Id = s.Id,
@@ -468,7 +468,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             return account;
         }
 
-        public async Task<StoreDto> UpdateStore(string storeId, StoreDto store , Boolean imgUpdate)
+        public async Task<StoreDto> UpdateStore(string storeId, StoreDto store, Boolean imgUpdate)
         {
             string fileImg = "ImagesStores";
             string time = await _timeStageService.GetTime();
@@ -521,10 +521,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
             if (status == null)
-            { 
-                result.Status = store.Status; 
+            {
+                result.Status = store.Status;
             }
-            
+
             try
             {
                 context.Entry(result).State = EntityState.Modified;

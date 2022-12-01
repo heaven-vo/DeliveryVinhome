@@ -74,7 +74,7 @@
             public double TotalShipFree { get; set; }
             public double TotalPaymentVNPay { get; set; }
             public double TotalPaymentCash { get; set; }
-            public double TotalSurcharge { get; set; }
+            //public double TotalSurcharge { get; set; }
             public double TotalRevenueOrder { get; set; }
             public double TotalProfitOrder { get; set; }
         }
