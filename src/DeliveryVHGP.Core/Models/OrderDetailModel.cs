@@ -37,5 +37,6 @@
         public string? ShipperId { get; set; }
         public string? ShipperName { get; set; }
         public string? Phone { get; set; }
+        public int? OrderActionType { get; set; }
     }
 }

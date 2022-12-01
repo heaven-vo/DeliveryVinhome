@@ -434,16 +434,20 @@ namespace DeliveryVHGP.WebApi.Repositories
                                     ).OrderBy(t => t.Status).ToListAsync();
             order.ListStatusOrder = listStatus;
 
-            var listShipper = await (from od in context.ShipperHistories
-                                     join o in context.Orders on od.OrderId equals o.Id
-                                     join s in context.Shippers on od.ShipperId equals s.Id
-                                     where o.Id == order.Id
+            var listShipper = await (from sm in context.SegmentDeliveryRoutes
+                                     join s in context.Shippers on sm.ShipperId equals s.Id
+                                     join r in context.RouteEdges on sm.Id equals r.RouteId
+                                     join oa in context.OrderActions on r.Id equals oa.RouteEdgeId
+                                     join o in context.Orders on oa.OrderId equals o.Id
+                                     //leftJOi sh in context.ShipperHistories on s.Id equals sh.ShipperId
+                                     where o.Id == orderId && (oa.OrderActionType == (int)OrderActionEnum.PickupStore || oa.OrderActionType == (int)OrderActionEnum.DeliveryCus)
                                      select new ViewListShipp()
                                      {
-                                         ShipperId = od.ShipperId,
+                                         ShipperId = sm.ShipperId,
                                          Phone = s.Phone,
-                                         ShipperName = s.FullName
-                                     }).ToListAsync();
+                                         ShipperName = s.FullName,
+                                         OrderActionType = oa.OrderActionType
+                                     }).OrderBy(t => t.OrderActionType).ToListAsync();
             order.ListShipper = listShipper;
 
             return order;

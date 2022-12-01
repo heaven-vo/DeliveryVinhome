@@ -279,7 +279,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task<EdgeModel> GetCurrentEdgeInRoute(string shipperId)
         {
-            var edge = await context.RouteEdges.Include(x => x.Route)
+            var edge = await context.RouteEdges.Include(x => x.Route).Include(x => x.OrderActions)
                 .Where(x => x.Route.ShipperId == shipperId && x.Status == (int)EdgeStatusEnum.ToDo && x.Route.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
             if (edge == null)
             {
