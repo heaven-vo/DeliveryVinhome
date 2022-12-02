@@ -49,7 +49,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 DateTime? date = DateTime.UtcNow.AddHours(7).Date;
                 List<DateTime> listDate = new List<DateTime>();
-                for (int i = 1; i < 7; i++)
+                for (int i = 1; i <= 7; i++)
                 {
                     listDate.Add(date.Value.AddDays(i));
                 }
@@ -350,7 +350,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime? date = DateTime.Now;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 1; i < 7; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 listDate.Add(date.Value.AddDays(i));
             }
@@ -389,7 +389,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime? date = DateTime.Now.Date;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 1; i < 7; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 listDate.Add(date.Value.AddDays(i));
             }
