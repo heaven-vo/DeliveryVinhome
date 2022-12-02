@@ -13,7 +13,12 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             this.repository = repository;
         }
-
+        [HttpPost("menu3")]
+        public async Task<ActionResult> CreateMenuMode3()
+        {
+            await repository.Menu.CreateMenuMode3();
+            return Ok();
+        }
         //[HttpGet("Route")]
         //public async Task<ActionResult> CreateRoute()
         //{
