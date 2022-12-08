@@ -202,7 +202,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         [HttpDelete("{menuId}/products")]
-        public async Task<ActionResult> DeleteProductsToMenu(string menuId, string productId)
+        public async Task<ActionResult> DeleteProductsInMenu(string menuId, string productId)
         {
             try
             {
@@ -215,7 +215,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         [HttpPost("{menuId}/products")]
-        public async Task<ActionResult> UpdateProductsToMenu(ProductsInMenuUpdateModel product)
+        public async Task<ActionResult> UpdateProductsInMenu(ProductsInMenuUpdateModel product)
         {
             try
             {

@@ -17,7 +17,6 @@ namespace DeliveryVHGP.Core.Entities
         }
 
         public string Id { get; set; } = null!;
-        public string? CustomerId { get; set; }
         public string? StoreId { get; set; }
         public string? MenuId { get; set; }
         public string? BuildingId { get; set; }

@@ -118,9 +118,9 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Image).HasMaxLength(100);
+                entity.Property(e => e.Image).HasMaxLength(255);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Building>(entity =>
@@ -133,11 +133,11 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.HubId).HasMaxLength(50);
 
-                entity.Property(e => e.Latitude).HasMaxLength(250);
+                entity.Property(e => e.Latitude).HasMaxLength(255);
 
-                entity.Property(e => e.Longitude).HasMaxLength(250);
+                entity.Property(e => e.Longitude).HasMaxLength(255);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
 
                 entity.HasOne(d => d.Cluster)
                     .WithMany(p => p.Buildings)
@@ -196,7 +196,7 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.AreaId).HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
 
                 entity.HasOne(d => d.Area)
                     .WithMany(p => p.Clusters)
@@ -323,7 +323,7 @@ namespace DeliveryVHGP.Core.Data
 
                 entity.Property(e => e.BuildingId).HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Menu>(entity =>
@@ -392,8 +392,6 @@ namespace DeliveryVHGP.Core.Data
                 entity.Property(e => e.Id).HasMaxLength(50);
 
                 entity.Property(e => e.BuildingId).HasMaxLength(50);
-
-                entity.Property(e => e.CustomerId).HasMaxLength(50);
 
                 entity.Property(e => e.DeliveryTimeId).HasMaxLength(50);
 

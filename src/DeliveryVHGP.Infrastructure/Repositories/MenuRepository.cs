@@ -16,7 +16,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime dateNow = DateTime.UtcNow.AddHours(7).Date;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 0; i <= 6; i++)
+            for (int i = 1; i <= 7; i++)
             {
                 listDate.Add(dateNow.AddDays(i));
             }

@@ -266,34 +266,33 @@ namespace DeliveryVHGP.WebApi.Repositories
             return lstOrder;
         }
         //Get list order by Customer(in customer web)
-        public async Task<List<OrderModels>> GetListOrders(string CusId, int pageIndex, int pageSize)
-        {
-            var lstOrder = await (from order in context.Orders
-                                  join s in context.Stores on order.StoreId equals s.Id
-                                  join c in context.Customers on order.CustomerId equals c.Id
-                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
-                                  join b in context.Buildings on order.BuildingId equals b.Id
-                                  join m in context.Menus on order.MenuId equals m.Id
-                                  join od in context.OrderDetails on order.Id equals od.OrderId
-                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
-                                  where c.Id == CusId
-                                  select new OrderModels()
-                                  {
-                                      Id = order.Id,
-                                      Total = order.Total,
-                                      CustomerId = c.Id,
-                                      StoreId = s.Id,
-                                      storeName = s.Name,
-                                      status = order.Status,
-                                      BuildingId = b.Id,
-                                      buildingName = b.Name,
-                                      Time = h.CreateDate,
-                                      TimeDuration = dt.Id,
-                                      Dayfilter = m.DayFilter.ToString()
-                                  }
-                                  ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return lstOrder;
-        }
+        //public async Task<List<OrderModels>> GetListOrders(string CusId, int pageIndex, int pageSize)
+        //{
+        //    var lstOrder = await (from order in context.Orders
+        //                          join s in context.Stores on order.StoreId equals s.Id
+        //                          join h in context.OrderActionHistories on order.Id equals h.OrderId
+        //                          join b in context.Buildings on order.BuildingId equals b.Id
+        //                          join m in context.Menus on order.MenuId equals m.Id
+        //                          join od in context.OrderDetails on order.Id equals od.OrderId
+        //                          join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
+        //                          where c.Id == CusId
+        //                          select new OrderModels()
+        //                          {
+        //                              Id = order.Id,
+        //                              Total = order.Total,
+        //                              CustomerId = "None",
+        //                              StoreId = s.Id,
+        //                              storeName = s.Name,
+        //                              status = order.Status,
+        //                              BuildingId = b.Id,
+        //                              buildingName = b.Name,
+        //                              Time = h.CreateDate,
+        //                              TimeDuration = dt.Id,
+        //                              Dayfilter = m.DayFilter.ToString()
+        //                          }
+        //                          ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+        //    return lstOrder;
+        //}
         //Get list order by store(in app store)
         public async Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize)
         {
@@ -467,7 +466,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                  ).FirstOrDefaultAsync();
                 if (pro == null)
                 {
-                    throw new Exception("Product not in menu");
+                    throw new Exception("Sản phẩm hiện không khả dụng");
                 }
             }
             string refixOrderCode = "CDCC";
@@ -565,7 +564,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             catch
             {
-                throw new Exception("Save changes async not");
+                throw new Exception("Tạo đơn hàng không thành công");
             }
 
             return order;

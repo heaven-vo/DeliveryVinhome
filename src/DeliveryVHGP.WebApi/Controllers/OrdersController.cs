@@ -18,14 +18,14 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// Get list orders (customer web)
         /// </summary>
         // GET: api/Orders
-        [HttpGet("{cusId}/customers")]
-        public async Task<ActionResult> GetOrder(string cusId, int pageIndex, int pageSize)
-        {
-            var listOder = await repository.Order.GetListOrders(cusId, pageIndex, pageSize);
-            if (cusId == null)
-                return NotFound();
-            return Ok(listOder);
-        }
+        //[HttpGet("{cusId}/customers")]
+        //public async Task<ActionResult> GetOrder(string cusId, int pageIndex, int pageSize)
+        //{
+        //    var listOder = await repository.Order.GetListOrders(cusId, pageIndex, pageSize);
+        //    if (cusId == null)
+        //        return NotFound();
+        //    return Ok(listOder);
+        //}
         /// <summary>
         /// Get list orders by store (customer web)
         /// </summary>
@@ -81,13 +81,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 }
                 return Ok(new { StatusCode = "Successful", data = result });
             }
-            catch
+            catch (Exception ex)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "Hiện tại cửa hàng đã ngưng hoạt động !!" +
-                                              "Vui lòng đặt lại đơn hàng "
+                    message = ex.Message
                 });
             }
         }
@@ -152,7 +151,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         /// <summary>
-        /// Get order by id with pagination
+        /// None
         /// </summary>
         //GET: api/v1/orderById?pageIndex=1&pageSize=3
         [HttpGet("Payment-confirm")]
@@ -162,7 +161,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             string hashSecret = "YLGGIJRNXHISHHCZSMHXFRVXUTJIFMSZ"; //Chuỗi bí mật
             VnPayLibrary pay = new VnPayLibrary();
             var vnpayData = Request.QueryString.ToString();
-            Console.WriteLine(vnpayData);
+            //Console.WriteLine(vnpayData);
             //lấy toàn bộ dữ liệu được trả về
             string[] authorsList = vnpayData.Split("&");
             string vnp_Amount = "";
@@ -177,13 +176,10 @@ namespace DeliveryVHGP.WebApi.Controllers
             string vnp_TransactionStatus = "";
             string vnp_TxnRef = "";
 
-            Console.WriteLine("authorsList" + String.Join(Environment.NewLine, authorsList));
             foreach (string author in authorsList)
             {
 
                 string[] ListRespone = author.Split("=");
-                Console.WriteLine("ListRespone[0]" + ListRespone[0]);
-                Console.WriteLine("ListRespone[1]" + ListRespone[1]);
                 if (ListRespone[0] == "?vnp_Amount")
                 {
                     vnp_Amount = ListRespone[1];

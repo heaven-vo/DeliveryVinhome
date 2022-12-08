@@ -59,7 +59,14 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 };
                 await Add(storeToCusSegment);
             }
-            await Save();
+            try
+            {
+                await Save();
+            }
+            catch
+            {
+                throw new Exception("Không thể thiết lập giao hàng");
+            }
         }
         public async Task<List<SegmentModel>> GetSegmentAvaliable(List<string> listOrder)
         {

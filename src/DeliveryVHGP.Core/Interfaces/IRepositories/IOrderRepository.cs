@@ -11,7 +11,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<OrderAdminDto>> GetAllOrder(FilterRequest request);
         Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request);
         Task<PriceReportModel> GetPriceOrdersReport(DateFilterRequest request);
-        Task<List<OrderModels>> GetListOrders(string CusId, int pageIndex, int pageSize);
+        //Task<List<OrderModels>> GetListOrders(string CusId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetListOrdersByStoreByStatus(string StoreId, int StatusId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize);

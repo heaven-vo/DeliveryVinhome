@@ -69,10 +69,18 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             return listRouteModel;
         }
-        public async Task CreateRoute(List<SegmentDeliveryRoute> route, List<SegmentModel> listSegments)
+        public async Task<int> CreateRoute(List<SegmentDeliveryRoute> route, List<SegmentModel> listSegments)
         {
-            await context.AddRangeAsync(route);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.AddRangeAsync(route);
+                await context.SaveChangesAsync();
+                return 1;
+            }
+            catch
+            {
+                return 0;
+            }
         }
         public async Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments)
         {
@@ -144,7 +152,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
-        public async Task RemoveAllRouteAction()
+        public async Task RemoveAllRouteAction()// to test
         {
             List<RouteEdge> listEdge = new List<RouteEdge>();
             List<OrderAction> listAction = new List<OrderAction>();
@@ -166,7 +174,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
-        public async Task AcceptRouteByShipper(string routeId, string shipperId) // quen tạo action history
+        public async Task AcceptRouteByShipper(string routeId, string shipperId)
         {
             var routeTodo = await context.SegmentDeliveryRoutes.Where(x => x.ShipperId == shipperId && x.Status == (int)RouteStatusEnum.ToDo).FirstOrDefaultAsync();
             if (routeTodo != null)
