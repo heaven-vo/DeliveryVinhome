@@ -23,8 +23,12 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             //                                                    new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"}};
             // Instantiate the data problem.
             DataModel data = new DataModel();
-            data.VehicleNumber = 4;
+            data.VehicleNumber = 5;
             data.PickupsDeliveriesData = ChangeBuildingIdIntoInt(listSegments); //{1,6},{2,6},{1,6},{2,1} 
+            foreach (var a in listSegments)
+            {
+                Console.WriteLine(a.fromBuilding + " - " + a.toBuilding);
+            }
             foreach (var a in data.PickupsDeliveriesData)
             {
                 Console.WriteLine(a[0] + " " + a[1]);
@@ -63,7 +67,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
             // Add Distance constraint.
-            routing.AddDimension(transitCallbackIndex, 0, 50000,
+            routing.AddDimension(transitCallbackIndex, 0, 100000,
                                  true, // start cumul to zero
                                  "Distance");
             RoutingDimension distanceDimension = routing.GetMutableDimension("Distance");
@@ -79,12 +83,13 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 solver.Add(solver.MakeEquality(routing.VehicleVar(pickupIndex), routing.VehicleVar(deliveryIndex)));
                 solver.Add(solver.MakeLessOrEqual(distanceDimension.CumulVar(pickupIndex),
                                                   distanceDimension.CumulVar(deliveryIndex)));
+                //distanceDimension.SetCumulVarSoftLowerBound(routing.End(i), 2, 100000);
             }
 
             // Setting first solution heuristic.
             RoutingSearchParameters searchParameters =
                 operations_research_constraint_solver.DefaultRoutingSearchParameters();
-            searchParameters.FirstSolutionStrategy = FirstSolutionStrategy.Types.Value.PathCheapestArc;
+            searchParameters.FirstSolutionStrategy = FirstSolutionStrategy.Types.Value.PathCheapestArc;//PathMostConstrainedArc;
             searchParameters.TimeLimit = new Duration { Seconds = 5 };
 
             // Solve the problem.
@@ -173,8 +178,11 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 }
                 Console.WriteLine("Segment of the route: {0}", listSegments.Count);
 
-                await repo.RouteAction.CreateRoute(listRoute, listSegments);
-                await repo.RouteAction.CreateActionOrder(NodeAction, listSegments);
+                int check = await repo.RouteAction.CreateRoute(listRoute, listSegments);
+                if (check > 0)
+                {
+                    await repo.RouteAction.CreateActionOrder(NodeAction, listSegments);
+                }
                 //Console.WriteLine("Maximum distance of the routes: {0}m", maxRouteDistance);
             }
         }
@@ -202,7 +210,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         a[0] = build.Item2;
                         //Console.WriteLine(build.Item2);
                     }
-                    else if (build.Item1.ToString() == bu.toBuilding)
+                    if (build.Item1.ToString() == bu.toBuilding)
                     {
                         a[1] = build.Item2 + enumCount; //+n(n: building)
                         //Console.WriteLine(build.Item2);

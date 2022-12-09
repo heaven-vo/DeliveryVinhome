@@ -759,6 +759,10 @@ namespace DeliveryVHGP.WebApi.Repositories
 
         public async Task<MenuDto> UpdateMenu(string menuId, MenuDto menu)
         {
+            if (menu.DayFilter != null || menu.DayFilter == "")
+            {
+                menu.DayFilter = "2030/01/01";
+            }
             var menuUpdate = new Menu
             {
                 Id = menuId,
