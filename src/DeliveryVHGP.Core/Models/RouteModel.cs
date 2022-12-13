@@ -23,6 +23,8 @@ namespace DeliveryVHGP.Core.Models
         public string? ShipperId { get; set; }
         [FirestoreProperty]
         public int? Status { get; set; }
+        [FirestoreProperty]
+        public int? Type { get; set; }
 
     }
 }

@@ -17,6 +17,7 @@ namespace DeliveryVHGP.Core.Entities
         public double? Distance { get; set; }
         public int? Duration { get; set; }
         public string? Description { get; set; }
+        public int? Type { get; set; }
         public int? Status { get; set; }
 
         public virtual Shipper? Shipper { get; set; }

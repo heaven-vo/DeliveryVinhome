@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.Core.Interfaces;
+﻿using DeliveryVHGP.Core.Enums;
+using DeliveryVHGP.Core.Interfaces;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,17 +38,29 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         //check and add new order to cache
                         var listOrder = await scopeRepo.Order.CheckAvailableOrder();
                         await scopeRepo.Cache.AddOrderToCache(listOrder); //change status -> assign(not do -> test)
-
-                        ////load n order from cache -> segment -> run algorithm
-                        var listOrderDelivery = await scopeRepo.Cache.GetOrderFromCache(35);
-                        if (listOrderDelivery.Any())
+                        //---------------------------------
+                        //Process order by mode 1
+                        var listOrderDeliveryByFood = await scopeRepo.Cache.GetOrderFromCache(10, 1);
+                        if (listOrderDeliveryByFood.Any())
                         {
-                            //remove older route(do first)
-                            await scopeRepo.RouteAction.RemoveRouteActionNotShipper();// not in sequence diagram 
-                            var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDelivery);
+                            await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryFood);
+                            var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByFood);
                             if (listSegment.Any())
                             {
-                                //_logger.LogInformation("LOGGING: " + listSegment[0].fromBuilding + " - " + listSegment[0].toBuilding);
+                                int result = await scopeRepo.RouteAction.CreateSingleRoute(listSegment);
+                            }
+                        }
+
+                        //Process order by mode 2, 3
+                        ////load n order from cache -> segment -> run algorithm
+                        var listOrderDeliveryByroute = await scopeRepo.Cache.GetOrderFromCache(35, 2);
+                        if (listOrderDeliveryByroute.Any())
+                        {
+                            //remove older route(do first)
+                            await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryRoute);// not in sequence diagram 
+                            var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByroute);
+                            if (listSegment.Any())
+                            {
                                 DeliveryPickupAlgorithm algorithm = new DeliveryPickupAlgorithm(_serviceProvider);
                                 algorithm.AlgorithsProcess(listSegment);
                             }

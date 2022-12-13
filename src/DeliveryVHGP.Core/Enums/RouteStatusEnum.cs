@@ -6,6 +6,11 @@
         ToDo = 2,
         Done = 3
     }
+    public enum RouteTypeEnum
+    {
+        DeliveryFood = 1,
+        DeliveryRoute = 2
+    }
     public enum EdgeStatusEnum
     {
         NotYet = 1,

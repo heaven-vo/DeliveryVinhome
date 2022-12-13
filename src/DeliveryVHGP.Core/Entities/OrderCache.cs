@@ -7,6 +7,7 @@ namespace DeliveryVHGP.Core.Entities
     {
         public string Id { get; set; } = null!;
         public string OrderId { get; set; } = null!;
+        public int? MenuSaleMode { get; set; }
         public DateTime? CreateAt { get; set; }
         public DateTime? UpdateAt { get; set; }
         public bool? IsReady { get; set; }

@@ -14,15 +14,18 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task AddOrderToCache(List<string> listOrderId)
         {
-            List<OrderCache> list = new List<OrderCache>();
-            foreach (var orderId in listOrderId)
+            List<OrderCache> listCaches = new List<OrderCache>();
+            var listOrder = await context.Orders.Include(x => x.Menu).Where(x => listOrderId.Contains(x.Id)).ToListAsync();
+            listOrder.ForEach(x => x.Status = (int)OrderStatusEnum.Assigning);
+
+            foreach (var order in listOrder)
             {
-                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = orderId, CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
-                list.Add(cache);
+                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = order.Id, MenuSaleMode = int.Parse(order.Menu.SaleMode), CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
+                listCaches.Add(cache);
                 var actionHistory = new OrderActionHistory()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    OrderId = orderId,
+                    OrderId = order.Id,
                     FromStatus = (int)OrderStatusEnum.Received,
                     ToStatus = (int)OrderStatusEnum.Assigning,
                     CreateDate = DateTime.UtcNow.AddHours(7),
@@ -30,11 +33,9 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 };
                 await context.OrderActionHistories.AddAsync(actionHistory);
             }
-            var listOrder = await context.Orders.Where(x => listOrderId.Contains(x.Id)).ToListAsync();
-            listOrder.ForEach(x => x.Status = (int)OrderStatusEnum.Assigning);
             try
             {
-                await context.OrderCaches.AddRangeAsync(list);
+                await context.OrderCaches.AddRangeAsync(listCaches);
                 await Save();
             }
             catch
@@ -43,10 +44,20 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
 
         }
-        public async Task<List<string>> GetOrderFromCache(int size)
+        public async Task<List<string>> GetOrderFromCache(int size, int mode)
         {
-            var listOrer = await context.OrderCaches.Where(x => x.IsReady == true).OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
-            return listOrer;
+            List<string> listOrerId = new List<string>();
+            if (mode == 1)
+            {
+                listOrerId = await context.OrderCaches.Where(x => x.IsReady == true && x.MenuSaleMode == 1)
+                    .OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
+            }
+            if (mode != 1)
+            {
+                listOrerId = await context.OrderCaches.Where(x => x.IsReady == true && x.MenuSaleMode != 1)
+                    .OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
+            }
+            return listOrerId;
         }
     }
 }

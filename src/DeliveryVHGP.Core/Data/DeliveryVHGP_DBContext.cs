@@ -185,6 +185,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.CategoryInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CategoryInMenu_Menu");
             });
 
@@ -424,6 +425,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Order_Menu");
 
                 entity.HasOne(d => d.Service)
@@ -637,6 +639,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.ProductInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ProductInMenu_Menu");
 
                 entity.HasOne(d => d.Product)
@@ -774,6 +777,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Shipper)
                     .WithMany(p => p.SegmentDeliveryRoutes)
                     .HasForeignKey(d => d.ShipperId)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_SegmentDeliveryRoute_Shipper");
             });
 
@@ -870,6 +874,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Shipper)
                     .WithMany(p => p.ShipperHistories)
                     .HasForeignKey(d => d.ShipperId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ShipperHistory_Shipper");
             });
 
@@ -953,6 +958,7 @@ namespace DeliveryVHGP.Core.Data
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.StoreInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_StoreInMenu_Menu");
 
                 entity.HasOne(d => d.Store)

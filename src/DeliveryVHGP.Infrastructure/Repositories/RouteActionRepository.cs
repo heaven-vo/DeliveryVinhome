@@ -28,7 +28,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 foreach (var route in listRoute)
                 {
-                    RouteModel routeModel = new RouteModel() { RouteId = route.Id, EdgeNum = route.RouteEdges.Count(), ShipperId = route.ShipperId, Status = route.Status };
+                    RouteModel routeModel = new RouteModel() { RouteId = route.Id, EdgeNum = route.RouteEdges.Count(), ShipperId = route.ShipperId, Type = route.Type, Status = route.Status };
                     var first = route.RouteEdges.Where(x => x.Priority == 1).Select(x => x.ToBuildingId).FirstOrDefault();
                     var last = route.RouteEdges.OrderByDescending(x => x.Priority).Select(x => x.ToBuildingId).FirstOrDefault();
                     var buildingNameFirst = await context.Buildings.Where(x => x.Id == first).Select(x => x.Name).FirstOrDefaultAsync();
@@ -82,6 +82,58 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 return 0;
             }
         }
+        public async Task<int> CreateSingleRoute(List<SegmentModel> listSegments)
+        {
+            List<SegmentDeliveryRoute> listRoute = new List<SegmentDeliveryRoute>();
+            List<OrderAction> listAction = new List<OrderAction>();
+            foreach (var segment in listSegments)
+            {
+                SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryFood, Status = (int)RouteStatusEnum.NotAssign };
+                List<RouteEdge> listEdge = new List<RouteEdge>();
+
+                RouteEdge edgePickUp = new RouteEdge() { Id = Guid.NewGuid().ToString(), FromBuildingId = "", ToBuildingId = segment.fromBuilding, Priority = 1, Distance = 0, RouteId = route.Id, Status = (int)EdgeStatusEnum.NotYet };
+                RouteEdge edgeDelivery = new RouteEdge() { Id = Guid.NewGuid().ToString(), FromBuildingId = segment.fromBuilding, ToBuildingId = segment.toBuilding, Priority = 2, RouteId = route.Id, Status = (int)EdgeStatusEnum.NotYet };
+                edgeDelivery.Distance = 0;
+                OrderAction actionPickUp = new OrderAction() { Id = Guid.NewGuid().ToString(), RouteEdgeId = edgePickUp.Id, OrderId = segment.OrderId, Status = (int)OrderActionStatusEnum.Todo };
+                OrderAction actionDelivery = new OrderAction() { Id = Guid.NewGuid().ToString(), RouteEdgeId = edgeDelivery.Id, OrderId = segment.OrderId, Status = (int)OrderActionStatusEnum.Todo };
+
+                if (segment.SegmentMode == (int)SegmentModeEnum.StoreToHub)
+                {
+                    actionPickUp.OrderActionType = (int)OrderActionEnum.PickupStore;
+                    actionDelivery.OrderActionType = (int)OrderActionEnum.DeliveryHub;
+                }
+                if (segment.SegmentMode == (int)SegmentModeEnum.HubToCus)
+                {
+                    actionPickUp.OrderActionType = (int)OrderActionEnum.PickupHub;
+                    actionDelivery.OrderActionType = (int)OrderActionEnum.DeliveryCus;
+                }
+                if (segment.SegmentMode == (int)SegmentModeEnum.StoreToCus)
+                {
+                    actionPickUp.OrderActionType = (int)OrderActionEnum.PickupStore;
+                    actionDelivery.OrderActionType = (int)OrderActionEnum.DeliveryCus;
+                }
+                listAction.Add(actionDelivery);
+                listAction.Add(actionPickUp);
+                listEdge.Add(edgePickUp);
+                listEdge.Add(edgeDelivery);
+
+                route.RouteEdges = listEdge;
+                route.Distance = 0;
+                listRoute.Add(route);
+            }
+            try
+            {
+                await context.AddRangeAsync(listRoute);
+                await context.AddRangeAsync(listAction);
+                await context.SaveChangesAsync();
+            }
+            catch
+            {
+                return 0;
+            }
+
+            return 1;
+        }
         public async Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments)
         {
             List<OrderAction> listAction = new List<OrderAction>();
@@ -130,12 +182,12 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 await context.SaveChangesAsync();
             }
         }
-        public async Task RemoveRouteActionNotShipper()
+        public async Task RemoveRouteActionNotShipper(int routeType)
         {
             List<RouteEdge> listEdge = new List<RouteEdge>();
             List<OrderAction> listAction = new List<OrderAction>();
             var listRouteAction = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
-                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign).ToListAsync();
+                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign && x.Type == routeType).ToListAsync();
             if (listRouteAction.Count > 0)
             {
                 foreach (var route in listRouteAction)

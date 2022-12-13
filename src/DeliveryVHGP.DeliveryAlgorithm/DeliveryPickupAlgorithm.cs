@@ -116,13 +116,14 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     long totalRouteDistance = 0;
                     Console.WriteLine("Route for Vehicle {0}:", i);
                     // Creat table Delivery Route
-                    SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Status = (int)RouteStatusEnum.NotAssign };
+                    SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryRoute, Status = (int)RouteStatusEnum.NotAssign };
                     List<RouteEdge> listEdge = new List<RouteEdge>();
                     List<NodeModel> listNode = new List<NodeModel>();
                     long routeDistance = 0;
                     var start = routing.Start(i);
                     var index = solution.Value(routing.NextVar(start));
                     string previousBuiding = "";
+                    string previousEdgeId = "";
                     int priority = 1;
                     while (routing.IsEnd(index) == false)
                     {
@@ -136,7 +137,13 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                             node.Type = (int)EdgeTypeEnum.Delivery;
                         }
                         string buildId = ((BuildingEnum)buildingEnum).ToString();
+                        if (buildId == previousBuiding)
+                        {
+                            edge.Id = previousEdgeId;
+                            node.EdgeId = previousEdgeId;
+                        }
                         previousBuiding = buildId;
+                        previousEdgeId = edge.Id;
                         Console.Write("{0} -> ", buildingEnum);
                         //        //Create Route edge
                         //        //List order Id -> list segment -> check building id -> create orderAction()
@@ -161,8 +168,11 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         }
                         else
                             edge.Distance = routeDistance;
-                        listEdge.Add(edge);
-                        priority++;
+                        if (buildId != previousBuiding)// check dup edge
+                        {
+                            listEdge.Add(edge);
+                            priority++;
+                        }
                         listNode.Add(node);
                     }
                     Console.WriteLine("{0}", manager.IndexToNode((int)index));
