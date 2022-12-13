@@ -28,7 +28,7 @@ namespace DeliveryVHGP.Core.Entities
         public string? Phone { get; set; }
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
-        public string? CommissionRate { get; set; }
+        public double? CommissionRate { get; set; }
         public bool? Status { get; set; }
 
         public virtual Brand? Brand { get; set; }

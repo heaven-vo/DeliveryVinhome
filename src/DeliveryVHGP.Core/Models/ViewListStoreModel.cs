@@ -17,7 +17,7 @@ namespace DeliveryVHGP.Core.Models
         public string? Description { get; set; }
         public string? Phone { get; set; }
         public bool? Status { get; set; }
-        public string? CommissionRate { get; set; }
+        public double? CommissionRate { get; set; }
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
         public AccountInRole Account { get; set; }
