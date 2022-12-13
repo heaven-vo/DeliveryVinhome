@@ -4,6 +4,7 @@
     {
         public string Id { get; set; } = null!;
         public string? Name { get; set; }
+        public string? DefaultCommissionRate { get; set; }
         public string? Status { get; set; }
     }
 }

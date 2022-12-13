@@ -7,7 +7,6 @@ namespace DeliveryVHGP.WebApi.Models
     {
         public Building()
         {
-            Customers = new HashSet<Customer>();
             Orders = new HashSet<Order>();
             Segments = new HashSet<Segment>();
             Stores = new HashSet<Store>();
@@ -22,7 +21,6 @@ namespace DeliveryVHGP.WebApi.Models
 
         public virtual Cluster? Cluster { get; set; }
         public virtual Hub? Hub { get; set; }
-        public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Segment> Segments { get; set; }
         public virtual ICollection<Store> Stores { get; set; }

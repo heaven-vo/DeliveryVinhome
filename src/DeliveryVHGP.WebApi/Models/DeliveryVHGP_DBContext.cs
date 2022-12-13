@@ -57,6 +57,8 @@ namespace DeliveryVHGP.WebApi.Models
         public virtual DbSet<StoreCategory> StoreCategories { get; set; } = null!;
         public virtual DbSet<StoreInMenu> StoreInMenus { get; set; } = null!;
         public virtual DbSet<Tag> Tags { get; set; } = null!;
+        public virtual DbSet<Transaction> Transactions { get; set; } = null!;
+        public virtual DbSet<Wallet> Wallets { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -115,9 +117,9 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
-                entity.Property(e => e.Image).HasMaxLength(100);
+                entity.Property(e => e.Image).HasMaxLength(255);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Building>(entity =>
@@ -130,11 +132,11 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.HubId).HasMaxLength(50);
 
-                entity.Property(e => e.Latitude).HasMaxLength(250);
+                entity.Property(e => e.Latitude).HasMaxLength(255);
 
-                entity.Property(e => e.Longitude).HasMaxLength(250);
+                entity.Property(e => e.Longitude).HasMaxLength(255);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
 
                 entity.HasOne(d => d.Cluster)
                     .WithMany(p => p.Buildings)
@@ -182,6 +184,7 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.CategoryInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_CategoryInMenu_Menu");
             });
 
@@ -193,7 +196,7 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.AreaId).HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasMaxLength(100);
+                entity.Property(e => e.Name).HasMaxLength(255);
 
                 entity.HasOne(d => d.Area)
                     .WithMany(p => p.Clusters)
@@ -232,11 +235,6 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.Property(e => e.Image).HasMaxLength(50);
 
                 entity.Property(e => e.Phone).HasMaxLength(50);
-
-                entity.HasOne(d => d.Building)
-                    .WithMany(p => p.Customers)
-                    .HasForeignKey(d => d.BuildingId)
-                    .HasConstraintName("FK_Customer_Building");
             });
 
             modelBuilder.Entity<DeliveryShiftOfShipper>(entity =>
@@ -325,7 +323,7 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.BuildingId).HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Menu>(entity =>
@@ -395,13 +393,15 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.BuildingId).HasMaxLength(50);
 
-                entity.Property(e => e.CustomerId).HasMaxLength(50);
-
                 entity.Property(e => e.DeliveryTimeId).HasMaxLength(50);
 
                 entity.Property(e => e.FullName).HasMaxLength(50);
 
                 entity.Property(e => e.MenuId).HasMaxLength(50);
+
+                entity.Property(e => e.MessageFail)
+                    .HasMaxLength(350)
+                    .HasColumnName("messageFail");
 
                 entity.Property(e => e.Note).HasMaxLength(500);
 
@@ -416,11 +416,6 @@ namespace DeliveryVHGP.WebApi.Models
                     .HasForeignKey(d => d.BuildingId)
                     .HasConstraintName("FK_Order_Building");
 
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Order_Customer");
-
                 entity.HasOne(d => d.DeliveryTime)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.DeliveryTimeId)
@@ -429,6 +424,7 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_Order_Menu");
 
                 entity.HasOne(d => d.Service)
@@ -642,6 +638,7 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.ProductInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_ProductInMenu_Menu");
 
                 entity.HasOne(d => d.Product)
@@ -779,6 +776,7 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.HasOne(d => d.Shipper)
                     .WithMany(p => p.SegmentDeliveryRoutes)
                     .HasForeignKey(d => d.ShipperId)
+                    .OnDelete(DeleteBehavior.SetNull)
                     .HasConstraintName("FK_SegmentDeliveryRoute_Shipper");
             });
 
@@ -860,6 +858,23 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.ToTable("ShipperHistory");
 
                 entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId).HasMaxLength(50);
+
+                entity.Property(e => e.ShipperId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.ShipperHistories)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_ShipperHistory_Order");
+
+                entity.HasOne(d => d.Shipper)
+                    .WithMany(p => p.ShipperHistories)
+                    .HasForeignKey(d => d.ShipperId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_ShipperHistory_Shipper");
             });
 
             modelBuilder.Entity<Store>(entity =>
@@ -873,6 +888,8 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.Property(e => e.BuildingId).HasMaxLength(50);
 
                 entity.Property(e => e.CloseTime).HasMaxLength(50);
+
+                entity.Property(e => e.CommissionRate).HasMaxLength(50);
 
                 entity.Property(e => e.CreateAt).HasMaxLength(50);
 
@@ -920,6 +937,8 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.Id).HasMaxLength(50);
 
+                entity.Property(e => e.DefaultCommissionRate).HasMaxLength(50);
+
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.Status)
@@ -942,6 +961,7 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.HasOne(d => d.Menu)
                     .WithMany(p => p.StoreInMenus)
                     .HasForeignKey(d => d.MenuId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_StoreInMenu_Menu");
 
                 entity.HasOne(d => d.Store)
@@ -959,6 +979,39 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.Property(e => e.Image).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Transaction>(entity =>
+            {
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
+
+                entity.Property(e => e.OrderId).HasMaxLength(50);
+
+                entity.Property(e => e.WalletId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Transactions_Order");
+
+                entity.HasOne(d => d.Wallet)
+                    .WithMany(p => p.Transactions)
+                    .HasForeignKey(d => d.WalletId)
+                    .HasConstraintName("FK_Transactions_Wallets");
+            });
+
+            modelBuilder.Entity<Wallet>(entity =>
+            {
+                entity.Property(e => e.Id).HasMaxLength(50);
+
+                entity.Property(e => e.AccountId).HasMaxLength(50);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Wallets)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_Wallets_Account");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -8,6 +8,7 @@ namespace DeliveryVHGP.WebApi.Models
         public Account()
         {
             FcmTokens = new HashSet<FcmToken>();
+            Wallets = new HashSet<Wallet>();
         }
 
         public string Id { get; set; } = null!;
@@ -18,5 +19,6 @@ namespace DeliveryVHGP.WebApi.Models
 
         public virtual Role? Role { get; set; }
         public virtual ICollection<FcmToken> FcmTokens { get; set; }
+        public virtual ICollection<Wallet> Wallets { get; set; }
     }
 }
