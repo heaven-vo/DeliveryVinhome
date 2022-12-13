@@ -22,6 +22,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                {
                    Id = x.Id,
                    Name = x.Name,
+                   DefaultCommissionRate = x.DefaultCommissionRate,
                    Status = x.Status
                }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return liststorecate;
@@ -34,6 +35,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   {
                                       Id = Scate.Id,
                                       Name = Scate.Name,
+                                      DefaultCommissionRate = Scate.DefaultCommissionRate,
                                       Status = Scate.Status
                                   }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listStoreCategory;
@@ -42,7 +44,10 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             context.StoreCategories.Add(new StoreCategory { 
                 Id = Guid.NewGuid().ToString(),
-                Name = storeCate.Name });
+                Name = storeCate.Name,
+                DefaultCommissionRate = storeCate.DefaultCommissionRate
+                
+            });
             await context.SaveChangesAsync();
             return storeCate;
 
@@ -66,6 +71,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var result = await context.StoreCategories.FindAsync(storecaId);
             result.Id = storeCate.Id;
             result.Name = storeCate.Name;
+            result.DefaultCommissionRate = storeCate.DefaultCommissionRate;
             result.Status = storeCate.Status;
             context.Entry(result).State = EntityState.Modified;
             try

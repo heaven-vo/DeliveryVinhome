@@ -12,10 +12,11 @@ namespace DeliveryVHGP.WebApi.Models
             OrderDetails = new HashSet<OrderDetail>();
             Payments = new HashSet<Payment>();
             Segments = new HashSet<Segment>();
+            ShipperHistories = new HashSet<ShipperHistory>();
+            Transactions = new HashSet<Transaction>();
         }
 
         public string Id { get; set; } = null!;
-        public string? CustomerId { get; set; }
         public string? StoreId { get; set; }
         public string? MenuId { get; set; }
         public string? BuildingId { get; set; }
@@ -27,9 +28,9 @@ namespace DeliveryVHGP.WebApi.Models
         public double? ShipCost { get; set; }
         public string? DeliveryTimeId { get; set; }
         public int? Status { get; set; }
+        public string? MessageFail { get; set; }
 
         public virtual Building? Building { get; set; }
-        public virtual Customer? Customer { get; set; }
         public virtual DeliveryTimeFrame? DeliveryTime { get; set; }
         public virtual Menu? Menu { get; set; }
         public virtual Service? Service { get; set; }
@@ -40,5 +41,7 @@ namespace DeliveryVHGP.WebApi.Models
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
         public virtual ICollection<Segment> Segments { get; set; }
+        public virtual ICollection<ShipperHistory> ShipperHistories { get; set; }
+        public virtual ICollection<Transaction> Transactions { get; set; }
     }
 }

@@ -30,18 +30,18 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //GET: api/v1/orderReportBystore?pageIndex=1&pageSize=3
         [HttpGet("orderReport")]
-        public async Task<ActionResult> GetReportOrderInStore(string storeId, [FromQuery] DateFilterRequest request)
+        public async Task<ActionResult> GetReportOrderInStore(string storeId, [FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
-            return Ok(await repository.Store.GetListOrdersReport(storeId, request));
+            return Ok(await repository.Store.GetListOrdersReport(storeId, request, monthFilter));
         }
         /// <summary>
         /// Get order report Revenue in store
         /// </summary>
         //GET: api/v1/orderReportRevenueBystore?pageIndex=1&pageSize=3
         [HttpGet("orderReport-Revenue")]
-        public async Task<ActionResult> GetReportOrderRevenueInStore(string storeId, [FromQuery] DateFilterRequest request)
+        public async Task<ActionResult> GetReportOrderRevenueInStore(string storeId, [FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
-            return Ok(await repository.Store.GetPriceOrdersReport(storeId, request));
+            return Ok(await repository.Store.GetPriceOrdersReports(storeId, request, monthFilter));
         }
         /// <summary>
         /// Get list all store by brand with pagination

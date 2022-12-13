@@ -38,18 +38,18 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //GET: api/v1/OrderReport?pageIndex=1&pageSize=3
         [HttpGet("report")]
-        public async Task<ActionResult> GetListOrdersReport([FromQuery] DateFilterRequest request)
+        public async Task<ActionResult> GetListOrdersReport([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
-            return Ok(await repository.Order.GetListOrdersReport(request));
+            return Ok(await repository.Order.GetListOrdersReport(request, monthFilter));
         } 
         /// <summary>
         /// Get order reportPrice(admin web)
         /// </summary>
         //GET: api/v1/OrderReport?pageIndex=1&pageSize=3
         [HttpGet("report-price")]
-        public async Task<ActionResult> GetListOrdersReportPrice([FromQuery] DateFilterRequest request)
+        public async Task<ActionResult> GetListOrdersReportPrice([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
-            return Ok(await repository.Order.GetPriceOrdersReport(request));
+            return Ok(await repository.Order.GetPriceOrdersReports(request, monthFilter));
         }
         /// <summary>
         /// Get list all order by payment with pagination

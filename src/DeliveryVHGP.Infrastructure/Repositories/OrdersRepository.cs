@@ -140,63 +140,154 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return lstOrder;
         }
-        public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request)
+
+        public async Task<SystemReportModelInStore> GetListOrdersReport(DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-            var lstOrder = await (from orderr in context.Orders
-                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
-                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
-                                  select orderr).ToListAsync();
-            var countStore = context.Stores.Count();
-            var countShipper = context.Shippers.Count();
-            SystemReportModel report = new SystemReportModel()
+            SystemReportModelInStore report = new SystemReportModelInStore()
             {
-                TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
+                TotalOrderNew = 0,
+                TotalOrderUnpaidVNpay = 0,
+                TotalOrderCancel = 0,
+                TotalOrderCompleted = 0,
+                TotalOrder = 0,
+
+            };
+
+            //SystemReportModelInStore report = new SystemReportModelInStore()
+            if (request.DateFilter != "")
+            {
+                DateTime dateTime = DateTime.Parse(request.DateFilter);
+                var nextDay = dateTime.AddDays(1);
+
+                var lstOrder = await (from orderr in context.Orders
+                                      join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                      where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
+                                      select orderr).ToListAsync();
+                if (!lstOrder.Any())
+                {
+                    return report;
+                }
+
+                report.TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
-                                                    || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
-                                                    ).Count(), //don hang moi
-                TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count(),//don hang chua thanh toan vnpay
-                TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
-                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count(),//don hang chua thanh toan vnpay
-                TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(), //don hang thanh cong
-                TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
+                                                    || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery).Count(); //don hang moi
+                report.TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count();//don hang chua thanh toan vnpay
+                report.TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count();//don hang chua thanh toan vnpay
+                report.TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(); //don hang thanh cong
+                report.TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
                                                     || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
                                                     || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
-                                                    || order.Status == (int)OrderStatusEnum.Completed
-                                                    || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
+                                                    || order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
-                                                  ).Count(), //tong don hang
-                TotalStore = countStore, // tong store
-                TotalShipper = countShipper, // tong store
-            };
-            return report;
+                                                  ).Count(); //tong don hang
+                return report;
+            }
+            else if (monthFilter.Month != 0)
+            {
+
+                var lstOrder = await (from orderr in context.Orders
+                                      join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                      where  h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                      select orderr).ToListAsync();
+
+                if (!lstOrder.Any())
+                {
+                    return report;
+                }
+                report.TotalOrderNew = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
+                                                    || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                                    || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery).Count(); //don hang moi
+                report.TotalOrderUnpaidVNpay = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.New).Count();//don hang chua thanh toan vnpay
+                report.TotalOrderCancel = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail).Count();//don hang chua thanh toan vnpay
+                report.TotalOrderCompleted = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Count(); //don hang thanh cong
+                report.TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.New
+                                                    || order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)FailStatus.CustomerFail
+                                                    || order.Status == (int)FailStatus.OutTime || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail
+                                                    || order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)OrderStatusEnum.Assigning || order.Status == (int)OrderStatusEnum.Accepted
+                                                    || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                                    || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
+                                                  ).Count(); //tong don hang
+                return report;
+            }
+            return null;
         }
-        public async Task<PriceReportModel> GetPriceOrdersReport(DateFilterRequest request)
+       
+        public async Task<PriceReportModel> GetPriceOrdersReports(DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-            var lstOrder = await (from orderr in context.Orders
-                                  join h in context.OrderActionHistories on orderr.Id equals h.OrderId
-                                  join p in context.Payments on orderr.Id equals p.OrderId
-                                  where h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
-                                  select orderr).ToListAsync();
-            var lstPayment = await (from pay in context.Payments
-                                    join o in context.Orders on pay.OrderId equals o.Id
-                                    join h in context.OrderActionHistories on o.Id equals h.OrderId
-                                    where o.Status == (int)OrderStatusEnum.Completed && h.ToStatus == 0 && h.CreateDate.ToString().Contains(request.DateFilter)
-                                    select pay)
-                                    .ToListAsync();
             PriceReportModel report = new PriceReportModel()
             {
-                //TotalOrder = lstOrder.Where(order => order.Status == (int)OrderStatusEnum.Completed).Select()
-                TotalShipFree = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost), // tổng tiền ship
-                //TotalSurcharge = lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
-                TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount),// tổng tiền thanh toán VnPay
-                TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount),// tổng tiền thanh toán Cash
-                TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total), // tổng tiền order
-                TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total), // Doanh thu
-                TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost), // Lợi nhuận
+                TotalShipFree = 0,
+                TotalPaymentVNPay = 0,
+                TotalPaymentCash = 0,
+                TotalOrder = 0,
+                TotalRevenueOrder = 0,
+                TotalProfitOrder = 0
+
             };
-            return report;
-        }
+
+            //SystemReportModelInStore report = new SystemReportModelInStore()
+            if (request.DateFilter != "")
+            {
+                DateTime dateTime = DateTime.Parse(request.DateFilter);
+                var nextDay = dateTime.AddDays(1);
+
+                var lstOrder = await (from orderr in context.Orders
+                                      join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                      join p in context.Payments on orderr.Id equals p.OrderId
+                                      where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
+                                      select orderr).ToListAsync();
+
+                var lstPayment = await (from pay in context.Payments
+                                        join o in context.Orders on pay.OrderId equals o.Id
+                                        join h in context.OrderActionHistories on o.Id equals h.OrderId
+                                        where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
+                                        select pay).ToListAsync();
+                if (!lstOrder.Any())
+                {
+                    return report;
+                }
+
+                report.TotalShipFree = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // tổng tiền ship
+                //TotalSurcharge = lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
+                report.TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount);// tổng tiền thanh toán VnPay
+                report.TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount);// tổng tiền thanh toán Cash
+                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // tổng tiền order
+                report.TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // Doanh thu
+                report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // Lợi nhuận
+            }
+            else if (monthFilter.Month != 0)
+            {
+                var lstOrder = await (from orderr in context.Orders
+                                      join h in context.OrderActionHistories on orderr.Id equals h.OrderId
+                                      join p in context.Payments on orderr.Id equals p.OrderId
+                                      join s in context.Stores on orderr.StoreId equals s.Id
+                                      where h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                      select orderr).ToListAsync();
+                var lstPayment = await (from pay in context.Payments
+                                        join o in context.Orders on pay.OrderId equals o.Id
+                                        join h in context.OrderActionHistories on o.Id equals h.OrderId
+                                        join s in context.Stores on o.StoreId equals s.Id
+                                        where h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                        select pay).ToListAsync();
+
+                if (!lstOrder.Any())
+                {
+                    return report;
+                }
+                report.TotalShipFree = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // tổng tiền ship
+                                                                                                                                     //TotalSurcharge = lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000, // tổng tiền service
+                report.TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount);// tổng tiền thanh toán VnPay
+                report.TotalPaymentCash = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount);// tổng tiền thanh toán Cash
+                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // tổng tiền order
+                report.TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // Doanh thu
+                report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // Lợi nhuận
+                return report;
+            }
+                return null;
+            }
         public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
