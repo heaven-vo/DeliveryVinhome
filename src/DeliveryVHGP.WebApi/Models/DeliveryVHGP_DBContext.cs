@@ -889,8 +889,6 @@ namespace DeliveryVHGP.WebApi.Models
 
                 entity.Property(e => e.CloseTime).HasMaxLength(50);
 
-                entity.Property(e => e.CommissionRate).HasMaxLength(50);
-
                 entity.Property(e => e.CreateAt).HasMaxLength(50);
 
                 entity.Property(e => e.CreditAccount).HasMaxLength(100);
@@ -936,8 +934,6 @@ namespace DeliveryVHGP.WebApi.Models
                 entity.ToTable("StoreCategory");
 
                 entity.Property(e => e.Id).HasMaxLength(50);
-
-                entity.Property(e => e.DefaultCommissionRate).HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasMaxLength(50);
 
