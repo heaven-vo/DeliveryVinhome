@@ -61,6 +61,15 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(await repository.Order.GetOrderByPayment(paymentType, pageIndex, pageSize));
         }
         /// <summary>
+        /// Get order by phone with pagination
+        /// </summary>
+        //GET: api/v1/OrderByPhone?pageIndex=1&pageSize=3
+        [HttpGet("search-phone")]
+        public async Task<ActionResult> GetListOrderByPhone(int pageIndex, int pageSize,string phone)
+        {
+            return Ok(await repository.Order.GetOrderByPhone( pageIndex, pageSize, phone));
+        }
+        /// <summary>
         /// Get list all order by status with pagination
         /// </summary>
         //GET: api/v1/orderByStatus?pageIndex=1&pageSize=3

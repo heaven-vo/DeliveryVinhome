@@ -7,5 +7,10 @@
         public string? Name { get; set; }
         public string? RoleId { get; set; }
         public string? Status { get; set; }
+    } 
+    public class AccountCheck
+    {
+        //public string Id { get; set; } = null!;
+        public string? RoleId { get; set; }
     }
 }
