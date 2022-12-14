@@ -22,5 +22,21 @@ namespace DeliveryVHGP.WebApi.Controllers
         {
             return Ok(await repository.Account.GetAll(pageIndex, pageSize));
         }
+        /// <summary>
+        /// Check Account with pagination
+        /// </summary>
+        //GET: api/v1/Account?pageIndex=1&pageSize=3
+        [HttpGet("check-Account")]
+        public async Task<ActionResult> CheckAccount(string id)
+        {
+            try
+            {
+                return Ok(await repository.Account.CheckAccount(id));
+            }
+            catch 
+            {
+                return NotFound();
+            }
+        }
     }
 }

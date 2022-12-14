@@ -40,6 +40,58 @@ namespace DeliveryVHGP.WebApi.Repositories
                                   && p.Type.ToString().Contains(request.SearchByPayment)
                                   && (request.SearchByStatus == -1 || order.Status == request.SearchByStatus)
                                   && m.SaleMode.Contains(request.SearchByMode)
+                                  && order.PhoneNumber.Contains(request.SearchByPhone)
+                                  //&& order.Status == request.SearchByStatus
+                                  select new OrderAdminDto()
+                                  {
+                                      Id = order.Id,
+                                      Total = order.Total,
+                                      StoreName = s.Name,
+                                      Phone = order.PhoneNumber,
+                                      Note = order.Note,
+                                      ShipCost = order.ShipCost,
+                                      CustomerName = order.FullName,
+                                      PaymentName = p.Type,
+                                      PaymentStatus = p.Status,
+                                      BuildingName = b.Name,
+                                      ModeId = m.SaleMode,
+                                      //ShipperName = sp.FullName,
+                                      Status = order.Status,
+                                      Time = h.CreateDate,
+                                      TimeDuration = dt.Id,
+                                      ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                      FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
+                                      Dayfilter = m.DayFilter.ToString()
+
+                                  }
+                                ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var order in lstOrder)
+            {
+                var listShipper = await (from od in context.ShipperHistories
+                                         join o in context.Orders on od.OrderId equals o.Id
+                                         join s in context.Shippers on od.ShipperId equals s.Id
+                                         where o.Id == order.Id
+                                         select new ViewListShipper()
+                                         {
+                                             ShipperId = od.ShipperId,
+                                             Phone = s.Phone,
+                                             ShipperName = s.FullName
+                                         }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                order.ListShipper = listShipper;
+            }
+            return lstOrder;
+        }
+         public async Task<List<OrderAdminDto>> GetOrderByPhone(int pageIndex, int pageSize,string phone)
+        {
+            var lstOrder = await (from order in context.Orders
+                                  join s in context.Stores on order.StoreId equals s.Id
+                                  join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                  join b in context.Buildings on order.BuildingId equals b.Id
+                                  join p in context.Payments on order.Id equals p.OrderId
+                                  join m in context.Menus on order.MenuId equals m.Id
+                                  join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
+                                  //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
+                                  where h.ToStatus == 0 && order.PhoneNumber.Contains(phone)
                                   //&& order.Status == request.SearchByStatus
                                   select new OrderAdminDto()
                                   {
@@ -141,15 +193,17 @@ namespace DeliveryVHGP.WebApi.Repositories
             return lstOrder;
         }
 
-        public async Task<SystemReportModelInStore> GetListOrdersReport(DateFilterRequest request, MonthFilterRequest monthFilter)
+        public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-            SystemReportModelInStore report = new SystemReportModelInStore()
+            SystemReportModel report = new SystemReportModel()
             {
                 TotalOrderNew = 0,
                 TotalOrderUnpaidVNpay = 0,
                 TotalOrderCancel = 0,
                 TotalOrderCompleted = 0,
                 TotalOrder = 0,
+                TotalStore = 0, // tong store
+                TotalShipper = 0, // tong store
 
             };
 
@@ -163,6 +217,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join h in context.OrderActionHistories on orderr.Id equals h.OrderId
                                       where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
                                       select orderr).ToListAsync();
+                var countStore = context.Stores.Count();
+                var countShipper = context.Shippers.Count();
                 if (!lstOrder.Any())
                 {
                     return report;
@@ -182,6 +238,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+                report.TotalStore = countStore; // tong store
+                report.TotalShipper = countShipper; // tong store
                 return report;
             }
             else if (monthFilter.Month != 0)
@@ -191,6 +249,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join h in context.OrderActionHistories on orderr.Id equals h.OrderId
                                       where h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
                                       select orderr).ToListAsync();
+                var countStore = context.Stores.Count();
+                var countShipper = context.Shippers.Count();
 
                 if (!lstOrder.Any())
                 {
@@ -210,6 +270,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+                report.TotalStore = countStore; // tong store
+                report.TotalShipper = countShipper; // tong store
                 return report;
             }
             return null;
