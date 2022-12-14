@@ -116,7 +116,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     long totalRouteDistance = 0;
                     Console.WriteLine("Route for Vehicle {0}:", i);
                     // Creat table Delivery Route
-                    SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryRoute, Status = (int)RouteStatusEnum.NotAssign };
+                    SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryRoute, Status = (int)RouteStatusEnum.NotAssign, Description = "Algori" };
                     List<RouteEdge> listEdge = new List<RouteEdge>();
                     List<NodeModel> listNode = new List<NodeModel>();
                     long routeDistance = 0;
@@ -142,17 +142,9 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                             edge.Id = previousEdgeId;
                             node.EdgeId = previousEdgeId;
                         }
-                        previousBuiding = buildId;
+
                         previousEdgeId = edge.Id;
                         Console.Write("{0} -> ", buildingEnum);
-                        //        //Create Route edge
-                        //        //List order Id -> list segment -> check building id -> create orderAction()
-                        //        //if segment type 2(hub - cus), 3(store - cus) -> remove order Queue
-                        //        //if segment type 1(store - hub) -> remove then add to queue || do nothing
-
-                        //        //load list order from queue -> segment(not done, done) -> 1 segment then remove order from queue 
-                        //        //-> segment done -> order done, fail or at hub
-                        //        //if order at hub -> add order to queue
 
                         var previousIndex = index;
                         index = solution.Value(routing.NextVar(index));
@@ -168,12 +160,13 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                         }
                         else
                             edge.Distance = routeDistance;
-                        if (buildId != previousBuiding)// check dup edge
+                        if (buildId != previousBuiding)// check dup edge, then change previousBuilding
                         {
                             listEdge.Add(edge);
                             priority++;
                         }
                         listNode.Add(node);
+                        previousBuiding = buildId;// last
                     }
                     Console.WriteLine("{0}", manager.IndexToNode((int)index));
                     Console.WriteLine("Distance of the route: {0}m", routeDistance);
@@ -187,11 +180,13 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     }
                 }
                 Console.WriteLine("Segment of the route: {0}", listSegments.Count);
-
+                Console.WriteLine("IF____________________");
                 int check = await repo.RouteAction.CreateRoute(listRoute, listSegments);
                 if (check > 0)
                 {
+                    Console.WriteLine("BEFFOR____________________");
                     await repo.RouteAction.CreateActionOrder(NodeAction, listSegments);
+                    Console.WriteLine("AFTER____________________");
                 }
                 //Console.WriteLine("Maximum distance of the routes: {0}m", maxRouteDistance);
             }

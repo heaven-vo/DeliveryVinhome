@@ -189,7 +189,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
                 var lstOrder = await (from orderr in context.Orders
                                       join h in context.OrderActionHistories on orderr.Id equals h.OrderId
-                                      where  h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                      where h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
                                       select orderr).ToListAsync();
 
                 if (!lstOrder.Any())
@@ -214,7 +214,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return null;
         }
-       
+
         public async Task<PriceReportModel> GetPriceOrdersReports(DateFilterRequest request, MonthFilterRequest monthFilter)
         {
             PriceReportModel report = new PriceReportModel()
@@ -286,8 +286,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                 report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // Lợi nhuận
                 return report;
             }
-                return null;
-            }
+            return null;
+        }
         public async Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize)
         {
             var lstOrder = await (from order in context.Orders
@@ -843,7 +843,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var listOrder = await context.Orders.Include(x => x.OrderCache)//.Include(x => x.OrderActionHistories)
                 .Where(x => x.Status == (int)OrderStatusEnum.Received && (x.Menu.SaleMode == "1"
                              || (x.Menu.SaleMode == "2" && x.DeliveryTime.FromHour <= time)
-                             || (x.Menu.SaleMode == "3" && x.Menu.DayFilter == date && x.DeliveryTime.FromHour <= time)
+                             || (x.Menu.SaleMode == "3" && x.Menu.DayFilter <= date && x.DeliveryTime.FromHour <= time)
                              ) && (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash
                                 || (x.Payments.FirstOrDefault().Type == (int)PaymentEnum.VNPay && x.Payments.FirstOrDefault().Status == (int)PaymentStatusEnum.successful)
                                 )

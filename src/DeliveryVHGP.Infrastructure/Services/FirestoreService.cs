@@ -20,7 +20,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         public async Task AddRoute(RouteModel route)
         {
 
-            DocumentReference document = fireStoreDb.Collection("employees").Document(route.RouteId);
+            DocumentReference document = fireStoreDb.Collection("routes").Document(route.RouteId);
             await document.SetAsync(route);
 
 
@@ -29,7 +29,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         {
             try
             {
-                DocumentReference empRef = fireStoreDb.Collection("employees").Document(routeId);
+                DocumentReference empRef = fireStoreDb.Collection("routes").Document(routeId);
                 await empRef.SetAsync(route, SetOptions.MergeAll);
             }
             catch
@@ -41,7 +41,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         {
             try
             {
-                DocumentReference docRef = fireStoreDb.Collection("employees").Document(id);
+                DocumentReference docRef = fireStoreDb.Collection("routes").Document(id);
                 DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
                 if (snapshot.Exists)
@@ -87,8 +87,8 @@ namespace DeliveryVHGP.Infrastructure.Services
         {
             try
             {
-                CollectionReference collectionReference = fireStoreDb.Collection("employees");
-                DocumentReference empRef = fireStoreDb.Collection("employees").Document(id);
+                CollectionReference collectionReference = fireStoreDb.Collection("routes");
+                DocumentReference empRef = fireStoreDb.Collection("routes").Document(id);
                 await empRef.DeleteAsync();
             }
             catch
@@ -100,7 +100,7 @@ namespace DeliveryVHGP.Infrastructure.Services
         {
             try
             {
-                Query employeeQuery = fireStoreDb.Collection("employees");
+                Query employeeQuery = fireStoreDb.Collection("routes");
                 QuerySnapshot employeeQuerySnapshot = await employeeQuery.GetSnapshotAsync();
 
                 foreach (DocumentSnapshot documentSnapshot in employeeQuerySnapshot.Documents)
