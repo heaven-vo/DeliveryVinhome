@@ -15,6 +15,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<OrderAdminDto>> GetListOrdersByStore(string StoreId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetListOrdersByStoreByStatus(string StoreId, int StatusId, int pageIndex, int pageSize);
         Task<List<OrderAdminDto>> GetOrderByPayment(int PaymentType, int pageIndex, int pageSize);
+        Task<List<OrderAdminDto>> GetOrderByPhone(int pageIndex, int pageSize, string phone);
         Task<List<OrderAdminDto>> GetOrderByStatus(int status, int pageIndex, int pageSize);
         Task<List<TimeDurationOrder>> GetDurationOrder(string menuId, int pageIndex, int pageSize);
         Task<Object> GetOrdersById(string orderId);

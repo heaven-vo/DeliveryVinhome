@@ -27,6 +27,18 @@ namespace DeliveryVHGP.WebApi.Repositories
 
             return listAccount;
         }
+        public async Task<AccountCheck> CheckAccount(string id)
+        {
+            var check = await context.Accounts.
+                Where(x => x.Id == id).
+                Select(x => new AccountCheck
+                {
+                    RoleId = x.RoleId,
+                })
+                .FirstOrDefaultAsync();
+
+            return check;
+        }
         public async Task CreateAcc()
         {
             Account acc = new Account() { Id = "123"+ DateTime.UtcNow, Name = "Duongas", RoleId = "2", Password = "adasdas", Status = "true"};
