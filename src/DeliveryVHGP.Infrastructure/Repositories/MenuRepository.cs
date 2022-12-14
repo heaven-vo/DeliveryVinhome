@@ -737,6 +737,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
                 SaleMode = menu.ModeId,
+                Priority = menu.Priority,
                 Active = true
             };
             foreach (var category in menu.listCategory)
@@ -771,7 +772,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
                 DayFilter = DateTime.Parse(menu.DayFilter),
-                SaleMode = menu.ModeId
+                SaleMode = menu.ModeId,
+                Priority = menu.Priority
             };
             List<String> listCate = (List<String>)await context.CategoryInMenus.Where(x => x.MenuId == menuId).Select(x => x.CategoryId).ToListAsync();
             List<String> listNewCate = (List<String>)menu.listCategory;
@@ -817,6 +819,16 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return menu;
 
+        }
+        public async Task DeleteMenu(string menuId)
+        {
+            var menu = await context.Menus.FindAsync(menuId);
+            if (menu == null)
+            {
+                throw new Exception("Menu id is wrong");
+            }
+            context.Remove(menu);
+            await context.SaveChangesAsync();
         }
 
         public async Task<double> GetTime()

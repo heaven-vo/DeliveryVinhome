@@ -61,6 +61,23 @@ namespace DeliveryVHGP.WebApi.Controllers.AdminController
             }
             return Ok(menu);
         }
+        [HttpDelete("{menuId}")]
+        public async Task<ActionResult<MenuDto>> DeleteMenu(string menuId)
+        {
+            if (menuId == null)
+            {
+                return BadRequest();
+            }
+            try
+            {
+                await repository.Menu.DeleteMenu(menuId);
+            }
+            catch (Exception ex)
+            {
+                return Conflict(ex.Message);
+            }
+            return Ok();
+        }
 
     }
 }

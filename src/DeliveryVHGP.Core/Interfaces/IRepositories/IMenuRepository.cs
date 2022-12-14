@@ -31,6 +31,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task UpdateProductsInMenu(ProductsInMenuUpdateModel product);
         Task<MenuDto> CreatNewMenu(MenuDto menu);
         Task<MenuDto> UpdateMenu(string menuId, MenuDto menu);
+        Task DeleteMenu(string menuId);
 
     }
 }
