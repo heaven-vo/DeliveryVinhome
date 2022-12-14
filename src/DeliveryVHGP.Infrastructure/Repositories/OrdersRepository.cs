@@ -141,15 +141,17 @@ namespace DeliveryVHGP.WebApi.Repositories
             return lstOrder;
         }
 
-        public async Task<SystemReportModelInStore> GetListOrdersReport(DateFilterRequest request, MonthFilterRequest monthFilter)
+        public async Task<SystemReportModel> GetListOrdersReport(DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-            SystemReportModelInStore report = new SystemReportModelInStore()
+            SystemReportModel report = new SystemReportModel()
             {
                 TotalOrderNew = 0,
                 TotalOrderUnpaidVNpay = 0,
                 TotalOrderCancel = 0,
                 TotalOrderCompleted = 0,
                 TotalOrder = 0,
+                TotalStore = 0, // tong store
+                TotalShipper = 0, // tong store
 
             };
 
@@ -163,6 +165,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join h in context.OrderActionHistories on orderr.Id equals h.OrderId
                                       where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
                                       select orderr).ToListAsync();
+                var countStore = context.Stores.Count();
+                var countShipper = context.Shippers.Count();
                 if (!lstOrder.Any())
                 {
                     return report;
@@ -182,6 +186,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+                report.TotalStore = countStore; // tong store
+                report.TotalShipper = countShipper; // tong store
                 return report;
             }
             else if (monthFilter.Month != 0)
@@ -191,6 +197,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join h in context.OrderActionHistories on orderr.Id equals h.OrderId
                                       where  h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
                                       select orderr).ToListAsync();
+                var countStore = context.Stores.Count();
+                var countShipper = context.Shippers.Count();
 
                 if (!lstOrder.Any())
                 {
@@ -210,6 +218,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+                report.TotalStore = countStore; // tong store
+                report.TotalShipper = countShipper; // tong store
                 return report;
             }
             return null;

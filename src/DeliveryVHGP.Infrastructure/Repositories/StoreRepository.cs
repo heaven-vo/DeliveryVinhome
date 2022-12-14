@@ -55,6 +55,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<SystemReportModelInStore> GetListOrdersReport(string storeId, DateFilterRequest request, MonthFilterRequest monthFilter)
         {
+
             SystemReportModelInStore report = new SystemReportModelInStore()
             {
                 TotalOrderNew = 0,
@@ -62,7 +63,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 TotalOrderCancel = 0,
                 TotalOrderCompleted = 0,
                 TotalOrder = 0,
-
+            
             };
 
             //SystemReportModelInStore report = new SystemReportModelInStore()
@@ -76,6 +77,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join s in context.Stores on orderr.StoreId equals s.Id
                                       where s.Id == storeId && h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
                                       select orderr).ToListAsync();
+         
+
                 if (!lstOrder.Any())
                 {
                     return report;
@@ -95,6 +98,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+                
                 return report;
             }
             else if (monthFilter.Month != 0)
@@ -105,6 +109,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join s in context.Stores on orderr.StoreId equals s.Id
                                       where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
                                       select orderr).ToListAsync();
+               
 
                 if (!lstOrder.Any())
                 {
@@ -124,6 +129,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
+              
                 return report;
             }
             return null;
