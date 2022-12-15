@@ -15,12 +15,13 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public async Task AddOrderToCache(List<string> listOrderId)
         {
             List<OrderCache> listCaches = new List<OrderCache>();
-            var listOrder = await context.Orders.Include(x => x.Menu).Where(x => listOrderId.Contains(x.Id)).ToListAsync();
+            var listOrder = await context.Orders.Where(x => listOrderId.Contains(x.Id)).ToListAsync();
             listOrder.ForEach(x => x.Status = (int)OrderStatusEnum.Assigning);
 
             foreach (var order in listOrder)
             {
-                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = order.Id, MenuSaleMode = int.Parse(order.Menu.SaleMode), CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
+                var menu = await context.Menus.Where(x => x.Id == order.MenuId).FirstOrDefaultAsync();
+                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = order.Id, MenuSaleMode = int.Parse(menu.SaleMode), CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
                 listCaches.Add(cache);
                 var actionHistory = new OrderActionHistory()
                 {
