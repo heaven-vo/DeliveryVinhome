@@ -584,6 +584,16 @@ namespace DeliveryVHGP.WebApi.Repositories
                     RoleId = "2",
                     Status = "true"
                 });
+            context.Wallets.Add(
+             new Wallet
+             {
+                 Id = Guid.NewGuid().ToString(),
+                 AccountId = store.Id,
+                 Type = (int)WalletTypeEnum.Commission,
+                 Amount = 0,
+                 Active = true,
+
+             });
             await context.SaveChangesAsync();
             return store;
 
