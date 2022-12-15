@@ -38,7 +38,7 @@
         }
         public class FilterRequest
         {
-            public string? DateFilter { get; set; } = "";
+           public string? DateFilter { get; set; } = "";
             public string? SearchByPayment { get; set; } = "";
             public string? SearchByPhone { get; set; } = "";
             public int SearchByStatus { get; set; } = -1;

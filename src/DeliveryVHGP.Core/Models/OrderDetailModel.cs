@@ -25,6 +25,7 @@
         public string? FromHour { get; set; }
         public string? ToHour { get; set; }
         public string? Dayfilter { get; set; }
+        public string? MessageFail { get; set; }
 
 
         public List<ViewListDetail> ListProInMenu { get; set; }
