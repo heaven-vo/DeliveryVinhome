@@ -99,7 +99,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                 StartHour = menu.StartHour,
                 EndHour = menu.EndHour,
                 listCategory = cateId,
-                ModeId = menu.SaleMode
+                ModeId = menu.SaleMode,
+                Priority = menu.Priority
             };
             return menuDto;
         }

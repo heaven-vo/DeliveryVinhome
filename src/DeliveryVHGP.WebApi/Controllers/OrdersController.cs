@@ -268,7 +268,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
             return Ok();
         }
-        [HttpGet("complete")]
+        [HttpPut("complete")]
         public async Task<ActionResult> CompleteOrder(string orderActionId, string shipperId, int actionType)
         {
             try
@@ -285,12 +285,46 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
-        [HttpGet("cancel")]
+        [HttpPut("cancel")]
         public async Task<ActionResult> CancelOrder(string orderActionId, string shipperId, int actionType, string messageFail)
         {
             try
             {
                 await repository.Order.CancelOrder(orderActionId, shipperId, actionType, messageFail);
+                return Ok(new { StatusCode = "Successful" });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
+        [HttpPut("admin/cancel")]
+        public async Task<ActionResult> CancelOrderByAdmin(string orderId, int orderStatus, string messageFail)
+        {
+            try
+            {
+                await repository.Order.CancelOrderByAdmin(orderId, orderStatus, messageFail);
+                return Ok(new { StatusCode = "Successful" });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
+        [HttpPut("store/cancel")]
+        public async Task<ActionResult> CancelOrderByStore(string orderId, string messageFail)
+        {
+            try
+            {
+                await repository.Order.CancelOrderByStore(orderId, messageFail);
                 return Ok(new { StatusCode = "Successful" });
             }
             catch (Exception e)

@@ -81,7 +81,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             return lstOrder;
         }
-         public async Task<List<OrderAdminDto>> GetOrderByPhone(int pageIndex, int pageSize,string phone)
+        public async Task<List<OrderAdminDto>> GetOrderByPhone(int pageIndex, int pageSize, string phone)
         {
             var lstOrder = await (from order in context.Orders
                                   join s in context.Stores on order.StoreId equals s.Id
@@ -898,7 +898,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             await context.SaveChangesAsync();
             return order;
         }
-        public async Task<List<string>> CheckAvailableOrder() // Remove mode 1
+        public async Task<List<string>> CheckAvailableOrder()
         {
             var time = Double.Parse(DateTime.UtcNow.AddHours(7).ToString("HH.mm"));
             DateTime date = DateTime.UtcNow.AddHours(7).Date;
@@ -1009,12 +1009,54 @@ namespace DeliveryVHGP.WebApi.Repositories
             await CreateShipperHistory(shipperId, orderAction.OrderId, actionType, (int)StatusEnum.fail);
             await RemoveOrderFromCache(orderAction.OrderId);
         }
+        public async Task CancelOrderByAdmin(string orderId, int orderStatus, string messageFail)
+        {
+            var order = await context.Orders.FindAsync(orderId);
+            if (order == null)
+            {
+                throw new Exception("Đơn hàng không tồn tại");
+            }
+            order.MessageFail = messageFail;
+            var orderUpdate = await OrderUpdateStatus(orderId, orderStatus);
+            await context.SaveChangesAsync();
+            if (order.Status >= (int)OrderStatusEnum.Accepted && order.Status <= (int)InProcessStatus.CustomerDelivery)
+            {
+                var listAction = await context.OrderActions.Where(x => x.OrderId == orderId && x.Status == (int)OrderActionStatusEnum.Todo).ToListAsync();
+                if (listAction.Any())
+                {
+                    listAction.ForEach(x => x.Status = (int)OrderActionStatusEnum.Fail);
+                }
+                foreach (var action in listAction)
+                {
+                    await CheckDoneRoute(action.Id);
+                }
+                //await CreateShipperHistory(shipperId, orderAction.OrderId, actionType, (int)StatusEnum.fail);
+            }
+            await RemoveOrderFromCache(orderId);
+        }
+        public async Task CancelOrderByStore(string orderId, string messageFail)
+        {
+            var order = await context.Orders.FindAsync(orderId);
+            if (order != null && order.Status <= (int)OrderStatusEnum.Assigning)
+            {
+                order.MessageFail = messageFail;
+                var orderUpdate = await OrderUpdateStatus(orderId, (int)FailStatus.StoreFail);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Bạn không có quyền hủy đơn này");
+            }
+            await RemoveOrderFromCache(orderId);
+        }
         public async Task RemoveOrderFromCache(string orderId)
         {
             var orderCache = await context.OrderCaches.Where(x => x.OrderId == orderId).FirstOrDefaultAsync();
-            context.Remove(orderCache);
-            await context.SaveChangesAsync();
-
+            if (orderCache != null)
+            {
+                context.Remove(orderCache);
+                await context.SaveChangesAsync();
+            }
         }
         public async Task CreateTransaction(string shipperId, string orderId, int actionType)
         {
@@ -1136,21 +1178,20 @@ namespace DeliveryVHGP.WebApi.Repositories
                 .ToListAsync();
             if (!actionTodo.Any() || actionTodo == null)
             {
+                var edgeNotDone = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId && x.Status != (int)EdgeStatusEnum.Done).ToListAsync();
                 action.RouteEdge.Status = (int)EdgeStatusEnum.Done;
                 var lastEdge = await context.RouteEdges.Where(x => x.RouteId == action.RouteEdge.RouteId)
                     .OrderByDescending(x => x.Priority).Select(x => x.Priority).FirstOrDefaultAsync();
-                //Console.WriteLine("Last edge: " + lastEdge);
-                if (action.RouteEdge.Priority == lastEdge)
+                if (action.RouteEdge.Priority == lastEdge && edgeNotDone.Count <= 1)
                 {
                     var route = await context.SegmentDeliveryRoutes.FindAsync(action.RouteEdge.RouteId);
                     route.Status = (int)RouteStatusEnum.Done;
                     await firestoreService.DeleteEm(route.Id);
                 }
-                else
+                else// chưa xử lý nếu admin cancel đơn
                 {
                     var index = await context.RouteEdges.Where(x => x.Id == action.RouteEdgeId)
                         .Select(x => x.Priority).FirstOrDefaultAsync();
-                    //Console.WriteLine("index: " + index);
                     var nextEdge = await context.RouteEdges
                         .Where(x => x.RouteId == action.RouteEdge.RouteId && x.Priority == (index + 1)).FirstOrDefaultAsync();
                     if (nextEdge == null)
