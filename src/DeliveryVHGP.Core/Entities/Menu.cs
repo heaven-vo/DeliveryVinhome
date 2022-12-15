@@ -24,6 +24,7 @@ namespace DeliveryVHGP.Core.Entities
         public double? StartHour { get; set; }
         public double? EndHour { get; set; }
         public string? SaleMode { get; set; }
+        public double? ShipCost { get; set; }
         public int? Priority { get; set; }
         public bool? Active { get; set; }
 

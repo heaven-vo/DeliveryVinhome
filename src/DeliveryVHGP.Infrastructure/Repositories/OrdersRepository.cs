@@ -636,6 +636,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             {
                 throw new Exception("Đơn hàng không hợp lệ");
             }
+            var shipCost = await context.Menus.Where(x => x.Id == order.MenuId).Select(x => x.ShipCost).FirstOrDefaultAsync();
             var od = new Order
             {
                 Id = order.Id,
@@ -646,7 +647,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 FullName = order.FullName,
                 PhoneNumber = order.PhoneNumber,
                 MenuId = order.MenuId,
-                ShipCost = order.ShipCost,
+                ShipCost = shipCost,
                 DeliveryTimeId = order.DeliveryTimeId,
                 ServiceId = order.ServiceId,
                 Status = (int)OrderStatusEnum.New

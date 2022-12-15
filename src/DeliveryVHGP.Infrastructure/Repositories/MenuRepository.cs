@@ -100,6 +100,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 EndHour = menu.EndHour,
                 listCategory = cateId,
                 ModeId = menu.SaleMode,
+                ShipCost = menu.ShipCost,
                 Priority = menu.Priority
             };
             return menuDto;
@@ -739,6 +740,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 EndHour = menu.EndHour,
                 SaleMode = menu.ModeId,
                 Priority = menu.Priority,
+                ShipCost = menu.ShipCost,
                 Active = true
             };
             foreach (var category in menu.listCategory)
@@ -761,7 +763,7 @@ namespace DeliveryVHGP.WebApi.Repositories
 
         public async Task<MenuDto> UpdateMenu(string menuId, MenuDto menu)
         {
-            if (menu.DayFilter != null || menu.DayFilter == "")
+            if (menu.DayFilter == null || menu.DayFilter == "")
             {
                 menu.DayFilter = "2030/01/01";
             }
@@ -774,6 +776,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 EndHour = menu.EndHour,
                 DayFilter = DateTime.Parse(menu.DayFilter),
                 SaleMode = menu.ModeId,
+                ShipCost = menu.ShipCost,
                 Priority = menu.Priority
             };
             List<String> listCate = (List<String>)await context.CategoryInMenus.Where(x => x.MenuId == menuId).Select(x => x.CategoryId).ToListAsync();

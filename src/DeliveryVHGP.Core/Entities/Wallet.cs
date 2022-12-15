@@ -13,6 +13,7 @@ namespace DeliveryVHGP.Core.Entities
         public string Id { get; set; } = null!;
         public string? AccountId { get; set; }
         public double? Amount { get; set; }
+        public int? Type { get; set; }
         public bool? Active { get; set; }
 
         public virtual Account? Account { get; set; }
