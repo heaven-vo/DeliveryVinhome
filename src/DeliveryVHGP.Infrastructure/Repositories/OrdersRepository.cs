@@ -1061,12 +1061,15 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task CreateTransaction(string shipperId, string orderId, int actionType)
         {
+            double shipPercent = 0.4;
             var order = await context.Orders.Include(x => x.Payments).Where(x => x.Id == orderId).FirstOrDefaultAsync();
             if (order == null)
                 throw new Exception("Order id is not valid");
             else
             {
-                var wallet = await context.Wallets.Where(x => x.AccountId == shipperId).FirstOrDefaultAsync();
+                var wallet = await context.Wallets.Where(x => x.AccountId == shipperId && x.Type == (int)WalletTypeEnum.Refund).FirstOrDefaultAsync();
+                var refundWallet = await context.Wallets.Where(x => x.AccountId == shipperId && x.Type == (int)WalletTypeEnum.Refund).FirstOrDefaultAsync();
+                var codWallet = await context.Wallets.Where(x => x.AccountId == shipperId && x.Type == (int)WalletTypeEnum.Cod).FirstOrDefaultAsync();
                 Transaction tran = new Transaction()
                 {
                     Id = Guid.NewGuid().ToString(),
