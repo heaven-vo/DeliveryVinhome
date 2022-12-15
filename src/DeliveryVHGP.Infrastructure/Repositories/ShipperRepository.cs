@@ -1,11 +1,11 @@
-﻿using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Models;
-using Microsoft.EntityFrameworkCore;
-using DeliveryVHGP.Infrastructure.Services;
+﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
-using DeliveryVHGP.Infrastructure.Repositories.Common;
 using DeliveryVHGP.Core.Enums;
+using DeliveryVHGP.Core.Interface.IRepositories;
+using DeliveryVHGP.Core.Models;
+using DeliveryVHGP.Infrastructure.Repositories.Common;
+using DeliveryVHGP.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace DeliveryVHGP.WebApi.Repositories
 {
@@ -13,7 +13,7 @@ namespace DeliveryVHGP.WebApi.Repositories
     {
         private readonly IFileService _fileService;
         private readonly ITimeStageService _timeStageService;
-        public ShipperRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context): base(context)
+        public ShipperRepository(ITimeStageService timeStageService, IFileService fileService, DeliveryVHGP_DBContext context) : base(context)
         {
             _fileService = fileService;
             _timeStageService = timeStageService;
@@ -24,46 +24,46 @@ namespace DeliveryVHGP.WebApi.Repositories
                                      join acc in context.Accounts on ship.Id equals acc.Id
                                      where ship.FullName.Contains(request.SearchByName)
                                      select new ShipperModel()
-                                   {
-                                       Id = ship.Id,
-                                       FullName = ship.FullName,
-                                       Phone = ship.Phone,
-                                       Image = ship.Image,
-                                       Email = ship.Email,
-                                       VehicleType = ship.VehicleType,
-                                       DeliveryTeam = ship.DeliveryTeam,
-                                       LicensePlates = ship.LicensePlates,
-                                       Password = acc.Password,
-                                       Colour = ship.Colour,
-                                       Status = ship.Status,
-                                       CreateAt = ship.CreateAt,
-                                       UpdateAt = ship.UpdateAt,
+                                     {
+                                         Id = ship.Id,
+                                         FullName = ship.FullName,
+                                         Phone = ship.Phone,
+                                         Image = ship.Image,
+                                         Email = ship.Email,
+                                         VehicleType = ship.VehicleType,
+                                         DeliveryTeam = ship.DeliveryTeam,
+                                         LicensePlates = ship.LicensePlates,
+                                         Password = acc.Password,
+                                         Colour = ship.Colour,
+                                         Status = ship.Status,
+                                         CreateAt = ship.CreateAt,
+                                         UpdateAt = ship.UpdateAt,
 
-                                   }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                                     }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listShipper;
         }
         public async Task<Object> GetShipperById(string shipId)
         {
             var shipper = await (from ship in context.Shippers.Where(x => x.Id == shipId)
-                                     
+
                                  join acc in context.Accounts on ship.Id equals acc.Id
                                  select new ShipperModel()
-                                     {
-                                         Id = ship.Id,
-                                         FullName = ship.FullName,
-                                         Phone = ship.Phone,
-                                         Email = ship.Email,
-                                         Image = ship.Image,
-                                         VehicleType = ship.VehicleType,
-                                         DeliveryTeam = ship.DeliveryTeam,
-                                         LicensePlates = ship.LicensePlates,
-                                         Colour = ship.Colour,
-                                         Status = ship.Status,
-                                         Password = acc.Password,
-                                         CreateAt = ship.CreateAt,
-                                         UpdateAt = ship.UpdateAt
+                                 {
+                                     Id = ship.Id,
+                                     FullName = ship.FullName,
+                                     Phone = ship.Phone,
+                                     Email = ship.Email,
+                                     Image = ship.Image,
+                                     VehicleType = ship.VehicleType,
+                                     DeliveryTeam = ship.DeliveryTeam,
+                                     LicensePlates = ship.LicensePlates,
+                                     Colour = ship.Colour,
+                                     Status = ship.Status,
+                                     Password = acc.Password,
+                                     CreateAt = ship.CreateAt,
+                                     UpdateAt = ship.UpdateAt
 
-                                     }).FirstOrDefaultAsync();
+                                 }).FirstOrDefaultAsync();
             return shipper;
         }
         public async Task<IEnumerable<ShipperModel>> GetListShipperByName(string shipName, int pageIndex, int pageSize)
@@ -90,7 +90,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                      }).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return listShipper;
         }
-            public async Task<ShipperDto> CreateShipper(ShipperDto ship)
+        public async Task<ShipperDto> CreateShipper(ShipperDto ship)
         {
             string fileImg = "ImagesShipper";
             string time = await _timeStageService.GetTime();
@@ -98,11 +98,11 @@ namespace DeliveryVHGP.WebApi.Repositories
                 new Shipper
                 {
                     Id = ship.Id,
-                    FullName=ship.FullName,
-                    Phone= ship.Phone,
-                    Email=ship.Email,
-                    VehicleType=ship.VehicleType,
-                    DeliveryTeam=ship.DeliveryTeam,
+                    FullName = ship.FullName,
+                    Phone = ship.Phone,
+                    Email = ship.Email,
+                    VehicleType = ship.VehicleType,
+                    DeliveryTeam = ship.DeliveryTeam,
                     Image = await _fileService.UploadFile(fileImg, ship.Image),
                     LicensePlates = ship.LicensePlates,
                     Status = true,
@@ -121,19 +121,19 @@ namespace DeliveryVHGP.WebApi.Repositories
             context.Wallets.Add(
                new Wallet
                {
-                  Id = Guid.NewGuid().ToString(),
-                  AccountId = ship.Id,
-                  Type = (int)WalletTypeEnum.Refund,
-                  Amount = 0,
-                  Active = true,
-                  
+                   Id = Guid.NewGuid().ToString(),
+                   AccountId = ship.Id,
+                   Type = (int)WalletTypeEnum.Refund,
+                   Amount = 0,
+                   Active = true,
+
                });
             context.Wallets.Add(
               new Wallet
               {
                   Id = Guid.NewGuid().ToString(),
                   AccountId = ship.Id,
-                  Type = (int)WalletTypeEnum.Cod,
+                  Type = (int)WalletTypeEnum.Debit,
                   Amount = 0,
                   Active = true,
 

@@ -2,6 +2,7 @@
 {
     public class TransactionModel
     {
+        public int walletType { get; set; }
         public int? TransactionType { get; set; }
         public double? Amount { get; set; }
         public int? TransactionAction { get; set; }

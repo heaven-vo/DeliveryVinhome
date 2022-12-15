@@ -1,5 +1,6 @@
 ﻿using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
+using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
 using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.Infrastructure.Repositories.Common;
@@ -12,15 +13,17 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         public TransactionRepository(DeliveryVHGP_DBContext context) : base(context)
         {
         }
-        public async Task<double> GetBalanceWallet(string accountId)
+        public async Task<WalletsShipperModel> GetBalanceWallet(string accountId)
         {
-            var wallet = await context.Wallets.Where(x => x.AccountId == accountId && x.Active == true).FirstOrDefaultAsync();
-            if (wallet == null)
+            var refundBalance = await context.Wallets.Where(x => x.AccountId == accountId && x.Type == (int)WalletTypeEnum.Refund && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
+            var debitBalance = await context.Wallets.Where(x => x.AccountId == accountId && x.Type == (int)WalletTypeEnum.Debit && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
+            if (refundBalance == null || debitBalance == null)
             {
                 throw new Exception("Account's wallet not avaliable");
             }
-            var balance = (double)wallet.Amount;
-            return balance;
+            WalletsShipperModel wallet = new WalletsShipperModel { refundBalance = refundBalance, debitBalance = debitBalance };
+            ;
+            return wallet;
         }
         public async Task<List<TransactionModel>> GetListTransactionByShipperId(string shipperId, int page, int pageSize)
         {
@@ -38,6 +41,19 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     TransactionAction = x.Action,
                     Status = x.Status
                 }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            foreach (var transaction in listTrans)
+            {
+                if (transaction.TransactionType == (int)TransactionTypeEnum.refund || transaction.TransactionType == (int)TransactionTypeEnum.withdraw)
+                {
+                    transaction.walletType = (int)WalletTypeEnum.Refund;
+                }
+                if (transaction.TransactionType == (int)TransactionTypeEnum.cod || transaction.TransactionType == (int)TransactionTypeEnum.shippingcost
+                    || transaction.TransactionType == (int)TransactionTypeEnum.recharge)
+                {
+                    transaction.walletType = (int)WalletTypeEnum.Debit;
+                }
+
+            }
             return listTrans;
         }
     }

@@ -3,7 +3,7 @@
     public enum WalletTypeEnum
     {
         Refund = 1,
-        Cod = 2,
+        Debit = 2,
         Commission = 3
     }
 }

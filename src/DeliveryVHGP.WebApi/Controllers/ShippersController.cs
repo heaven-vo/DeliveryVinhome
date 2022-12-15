@@ -32,12 +32,12 @@ namespace DeliveryVHGP.WebApi.Controllers
             }
         }
         [HttpGet("{shipperId}/wallet")]
-        public async Task<ActionResult> GetBalaceWallet(string shipperId)
+        public async Task<ActionResult<WalletsShipperModel>> GetBalaceWallet(string shipperId)
         {
             try
             {
-                var balance = await repository.Transaction.GetBalanceWallet(shipperId);
-                return Ok(new { StatusCode = "Successful", data = balance });
+                var walletBalance = await repository.Transaction.GetBalanceWallet(shipperId);
+                return Ok(new { StatusCode = "Successful", data = walletBalance });
             }
             catch (Exception e)
             {
