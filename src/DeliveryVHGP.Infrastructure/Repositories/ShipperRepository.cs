@@ -118,6 +118,26 @@ namespace DeliveryVHGP.WebApi.Repositories
                    RoleId = "3",
                    Status = "true"
                });
+            context.Wallets.Add(
+               new Wallet
+               {
+                  Id = Guid.NewGuid().ToString(),
+                  AccountId = ship.Id,
+                  Type = (int)WalletTypeEnum.Refund,
+                  Amount = 0,
+                  Active = true,
+                  
+               });
+            context.Wallets.Add(
+              new Wallet
+              {
+                  Id = Guid.NewGuid().ToString(),
+                  AccountId = ship.Id,
+                  Type = (int)WalletTypeEnum.Cod,
+                  Amount = 0,
+                  Active = true,
+
+              });
             await context.SaveChangesAsync();
             return ship;
         }
