@@ -27,4 +27,8 @@
         public string? SearchByStoreCategory { get; set; } = "";
         public string? SearchByBrand { get; set; } = "";
     }
+    public class WalletsStoreModel
+    {
+        public double? CommissionBalance { get; set; }
+    }
 }

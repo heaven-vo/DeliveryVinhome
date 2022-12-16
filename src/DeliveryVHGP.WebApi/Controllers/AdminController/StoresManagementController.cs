@@ -203,5 +203,30 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
+        [HttpGet("storeId-wallets")]
+        public async Task<ActionResult> AddWallerbyStore(string storeId)
+        {
+            var store = await repository.Store.CreatWallet(storeId);
+            if (storeId == null)
+                return NotFound();
+            return Ok(store);
+        }
+        [HttpGet("{storeId}/wallet")]
+        public async Task<ActionResult<WalletsStoreModel>> GetBalaceStoreWallet(string storeId)
+        {
+            try
+            {
+                var walletBalance = await repository.Store.GetBalanceStoreWallet(storeId);
+                return Ok(new { StatusCode = "Successful", data = walletBalance });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
     }
 }

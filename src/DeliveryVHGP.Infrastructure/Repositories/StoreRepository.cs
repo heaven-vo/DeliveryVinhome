@@ -166,6 +166,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         join h in context.OrderActionHistories on o.Id equals h.OrderId
                                         join s in context.Stores on o.StoreId equals s.Id
                                         where s.Id == storeId && h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
+                                        where o.Status == (int)OrderStatusEnum.Completed
                                         select pay).ToListAsync();
                 if (!lstOrder.Any())
                 {
@@ -176,9 +177,13 @@ namespace DeliveryVHGP.WebApi.Repositories
                 //TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Where(p => p.Status == (int)OrderStatusEnum.Completed).Count() * 10000, // tổng tiền service
                 report.TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount);// tổng tiền thanh toán VnPay
                 report.TotalPaymentCash = (double)lstPayment.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount);// tổng tiền thanh toán Cash
-                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // tổng tiền order
+                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed || p.Status == (int)OrderStatusEnum.InProcess
+                                                    || p.Status == (int)InProcessStatus.HubDelivery || p.Status == (int)InProcessStatus.AtHub || p.Status == (int)InProcessStatus.CustomerDelivery).Sum(o => o.Total); // tổng tiền order
                 report.TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // Doanh thu
                 report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000; // Lợi nhuận
+                report.TotalCommissionOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed || p.Status == (int)OrderStatusEnum.InProcess
+                                                   || p.Status == (int)InProcessStatus.HubDelivery || p.Status == (int)InProcessStatus.AtHub || p.Status == (int)InProcessStatus.CustomerDelivery).Sum(o => o.Total);
+
                 return report;
             }
             else if (monthFilter.Month != 0)
@@ -195,6 +200,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         join h in context.OrderActionHistories on o.Id equals h.OrderId
                                         join s in context.Stores on o.StoreId equals s.Id
                                         where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                        where o.Status == (int)OrderStatusEnum.Completed
                                         select pay).ToListAsync();
 
                 if (!lstOrder.Any())
@@ -205,9 +211,13 @@ namespace DeliveryVHGP.WebApi.Repositories
                 //TotalSurcharge = lstOrder.Where(x => x.ServiceId == "1").Where(p => p.Status == (int)OrderStatusEnum.Completed).Count() * 10000, // tổng tiền service
                 report.TotalPaymentVNPay = (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount);// tổng tiền thanh toán VnPay
                 report.TotalPaymentCash = (double)lstPayment.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount);// tổng tiền thanh toán Cash
-                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // tổng tiền order
+                report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed || p.Status == (int)OrderStatusEnum.InProcess
+                                                     || p.Status == (int)InProcessStatus.HubDelivery || p.Status == (int)InProcessStatus.AtHub || p.Status == (int)InProcessStatus.CustomerDelivery).Sum(o => o.Total); // tổng tiền order
                 report.TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000 + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // Doanh thu
                 report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Where(x => x.ServiceId == "1").Count() * 10000; // Lợi nhuận
+                report.TotalCommissionOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed || p.Status == (int)OrderStatusEnum.InProcess
+                                                   || p.Status == (int)InProcessStatus.HubDelivery || p.Status == (int)InProcessStatus.AtHub || p.Status == (int)InProcessStatus.CustomerDelivery).Sum(o => o.Total);
+
                 return report;
             }
             return null;
@@ -704,6 +714,34 @@ namespace DeliveryVHGP.WebApi.Repositories
                 throw;
             }
             return store;
+        }
+        public async Task<Object> CreatWallet(string storeId)
+        {
+            var store = await context.Stores.FindAsync(storeId);
+            context.Wallets.Add(
+            new Wallet
+            {
+                Id = Guid.NewGuid().ToString(),
+                AccountId = store.Id,
+                Type = (int)WalletTypeEnum.Commission,
+                Amount = 0,
+                Active = true,
+
+            });
+            await context.SaveChangesAsync();
+            return store;
+        }
+        public async Task<WalletsStoreModel> GetBalanceStoreWallet(string accountId)
+        {
+            var CommissionBalance = await context.Wallets.Where(x => x.AccountId == accountId && x.Type == (int)WalletTypeEnum.Commission && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
+
+            if (CommissionBalance == null)
+            {
+                throw new Exception("Account's wallet not avaliable");
+            }
+            WalletsStoreModel wallet = new WalletsStoreModel { CommissionBalance = CommissionBalance };
+            ;
+            return wallet;
         }
     }
 }
