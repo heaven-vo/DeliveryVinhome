@@ -1,8 +1,4 @@
-﻿using DeliveryVHGP.Core.Enums;
-using DeliveryVHGP.Core.Interfaces;
-using DeliveryVHGP.Core.Models;
-using DeliveryVHGP.Infrastructure.Services;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -33,48 +29,48 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                 {
                     using (var scope = _serviceProvider.CreateScope())
                     {
-                        var scopeRepo = scope.ServiceProvider.GetService<IRepositoryWrapper>();
+                        //var scopeRepo = scope.ServiceProvider.GetService<IRepositoryWrapper>();
 
-                        //check and add new order to cache
-                        var listOrder = await scopeRepo.Order.CheckAvailableOrder();
-                        await scopeRepo.Cache.AddOrderToCache(listOrder); //change status -> assign(not do -> test)
-                        //---------------------------------
-                        //Process order by mode 1
-                        var listOrderDeliveryByFood = await scopeRepo.Cache.GetOrderFromCache(10, 1);
-                        if (listOrderDeliveryByFood.Any())
-                        {
-                            await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryFood);
-                            var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByFood);
-                            if (listSegment.Any())
-                            {
-                                int result = await scopeRepo.RouteAction.CreateSingleRoute(listSegment);
-                            }
-                        }
+                        ////check and add new order to cache
+                        //var listOrder = await scopeRepo.Order.CheckAvailableOrder();
+                        //await scopeRepo.Cache.AddOrderToCache(listOrder); //change status -> assign(not do -> test)
+                        ////---------------------------------
+                        ////Process order by mode 1
+                        //var listOrderDeliveryByFood = await scopeRepo.Cache.GetOrderFromCache(10, 1);
+                        //if (listOrderDeliveryByFood.Any())
+                        //{
+                        //    await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryFood);
+                        //    var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByFood);
+                        //    if (listSegment.Any())
+                        //    {
+                        //        int result = await scopeRepo.RouteAction.CreateSingleRoute(listSegment);
+                        //    }
+                        //}
 
-                        //Process order by mode 2, 3
-                        ////load n order from cache -> segment -> run algorithm
-                        var listOrderDeliveryByroute = await scopeRepo.Cache.GetOrderFromCache(35, 2);
-                        if (listOrderDeliveryByroute.Any())
-                        {
-                            //remove older route(do first)
-                            await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryRoute);// not in sequence diagram 
-                            var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByroute);
-                            if (listSegment.Any())
-                            {
-                                DeliveryPickupAlgorithm algorithm = new DeliveryPickupAlgorithm(_serviceProvider);
-                                algorithm.AlgorithsProcess(listSegment);
-                            }
-                        }
+                        ////Process order by mode 2, 3
+                        //////load n order from cache -> segment -> run algorithm
+                        //var listOrderDeliveryByroute = await scopeRepo.Cache.GetOrderFromCache(35, 2);
+                        //if (listOrderDeliveryByroute.Any())
+                        //{
+                        //    //remove older route(do first)
+                        //    await scopeRepo.RouteAction.RemoveRouteActionNotShipper((int)RouteTypeEnum.DeliveryRoute);// not in sequence diagram 
+                        //    var listSegment = await scopeRepo.Segment.GetSegmentAvaliable(listOrderDeliveryByroute);
+                        //    if (listSegment.Any())
+                        //    {
+                        //        DeliveryPickupAlgorithm algorithm = new DeliveryPickupAlgorithm(_serviceProvider);
+                        //        algorithm.AlgorithsProcess(listSegment);
+                        //    }
+                        //}
 
-                        //Remove route and load new route in firestore
-                        var scopeFireStore = scope.ServiceProvider.GetService<IFirestoreService>();
-                        await scopeFireStore.DeleteAllRoutes();
-                        List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
-                        if (ListRoute.Count > 0)
-                            foreach (var routeModel in ListRoute)
-                            {
-                                await scopeFireStore.AddRoute(routeModel);
-                            }
+                        ////Remove route and load new route in firestore
+                        //var scopeFireStore = scope.ServiceProvider.GetService<IFirestoreService>();
+                        //await scopeFireStore.DeleteAllRoutes();
+                        //List<RouteModel> ListRoute = await scopeRepo.RouteAction.GetCurrentAvalableRoute();
+                        //if (ListRoute.Count > 0)
+                        //    foreach (var routeModel in ListRoute)
+                        //    {
+                        //        await scopeFireStore.AddRoute(routeModel);
+                        //    }
                         await Task.Delay(400000, stoppingToken);
                     }
                 }

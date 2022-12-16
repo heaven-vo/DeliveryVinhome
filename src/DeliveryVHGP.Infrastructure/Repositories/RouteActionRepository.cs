@@ -88,7 +88,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<OrderAction> listAction = new List<OrderAction>();
             foreach (var segment in listSegments)
             {
-                SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryFood, Status = (int)RouteStatusEnum.NotAssign };
+                SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryFood, Status = (int)RouteStatusEnum.NotAssign, Description = "Mode 1" };
                 List<RouteEdge> listEdge = new List<RouteEdge>();
 
                 RouteEdge edgePickUp = new RouteEdge() { Id = Guid.NewGuid().ToString(), FromBuildingId = "", ToBuildingId = segment.fromBuilding, Priority = 1, Distance = 0, RouteId = route.Id, Status = (int)EdgeStatusEnum.NotYet };
