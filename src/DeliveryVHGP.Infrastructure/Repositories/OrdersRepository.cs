@@ -1039,15 +1039,26 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task CompleteOrder(string orderActionId, string shipperId, int actionType)
         {
-            var orderAction = await context.OrderActions.FindAsync(orderActionId);
-            var service = await context.Orders.Where(x => x.Id == orderAction.OrderId).Select(x => x.ServiceId).FirstOrDefaultAsync();
+            var orderAction = await context.OrderActions.Include(x => x.Order).Where(x => x.Id == orderActionId).FirstOrDefaultAsync();
             if (orderAction == null)
             {
                 throw new Exception("Order action Id not valid");
             }
+            if (orderAction.Order == null)
+            {
+                throw new Exception("Order not found by action id");
+            }
+            var service = orderAction.Order.ServiceId;
             orderAction.Status = (int)OrderActionStatusEnum.Done;
             if (actionType == (int)OrderActionEnum.PickupStore)
             {
+                var storeId = orderAction.Order.StoreId;
+                var CommissionRate = await context.Stores.Where(x => x.Id == storeId).Select(x => x.CommissionRate).FirstOrDefaultAsync();
+                var storeWallet = await context.Wallets.Where(x => x.AccountId == storeId && x.Type == (int)WalletTypeEnum.Commission).FirstOrDefaultAsync();
+                if (storeWallet != null)
+                {
+                    storeWallet.Amount += orderAction.Order.Total * (CommissionRate / 100);
+                }
                 //thieu cus delivery
                 if (service == "1")
                 {
