@@ -78,6 +78,7 @@
             //public double TotalSurcharge { get; set; }
             public double TotalRevenueOrder { get; set; }
             public double TotalProfitOrder { get; set; }
+            public double TotalCommissionOrder { get; set; }
         }
         public class SystemReportModel
         {
