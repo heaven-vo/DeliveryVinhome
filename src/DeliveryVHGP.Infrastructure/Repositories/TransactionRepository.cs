@@ -27,12 +27,12 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task<List<TransactionModel>> GetListTransactionByShipperId(string shipperId, int page, int pageSize)
         {
-            var walletId = await context.Wallets.Where(x => x.AccountId == shipperId).Select(x => x.Id).FirstOrDefaultAsync();
-            if (walletId == null)
+            var ListWalletId = await context.Wallets.Where(x => x.AccountId == shipperId).Select(x => x.Id).ToListAsync();
+            if (!ListWalletId.Any())
             {
                 throw new Exception("Shipper's wallet not found");
             }
-            var listTrans = await context.Transactions.Where(x => x.WalletId == walletId).OrderByDescending(x => x.CreateAt)
+            var listTrans = await context.Transactions.Where(x => ListWalletId.Contains(x.WalletId)).OrderByDescending(x => x.CreateAt)
                 .Select(x => new TransactionModel
                 {
                     Amount = x.Amount,
