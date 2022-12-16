@@ -21,7 +21,12 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             foreach (var order in listOrder)
             {
                 var menu = await context.Menus.Where(x => x.Id == order.MenuId).FirstOrDefaultAsync();
-                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = order.Id, MenuSaleMode = int.Parse(menu.SaleMode), CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
+                int? saleMode = Int32.Parse(menu.SaleMode);
+                if (saleMode == null)
+                {
+                    saleMode = 1;
+                }
+                OrderCache cache = new OrderCache() { Id = Guid.NewGuid().ToString(), OrderId = order.Id, MenuSaleMode = saleMode, CreateAt = DateTime.UtcNow.AddHours(7), UpdateAt = DateTime.UtcNow.AddHours(7), IsReady = true };
                 listCaches.Add(cache);
                 var actionHistory = new OrderActionHistory()
                 {
@@ -53,9 +58,9 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 listOrerId = await context.OrderCaches.Where(x => x.IsReady == true && x.MenuSaleMode == 1)
                     .OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
             }
-            if (mode != 1)
+            if (mode == 2)
             {
-                listOrerId = await context.OrderCaches.Where(x => x.IsReady == true && x.MenuSaleMode != 1)
+                listOrerId = await context.OrderCaches.Where(x => x.IsReady == true && (x.MenuSaleMode == 2 || x.MenuSaleMode == 3))
                     .OrderBy(x => x.CreateAt).Select(x => x.OrderId).Take(size).ToListAsync();
             }
             return listOrerId;

@@ -187,7 +187,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<RouteEdge> listEdge = new List<RouteEdge>();
             List<OrderAction> listAction = new List<OrderAction>();
             var listRouteAction = await context.SegmentDeliveryRoutes.Include(x => x.RouteEdges).ThenInclude(r => r.OrderActions)
-                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign && x.Type == routeType).ToListAsync();
+                .Where(x => x.Status == (int)RouteStatusEnum.NotAssign && (x.Type == routeType || x.Type == null)).ToListAsync();
             if (listRouteAction.Count > 0)
             {
                 foreach (var route in listRouteAction)

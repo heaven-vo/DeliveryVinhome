@@ -51,7 +51,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet("check")]
         public async Task<ActionResult> CheckOrder()
         {
-            var listOrder = await repository.Cache.GetOrderFromCache(15, 2);
+            var listOrder = await repository.Cache.GetOrderFromCache(15, 1);
             return Ok(await repository.Segment.GetSegmentAvaliable(listOrder));
             //return Ok(await repository.Order.CheckAvailableOrder());
         }

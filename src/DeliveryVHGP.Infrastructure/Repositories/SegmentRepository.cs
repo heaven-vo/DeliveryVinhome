@@ -73,7 +73,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<SegmentModel> listVetorBuilding = new List<SegmentModel>();
             var listSegment = await context.Segments.Where(x => listOrder.Contains(x.OrderId) && x.Status == (int)SegmentStatusEnum.Viable)
                .ToListAsync();
-            if (listSegment != null)
+            if (listSegment != null && listSegment.Any())
             {
                 //listSegment.ForEach(x => x.Status = (int)SegmentStatusEnum.Unviable); //ko unviable nua, reroute khoi phai bat viable, segment done thoi
                 listVetorBuilding = listSegment.Select(x => new SegmentModel
