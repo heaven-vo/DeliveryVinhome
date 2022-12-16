@@ -19,8 +19,10 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task<List<OrderAdminDtoInStore>> GetListOrderCompletedByStore(string StoreId, int pageIndex, int pageSize, FilterRequest request);
         Task<List<OrderAdminDtoInStore>> GetListOrderByStoreByModeId(string StoreId, string modeId, DateFilterRequest request, int pageIndex, int pageSize);
         Task<StoreDto> CreatNewStore(StoreDto store);
+        Task<Object> CreatWallet(string storeId);
         Task<Object> DeleteStore(string storeId);
         Task<StoreDto> UpdateStore(string storeId, StoreDto store, Boolean imgUpdate);
         Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store);
+        Task<WalletsStoreModel> GetBalanceStoreWallet(string accountId);
         }
 }

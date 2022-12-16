@@ -20,19 +20,13 @@ namespace DeliveryVHGP.WebApi.Repositories
         //Get list order (in admin web)
         public async Task<List<OrderAdminDto>> GetAll(int pageIndex, int pageSize, FilterRequest request)
         {
-            //var fromm = request?.FromDate;
-            //var to = request?.ToDate;
-            //var to = request?.ToDate;
-            //if (fromm != null && to != null)
-            //{
-            //    fromm = ((DateTime)fromm).GetStartOfDate();
-            //    to = ((DateTime)to).GetEndOfDate();
-            //}
-     
+           
+            if (request.DateFilter != "")
+            {
                 DateTime dateTime = DateTime.Parse(request.DateFilter);
                 var nextDay = dateTime.AddDays(1);
 
-                var lstOrder = await (from order in context.Orders
+                  var lstOrder = await (from order in context.Orders
                                       join s in context.Stores on order.StoreId equals s.Id
                                       join h in context.OrderActionHistories on order.Id equals h.OrderId
                                       join b in context.Buildings on order.BuildingId equals b.Id
@@ -84,8 +78,63 @@ namespace DeliveryVHGP.WebApi.Repositories
                     order.ListShipper = listShipper;
                 }
                 return lstOrder;
-            //}
-            //return null;
+            }
+            if (request.DateFilter == "")
+            {
+                var lstOrder = await (from order in context.Orders
+                                      join s in context.Stores on order.StoreId equals s.Id
+                                      join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                      join b in context.Buildings on order.BuildingId equals b.Id
+                                      join p in context.Payments on order.Id equals p.OrderId
+                                      join m in context.Menus on order.MenuId equals m.Id
+                                      join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
+                                      //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
+                                      where h.ToStatus == 0
+                                      && p.Type.ToString().Contains(request.SearchByPayment)
+                                      && (request.SearchByStatus == -1 || order.Status == request.SearchByStatus)
+                                      && m.SaleMode.Contains(request.SearchByMode)
+                                      && order.PhoneNumber.Contains(request.SearchByPhone)
+                                      //&& order.Status == request.SearchByStatus
+                                      select new OrderAdminDto()
+                                      {
+                                          Id = order.Id,
+                                          Total = order.Total,
+                                          StoreName = s.Name,
+                                          Phone = order.PhoneNumber,
+                                          Note = order.Note,
+                                          ShipCost = order.ShipCost,
+                                          CustomerName = order.FullName,
+                                          PaymentName = p.Type,
+                                          PaymentStatus = p.Status,
+                                          BuildingName = b.Name,
+                                          ModeId = m.SaleMode,
+                                          //ShipperName = sp.FullName,
+                                          Status = order.Status,
+                                          Time = h.CreateDate,
+                                          TimeDuration = dt.Id,
+                                          ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                          FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
+                                          Dayfilter = m.DayFilter.ToString()
+
+                                      }
+                                    ).OrderByDescending(t => t.Time).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                foreach (var order in lstOrder)
+                {
+                    var listShipper = await (from od in context.ShipperHistories
+                                             join o in context.Orders on od.OrderId equals o.Id
+                                             join s in context.Shippers on od.ShipperId equals s.Id
+                                             where o.Id == order.Id
+                                             select new ViewListShipper()
+                                             {
+                                                 ShipperId = od.ShipperId,
+                                                 Phone = s.Phone,
+                                                 ShipperName = s.FullName
+                                             }).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+                    order.ListShipper = listShipper;
+                }
+                return lstOrder;
+            }
+                return null;
         }
          public async Task<List<OrderAdminDto>> GetOrderByPhone(int pageIndex, int pageSize,string phone)
         {
@@ -143,7 +192,8 @@ namespace DeliveryVHGP.WebApi.Repositories
             //var lstOrder = await context.Orders
             //    .Select(o => new OrderCountModels()
             //    {
-  
+            if (request.DateFilter != "")
+            {
                 DateTime dateTime = DateTime.Parse(request.DateFilter);
                 var nextDay = dateTime.AddDays(1);
                 var lstOrder = await (from order in context.Orders
@@ -200,6 +250,63 @@ namespace DeliveryVHGP.WebApi.Repositories
                 //int CountOrder = lstOrder.Count;
 
                 return lstOrder;
+            }
+            if (request.DateFilter == "")
+            {
+                var lstOrder = await (from order in context.Orders
+                                      join s in context.Stores on order.StoreId equals s.Id
+                                      join h in context.OrderActionHistories on order.Id equals h.OrderId
+                                      join b in context.Buildings on order.BuildingId equals b.Id
+                                      join p in context.Payments on order.Id equals p.OrderId
+                                      join m in context.Menus on order.MenuId equals m.Id
+                                      join dt in context.DeliveryTimeFrames on order.DeliveryTimeId equals dt.Id
+                                      //join sp in context.Shippers on order.ShipperId equals sp.Id  tamm
+                                      where h.ToStatus == 0
+                                      && p.Type.ToString().Contains(request.SearchByPayment)
+                                      && (request.SearchByStatus == -1 || order.Status == request.SearchByStatus)
+                                      && m.SaleMode.Contains(request.SearchByMode)
+                                      && order.PhoneNumber.Contains(request.SearchByPhone)
+                                      //&& order.Status == request.SearchByStatus
+                                      select new OrderAdminDto()
+                                      {
+                                          Id = order.Id,
+                                          Total = order.Total,
+                                          StoreName = s.Name,
+                                          Phone = order.PhoneNumber,
+                                          Note = order.Note,
+                                          ShipCost = order.ShipCost,
+                                          CustomerName = order.FullName,
+                                          PaymentName = p.Type,
+                                          PaymentStatus = p.Status,
+                                          BuildingName = b.Name,
+                                          ModeId = m.SaleMode,
+                                          //ShipperName = sp.FullName,
+                                          Status = order.Status,
+                                          Time = h.CreateDate,
+                                          TimeDuration = dt.Id,
+                                          ToHour = TimeSpan.FromHours((double)dt.ToHour).ToString(@"hh\:mm"),
+                                          FromHour = TimeSpan.FromHours((double)dt.FromHour).ToString(@"hh\:mm"),
+                                          Dayfilter = m.DayFilter.ToString()
+
+                                      }
+                                    ).OrderByDescending(t => t.Time).ToListAsync();
+                foreach (var order in lstOrder)
+                {
+                    var listShipper = await (from od in context.ShipperHistories
+                                             join o in context.Orders on od.OrderId equals o.Id
+                                             join s in context.Shippers on od.ShipperId equals s.Id
+                                             where o.Id == order.Id
+                                             select new ViewListShipper()
+                                             {
+                                                 ShipperId = od.ShipperId,
+                                                 Phone = s.Phone,
+                                                 ShipperName = s.FullName
+                                             }).ToListAsync();
+                    order.ListShipper = listShipper;
+                }
+                return lstOrder;
+            }
+            return null;
           
         }
 
@@ -316,6 +423,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         join o in context.Orders on pay.OrderId equals o.Id
                                         join h in context.OrderActionHistories on o.Id equals h.OrderId
                                         where h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
+                                        where o.Status == (int)OrderStatusEnum.Completed
                                         select pay).ToListAsync();
                 if (!lstOrder.Any())
                 {
@@ -329,6 +437,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 report.TotalOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // tổng tiền order
                 report.TotalRevenueOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost) + (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.Total); // Doanh thu
                 report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost); // Lợi nhuận
+                return report;
             }
             else if (monthFilter.Month != 0)
             {
@@ -343,6 +452,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                         join h in context.OrderActionHistories on o.Id equals h.OrderId
                                         join s in context.Stores on o.StoreId equals s.Id
                                         where h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
+                                        where o.Status == (int)OrderStatusEnum.Completed
                                         select pay).ToListAsync();
 
                 if (!lstOrder.Any())

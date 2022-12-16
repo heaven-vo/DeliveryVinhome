@@ -73,6 +73,18 @@ namespace DeliveryVHGP.WebApi.Controllers
             return Ok(store);
         }
         /// <summary>
+        /// Get store by id with pagination
+        /// </summary>
+        //GET: api/v1/storeById?pageIndex=1&pageSize=3
+        [HttpGet("storeId-wallets")]
+        public async Task<ActionResult> AddWallerbyStore(string storeId)
+        {
+            var store = await repository.Store.CreatWallet(storeId);
+            if (storeId == null)
+                return NotFound();
+            return Ok(store);
+        }
+        /// <summary>
         /// Get list orders preparing by store ,status:3 (store app) 
         /// </summary>
         // GET: api/Orders
@@ -200,6 +212,23 @@ namespace DeliveryVHGP.WebApi.Controllers
                     StatusCode = "Fail",
                     message = "Hiện tại cửa hàng đang đơn hàng chưa hoàn thành !!" +
                                               "Vui lòng kiểm tra lại đơn hàng và thử lại "
+                });
+            }
+        }
+        [HttpGet("{storeId}/wallet")]
+        public async Task<ActionResult<WalletsStoreModel>> GetBalaceStoreWallet(string storeId)
+        {
+            try
+            {
+                var walletBalance = await repository.Store.GetBalanceStoreWallet(storeId);
+                return Ok(new { StatusCode = "Successful", data = walletBalance });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
                 });
             }
         }
