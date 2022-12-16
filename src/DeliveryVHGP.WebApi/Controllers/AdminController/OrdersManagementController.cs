@@ -41,6 +41,20 @@ namespace DeliveryVHGP.WebApi.Controllers
         public async Task<ActionResult> GetListOrdersReport([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
             return Ok(await repository.Order.GetListOrdersReport(request, monthFilter));
+
+            try
+            {
+                var report = await repository.Order.GetListOrdersReport(request, monthFilter);
+                return Ok(new { StatusCode = "Successful", data = report });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = ex.Message
+                });
+            }
         } 
         /// <summary>
         /// Get order reportPrice(admin web)
@@ -50,6 +64,19 @@ namespace DeliveryVHGP.WebApi.Controllers
         public async Task<ActionResult> GetListOrdersReportPrice([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
             return Ok(await repository.Order.GetPriceOrdersReports(request, monthFilter));
+            try
+            {
+                var report = await repository.Order.GetPriceOrdersReports(request, monthFilter);
+                return Ok(new { StatusCode = "Successful", data = report });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = ex.Message
+                });
+            }
         }
         /// <summary>
         /// Get list all order by payment with pagination
