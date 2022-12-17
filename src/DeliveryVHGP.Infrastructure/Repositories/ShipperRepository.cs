@@ -176,28 +176,38 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusShipDto> UpdateStatusShipper(string ShipId, StatusShipDto shipper)
         {
             var result = await context.Shippers.FindAsync(ShipId);
-            var segmentTask = context.SegmentTasks.FirstOrDefault(sd => sd.ShipperId == ShipId);
-            var segment = context.Segments.FirstOrDefault(s => s.SegmentTaskId == segmentTask.Id);
             var segmentDeli = context.SegmentDeliveryRoutes.FirstOrDefault(sd => sd.ShipperId == ShipId);
-            var order = context.Orders.FirstOrDefault(x => x.Id == segment.OrderId);
-            if (order == null || segmentDeli == null)
+            if (segmentDeli != null)
+            {
+                var edge = context.RouteEdges.FirstOrDefault(e => e.RouteId == segmentDeli.Id);
+                if (edge != null)
+                {
+                    var oAction = context.OrderActions.FirstOrDefault(oa => oa.RouteEdgeId == edge.Id);
+                    if(oAction != null)
+                    {
+                        var order = context.Orders.FirstOrDefault(x => x.Id == oAction.OrderId);
+                        if (order != null)
+                        {
+                            //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
+                            if (order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)FailStatus.OutTime
+                                                    || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail || order.Status == (int)FailStatus.CustomerFail)
+                            {
+                                result.Status = shipper.Status;
+                            }
+                            if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
+                                || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
+                                throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
+                                                             "Vui lòng kiểm tra lại đơn hàng và thử lại");
+                        }
+                    }
+                }
+            }
+            if (segmentDeli == null)
             {
                 result.Status = shipper.Status;
             }
-            if (order != null)
-            {
-                //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
-                if (order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)OrderStatusEnum.Completed)
-                {
-                    result.Status = shipper.Status;
-                }
-                if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
-                    || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess)
-                    throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
-                                                 "Vui lòng kiểm tra lại đơn hàng và thử lại");
-            }
-
-            try
+                try
             {
                 context.Entry(result).State = EntityState.Modified;
                 await context.SaveChangesAsync();
@@ -207,6 +217,55 @@ namespace DeliveryVHGP.WebApi.Repositories
                 throw;
             }
             return shipper;
+        }
+        public async Task<Object> DeleteShipper(string shipperId)
+        {
+            var deShip = await context.Shippers.FindAsync(shipperId);
+            var segmentDeli = context.SegmentDeliveryRoutes.FirstOrDefault(sd => sd.ShipperId == shipperId);
+            //context.Shippers.Remove(deShip);
+            if (segmentDeli == null)
+            {
+                context.Shippers.Remove(deShip);
+            }
+            if (segmentDeli != null)
+            {
+                var edge = context.RouteEdges.FirstOrDefault(e => e.RouteId == segmentDeli.Id);
+                if (edge != null)
+                {
+                    var oAction = context.OrderActions.FirstOrDefault(oa => oa.RouteEdgeId == edge.Id);
+                    if (oAction != null)
+                    {
+                        var order = context.Orders.FirstOrDefault(x => x.Id == oAction.OrderId);
+                        var tran = await context.Transactions.Where(t => t.OrderId == order.Id).ToListAsync();
+                        if (order != null)
+                        {
+                            //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
+                            if (order.Status == (int)OrderStatusEnum.Fail || order.Status == (int)OrderStatusEnum.Completed || order.Status == (int)FailStatus.OutTime
+                                                    || order.Status == (int)FailStatus.StoreFail || order.Status == (int)FailStatus.ShipperFail || order.Status == (int)FailStatus.CustomerFail)
+                            {
+                                context.Shippers.Remove(deShip);
+                                context.Transactions.RemoveRange(tran);
+                            }
+                            if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
+                                || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
+                                throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
+                                                             "Vui lòng kiểm tra lại đơn hàng và thử lại");
+                        }
+                    }
+                }
+            }
+            //var shipperHis = context.ShipperHistories.FirstOrDefault(s => s.ShipperId == s.ShipperId);
+            //var order =  context.Orders.FirstOrDefault(o => o.Id == shipperHis.Id);
+            var account = await context.Accounts.FindAsync(shipperId);
+            context.Accounts.Remove(account);
+            var wallet = await context.Wallets.Where(w => w.AccountId == shipperId).ToListAsync();
+            context.Wallets.RemoveRange(wallet);
+            //var tran = await context.Transactions.Where(t => t.OrderId == order.Id).ToListAsync();
+            //context.Transactions.RemoveRange(tran);
+            await context.SaveChangesAsync();
+
+            return deShip;
         }
     }
 }

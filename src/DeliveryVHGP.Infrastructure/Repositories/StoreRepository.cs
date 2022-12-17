@@ -533,6 +533,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> GetStoreById(string storeId)
         {
+            
             var store = await (from s in context.Stores
                                join b in context.Brands on s.BrandId equals b.Id
                                join sc in context.StoreCategories on s.StoreCategoryId equals sc.Id
@@ -614,12 +615,20 @@ namespace DeliveryVHGP.WebApi.Repositories
             context.Stores.Remove(deStore);
             var account = await context.Accounts.FindAsync(storeId);
             context.Accounts.Remove(account);
+            var wallet = await context.Wallets.Where(w => w.AccountId == storeId).FirstOrDefaultAsync();
+            context.Wallets.Remove(wallet);
+            //var tran = await context.Transactions.FindAsync(storeId);
+            //context.Transactions.Remove(tran);
             await context.SaveChangesAsync();
 
             return deStore;
         }
         public async Task<AccountInRole> GetAccountInStore(string storeId)
         {
+            if ( storeId == null)
+            {
+                return null;
+            }
             var account = await context.Accounts.Where(x => x.Id == storeId)
                                     .Select(x => new AccountInRole
                                     {
@@ -635,7 +644,7 @@ namespace DeliveryVHGP.WebApi.Repositories
             var result = await context.Stores.FindAsync(storeId);
 
             var account = context.Accounts.FirstOrDefault(x => x.Id == storeId);
-            var statusOrder = context.Orders.OrderByDescending(s => s.Id).FirstOrDefault(s => s.StoreId == storeId);
+            var status = context.Orders.OrderByDescending(s => s.Id).FirstOrDefault(s => s.StoreId == storeId);
 
             result.Id = store.Id;
             result.Name = store.Name;
@@ -653,24 +662,23 @@ namespace DeliveryVHGP.WebApi.Repositories
             result.Slogan = store.Slogan;
             result.CommissionRate = store.CommissionRate;
             result.Description = store.Description;
-            if (statusOrder != null)
+            if (status != null)
             {
                 //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
-                if (statusOrder.Status == (int)OrderStatusEnum.Fail || statusOrder.Status == (int)OrderStatusEnum.Completed)
+                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed || status.Status == (int)FailStatus.OutTime
+                                        || status.Status == (int)FailStatus.StoreFail || status.Status == (int)FailStatus.ShipperFail || status.Status == (int)FailStatus.CustomerFail)
                 {
                     result.Status = store.Status;
                 }
-                if (statusOrder.Status == (int)OrderStatusEnum.New || statusOrder.Status == (int)OrderStatusEnum.Received || statusOrder.Status == (int)OrderStatusEnum.Assigning
-                    || statusOrder.Status == (int)OrderStatusEnum.Accepted || statusOrder.Status == (int)OrderStatusEnum.InProcess)
+                if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
+                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
-                                                 "Vui lòng kiểm tra lại đơn hàng và thử lại");
+                         "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            if (statusOrder == null)
-            {
-                result.Status = store.Status;
-            }
-            //result.Status = store.Status;
-            result.UpdateAt = time;
+
+                //result.Status = store.Status;
+                result.UpdateAt = time;
             account.Password = store.Password;
 
             try
@@ -690,19 +698,21 @@ namespace DeliveryVHGP.WebApi.Repositories
             if (status != null)
             {
                 //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
-                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed)
+                if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed || status.Status == (int)FailStatus.OutTime
+                                        || status.Status == (int)FailStatus.StoreFail || status.Status == (int)FailStatus.ShipperFail || status.Status == (int)FailStatus.CustomerFail)
                 {
                     result.Status = store.Status;
                 }
                 if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess)
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
+                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            if (status == null)
-            {
-                result.Status = store.Status;
-            }
+            //if (status == null)
+            //{
+            //    result.Status = store.Status;
+            //}
 
             try
             {
