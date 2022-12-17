@@ -22,7 +22,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 .Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var history in listHistory)
             {
-                var order = await context.Orders.Include(x => x.Service).Where(x => x.Id == history.OrderId).FirstOrDefaultAsync();
+                var order = await context.Orders.Include(x => x.Menu).Include(x => x.Service).Where(x => x.Id == history.OrderId).FirstOrDefaultAsync();
                 int routeType = 1;
                 double profit = 0;
                 if (order.Menu.SaleMode == "2" || order.Menu.SaleMode == "3")

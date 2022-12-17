@@ -57,5 +57,9 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             return listTrans;
         }
+        //public async Task<>(string AccountId, int walletType)
+        //{
+
+        //}
     }
 }
