@@ -34,7 +34,8 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     using (var scope = _serviceProvider.CreateScope())
                     {
                         var scopeRepo = scope.ServiceProvider.GetService<IRepositoryWrapper>();
-
+                        //Console.WriteLine("Start throw exception");
+                        //throw new Exception("Throw exception");
                         //check and add new order to cache
                         var listOrder = await scopeRepo.Order.CheckAvailableOrder();
                         await scopeRepo.Cache.AddOrderToCache(listOrder); //change status -> assign(not do -> test)
@@ -75,14 +76,14 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                             {
                                 await scopeFireStore.AddRoute(routeModel);
                             }
-                        await Task.Delay(300000, stoppingToken);
+                        await Task.Delay(900000, stoppingToken);
                     }
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("Error: " + ex.Message);
-                await Task.Delay(60000, stoppingToken).ConfigureAwait(false);
+                await Task.Delay(600000, stoppingToken);//.ConfigureAwait(false);
                 await ExecuteAsync(stoppingToken);
             }
 

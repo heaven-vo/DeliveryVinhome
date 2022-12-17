@@ -39,6 +39,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     TransactionType = x.Type,
                     Date = x.CreateAt,
                     TransactionAction = x.Action,
+                    OrderId = x.OrderId,
                     Status = x.Status
                 }).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
             foreach (var transaction in listTrans)

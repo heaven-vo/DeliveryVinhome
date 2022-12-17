@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.Core.Data;
+﻿using DeliveryVHGP.Core.Const;
+using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interface.IRepositories;
@@ -1060,11 +1061,11 @@ namespace DeliveryVHGP.WebApi.Repositories
                     storeWallet.Amount += orderAction.Order.Total * (CommissionRate / 100);
                 }
                 //thieu cus delivery
-                if (service == "1")
+                if (service == DeliveryService.FastService)
                 {
                     var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.CustomerDelivery);
                 }
-                if (service == "2")
+                if (service == DeliveryService.NormalService)
                 {
                     var order = await OrderUpdateStatus(orderAction.OrderId, (int)InProcessStatus.HubDelivery);
                 }
@@ -1192,7 +1193,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task CreateTransaction(string shipperId, string orderId, int actionType)
         {
-            double shipFeePercent = 0.4;
+            double shipFeePercent = ShipFee.ShipperCommission;
             var order = await context.Orders.Include(x => x.Payments).Where(x => x.Id == orderId).FirstOrDefaultAsync();
             if (order == null)
                 throw new Exception("Order id is not valid");
@@ -1210,7 +1211,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 };
                 if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.VNPay)
                 {
-                    if (order.ServiceId == "1")
+                    if (order.ServiceId == DeliveryService.FastService)
                     {
                         if (actionType == (int)OrderActionEnum.DeliveryCus)
                         {
@@ -1222,7 +1223,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             refundWallet.Amount += order.Total + shipFeePercent * 2 * order.ShipCost;
                         }
                     }
-                    if (order.ServiceId == "2")
+                    if (order.ServiceId == DeliveryService.NormalService)
                     {
                         if (actionType == (int)OrderActionEnum.DeliveryHub)
                         {
@@ -1236,7 +1237,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                         if (actionType == (int)OrderActionEnum.PickupHub)
                         {
                             tran.Amount = order.Total + order.ShipCost - shipFeePercent * order.ShipCost;
-                            tran.Action = (int)TransactionActionEnum.minus;
+                            tran.Action = (int)TransactionActionEnum.plus;
                             tran.Type = (int)TransactionTypeEnum.cod;
                             tran.WalletId = debitWallet.Id;
                             await context.AddAsync(tran);
@@ -1255,7 +1256,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 }
                 if (order.Payments.FirstOrDefault().Type == (int)PaymentEnum.Cash)
                 {
-                    if (order.ServiceId == "1")
+                    if (order.ServiceId == DeliveryService.FastService)
                     {
                         if (actionType == (int)OrderActionEnum.DeliveryCus)
                         {
@@ -1267,7 +1268,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                             debitWallet.Amount += (order.ShipCost - shipFeePercent * 2 * order.ShipCost);
                         }
                     }
-                    if (order.ServiceId == "2")
+                    if (order.ServiceId == DeliveryService.NormalService)
                     {
                         if (actionType == (int)OrderActionEnum.DeliveryHub)
                         {

@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.Core.Data;
+﻿using DeliveryVHGP.Core.Const;
+using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
@@ -22,13 +23,29 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             foreach (var history in listHistory)
             {
                 var order = await context.Orders.Include(x => x.Service).Where(x => x.Id == history.OrderId).FirstOrDefaultAsync();
+                int routeType = 1;
+                double profit = 0;
+                if (order.Menu.SaleMode == "2" || order.Menu.SaleMode == "3")
+                {
+                    routeType = 2;
+                }
+                if (order.ServiceId == DeliveryService.FastService)
+                {
+                    profit = (double)order.ShipCost * ShipFee.ShipperCommission * 2;
+                }
+                if (order.ServiceId == DeliveryService.NormalService)
+                {
+                    profit = (double)order.ShipCost * ShipFee.ShipperCommission;
+                }
                 ShipperHistoryModel shipperHistoryModel = new ShipperHistoryModel()
                 {
                     Id = history.Id,
                     ServiceName = order.Service.Name,
                     Total = order.Total,
                     ShippingCost = order.ShipCost,
+                    RouteType = routeType,
                     ActionType = history.ActionType,
+                    Profit = profit,
                     Date = history.CreateDate
                 };
                 shipperHistoryModels.Add(shipperHistoryModel);
