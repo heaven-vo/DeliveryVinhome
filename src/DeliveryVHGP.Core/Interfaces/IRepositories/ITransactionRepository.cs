@@ -7,5 +7,6 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
     {
         Task<List<TransactionModel>> GetListTransactionByShipperId(string shipperId, int page, int pageSize);
         Task<WalletsShipperModel> GetBalanceWallet(string accountId);
+        Task MinusWalletBalance(string AccountId, int walletType, double amonut);
     }
 }

@@ -48,8 +48,25 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
+        [HttpGet("report")]
+        public async Task<ActionResult<DeliveryShipperReportModel>> GetDeliveryAllShipperReport([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter, int page, int pageSize)
+        {
+            try
+            {
+                var report = await repository.ShipperHistory.GetDeliveryAllShipperReport(request, monthFilter, page, pageSize);
+                return Ok(new { StatusCode = "Successful", data = report });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
         [HttpGet("{shipperId}/report")]
-        public async Task<ActionResult<ShipperReportModel>> GetOrderReport(string shipperId, [FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
+        public async Task<ActionResult<ShipperReportModel>> GetShipperReport(string shipperId, [FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
             try
             {

@@ -164,5 +164,61 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             return null;
         }
+        public async Task<DeliveryShipperReportModel> GetDeliveryAllShipperReport(DateFilterRequest request, MonthFilterRequest monthFilter, int page, int pageSize)
+        {
+            DeliveryShipperReportModel report = new DeliveryShipperReportModel() { total = 0, success = 0, cancel = 0 };
+            List<ShipperHistory> history = new List<ShipperHistory>();
+            if (request.DateFilter != "")
+            {
+                DateTime dateTime = DateTime.Parse(request.DateFilter);
+                var nextDay = dateTime.AddDays(1);
+                history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.CreateDate > dateTime && x.CreateDate < nextDay).ToListAsync();
+                if (history.Any())
+                {
+                    report.total = history.Count();
+                    report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
+                    report.cancel = history.Where(x => x.Status == (int)StatusEnum.fail).Count();
+                }
+            }
+            else if (monthFilter.Month != 0)
+            {
+                history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.CreateDate.Value.Year == monthFilter.Year && x.CreateDate.Value.Month == monthFilter.Month).ToListAsync();
+                if (history.Any())
+                {
+                    report.total = history.Count();
+                    report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
+                    report.cancel = history.Where(x => x.Status == (int)StatusEnum.fail).Count();
+                }
+            }
+            //
+            List<ShipperInReport> shipperInReports = new List<ShipperInReport>();
+            var listShipper = await context.Shippers.OrderBy(x => x.FullName).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            if (listShipper.Any())
+            {
+                foreach (var shipper in listShipper)
+                {
+                    ShipperInReport shipperInReport = new ShipperInReport() { fullname = shipper.FullName, phone = shipper.Phone, distance = 0 };
+                    shipperInReport.totalOrder = history.Where(x => x.ShipperId == shipper.Id).Count();
+                    shipperInReport.successfulOrder = history.Where(x => x.ShipperId == shipper.Id && x.Status == (int)StatusEnum.success).Count();
+                    shipperInReport.canceledOrder = history.Where(x => x.ShipperId == shipper.Id && x.Status == (int)StatusEnum.fail).Count();
+                    shipperInReport.refundBalance = await context.Wallets.Where(x => x.AccountId == shipper.Id && x.Type == (int)WalletTypeEnum.Refund && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
+                    shipperInReport.debitBalance = await context.Wallets.Where(x => x.AccountId == shipper.Id && x.Type == (int)WalletTypeEnum.Debit && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
+                    var distance = await (from his in context.ShipperHistories
+                                          join order in context.Orders on his.OrderId equals order.Id
+                                          join orderAction in context.OrderActions on order.Id equals orderAction.OrderId
+                                          join edge in context.RouteEdges on orderAction.RouteEdgeId equals edge.Id
+                                          where his.ShipperId == shipper.Id && his.Status == (int)StatusEnum.success
+                                          && his.ActionType == orderAction.OrderActionType
+                                          select edge.Distance).FirstOrDefaultAsync();
+                    if (distance != null)
+                    {
+                        shipperInReport.distance = distance;
+                    }
+                    shipperInReports.Add(shipperInReport);
+                }
+                report.shipperInReports = shipperInReports;
+            }
+            return report;
+        }
     }
 }

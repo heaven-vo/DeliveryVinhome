@@ -8,6 +8,6 @@ namespace DeliveryVHGP.Core.Models.Noti
         [FirestoreProperty]
         public string email { get; set; }
         [FirestoreProperty]
-        public string fcmToken { get; set; }
+        public List<string> fcmToken { get; set; }
     }
 }

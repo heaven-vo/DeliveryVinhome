@@ -297,7 +297,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                 var user = await firestoreService.GetUserData(id);
                 if (user.fcmToken != null)
                 {
-                    tokens.Add(user.fcmToken);
+                    tokens.AddRange(user.fcmToken);
                 }
             }
             NotificationModel notificationModel = new NotificationModel()

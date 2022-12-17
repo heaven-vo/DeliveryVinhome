@@ -9,5 +9,6 @@ namespace DeliveryVHGP.Core.Interfaces.IRepositories
         Task<List<ShipperHistoryModel>> GetShipperHistories(string shipperId, int status, int page, int pageSize);
         Task<HistoryDetail> GetShipperHistoryDetail(string shipperHistoryId);
         Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request, MonthFilterRequest monthFilter);
+        Task<DeliveryShipperReportModel> GetDeliveryAllShipperReport(DateFilterRequest request, MonthFilterRequest monthFilter, int page, int pageSize);
     }
 }

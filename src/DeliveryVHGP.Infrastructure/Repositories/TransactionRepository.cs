@@ -57,9 +57,46 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             }
             return listTrans;
         }
-        //public async Task<>(string AccountId, int walletType)
-        //{
-
-        //}
+        public async Task MinusWalletBalance(string AccountId, int walletType, double amonut)
+        {
+            var wallet = await context.Wallets.Where(x => x.AccountId == AccountId && x.Type == walletType).FirstOrDefaultAsync();
+            if (wallet == null)
+            {
+                throw new Exception("Tài khoản không hợp lệ");
+            }
+            if (amonut > wallet.Amount && walletType == (int)WalletTypeEnum.Refund)
+            {
+                throw new Exception("Số tiền trong tài khoản không đủ để thực hiện giao dịch");
+            }
+            if (amonut > wallet.Amount && walletType == (int)WalletTypeEnum.Debit)
+            {
+                throw new Exception("Số tiền lớn hơn mức cần hoàn lại");
+            }
+            if (amonut > wallet.Amount && walletType == (int)WalletTypeEnum.Commission)
+            {
+                throw new Exception("Số tiền lớn hơn mức hoa hồng cần trả");
+            }
+            wallet.Amount -= amonut;
+            Transaction transaction = new Transaction()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Action = (int)TransactionActionEnum.minus,
+                Amount = amonut,
+                CreateAt = DateTime.UtcNow.AddHours(7),
+                WalletId = wallet.Id,
+                Type = (int)TransactionTypeEnum.recharge,
+                Status = (int)StatusEnum.success
+            };
+            if (walletType == (int)WalletTypeEnum.Debit || walletType == (int)WalletTypeEnum.Commission)
+            {
+                transaction.Type = (int)TransactionTypeEnum.recharge;
+            }
+            if (walletType == (int)WalletTypeEnum.Refund)
+            {
+                transaction.Type = (int)TransactionTypeEnum.withdraw;
+            }
+            await context.Transactions.AddAsync(transaction);
+            await context.SaveChangesAsync();
+        }
     }
 }

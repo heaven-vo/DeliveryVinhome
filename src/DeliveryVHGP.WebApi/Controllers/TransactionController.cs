@@ -30,5 +30,22 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
+        [HttpPut]
+        public async Task<ActionResult> MinusWalletBalanceByAdmin(string AccountId, int walletType, double amonut)
+        {
+            try
+            {
+                await repository.Transaction.MinusWalletBalance(AccountId, walletType, amonut);
+                return Ok(new { StatusCode = "Successful" });
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
     }
 }
