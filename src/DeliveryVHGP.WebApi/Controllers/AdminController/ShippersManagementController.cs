@@ -105,5 +105,26 @@ namespace DeliveryVHGP.WebApi.Controllers
                 });
             }
         }
+        /// <summary>
+        /// Delete for Shipper
+        /// </summary>
+        //POST: api/v1/ship
+        [HttpDelete("{shipperId}")]
+        public async Task<IActionResult> DeleteShip(string shipperId)
+        {
+            try
+            {
+                var ship = await repository.Shipper.DeleteShipper(shipperId);
+                return Ok(ship);
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
+        }
     }
 }
