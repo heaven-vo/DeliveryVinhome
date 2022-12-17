@@ -67,10 +67,21 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet("storeId")]
         public async Task<ActionResult> GetStoreById(string storeId)
         {
-            var store = await repository.Store.GetStoreById(storeId);
-            if (storeId == null)
-                return NotFound();
-            return Ok(store);
+            try
+            {
+                var store = await repository.Store.GetStoreById(storeId);
+                if (storeId == null)
+                    return NotFound();
+                return Ok(store);
+            }
+            catch (Exception e)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = e.Message
+                });
+            }
         }
         /// <summary>
         /// Get list orders preparing by store ,status:3 (store app) 
