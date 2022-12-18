@@ -20,7 +20,6 @@
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
         public AccountInRole Account { get; set; }
-        public WalletsDto Wallets { get; set; }
     }
     public class FilterRequestInStore
     {
