@@ -1361,5 +1361,44 @@ namespace DeliveryVHGP.WebApi.Repositories
             }
             await context.SaveChangesAsync();
         }
+        public async Task<object> GetWalletsStore(int pageIndex, int pageSize , WalletsFilter request) 
+        {
+            var lsrWallets = await (from  w in context.Wallets
+                                    //join a in context.Accounts on w.AccountId equals a.Id
+                                    //join s in context.Stores on a.Id equals s.Id
+                                    //join ship in context.Shippers on a.Id equals ship.Id
+                                    where w.Type == request.SearchByType || request.SearchByType == -1
+                                    //where w.Type(int).Con
+                                    select new WalletsDto
+                                    {
+                                        Id = w.Id,
+                                        AccountId = w.AccountId,
+                                        Amount = w.Amount,
+                                        //StoreName = s.Name,
+                                        //ShipName = ship.FullName,
+                                        Type = w.Type,
+                                        Active = w.Active
+                                    }
+                                    ).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
+            return lsrWallets;
+        }
+        public async Task<Object> getWalletById(string walletId)
+        {
+            var lsrWallets = await (from w in context.Wallets
+                                    //join a in context.Accounts on w.AccountId equals a.Id
+                                    //join s in context.Stores on a.Id equals s.Id
+                                    where w.Id == walletId 
+                                    select new WalletsDto
+                                    {
+                                        Id = w.Id,
+                                        AccountId = w.AccountId,
+                                        Amount = w.Amount,
+                                        //StoreName = s.Name,
+                                        Type = w.Type,
+                                        Active = w.Active
+                                    }
+                                    ).FirstOrDefaultAsync();
+            return lsrWallets;
+        }
     }
 }

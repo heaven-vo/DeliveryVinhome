@@ -1,4 +1,5 @@
 ﻿using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using static DeliveryVHGP.Core.Models.OrderAdminDto;
 
@@ -63,7 +64,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         [HttpGet("report-price")]
         public async Task<ActionResult> GetListOrdersReportPrice([FromQuery] DateFilterRequest request, [FromQuery] MonthFilterRequest monthFilter)
         {
-            return Ok(await repository.Order.GetPriceOrdersReports(request, monthFilter));
+           
             try
             {
                 var report = await repository.Order.GetPriceOrdersReports(request, monthFilter);
@@ -137,6 +138,48 @@ namespace DeliveryVHGP.WebApi.Controllers
             catch
             {
                 return NotFound(); ;
+            }
+        }
+        /// <summary>
+        /// Get list wallet with pagination
+        /// </summary>
+        // GET: api/Orders
+        [HttpGet("wallets")]
+        public async Task<ActionResult> GetWallet(int pageIndex, int pageSize,[FromQuery] WalletsFilter request)
+        {
+            try
+            {
+                var report = await repository.Order.GetWalletsStore(pageIndex, pageSize, request);
+                return Ok(new { StatusCode = "Successful", data = report });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = ex.Message
+                });
+            }
+        }
+        /// <summary>
+        /// Get wallet by Id with pagination
+        /// </summary>
+        // GET: api/Wallets
+        [HttpGet("byWalletId")]
+        public async Task<ActionResult> GetWalletById(string walletId)
+        {
+            try
+            {
+                var report = await repository.Order.getWalletById(walletId);
+                return Ok(new { StatusCode = "Successful", data = report });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    StatusCode = "Fail",
+                    message = ex.Message
+                });
             }
         }
     }
