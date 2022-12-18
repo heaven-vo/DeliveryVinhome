@@ -16,9 +16,11 @@
         public string? Password { get; set; }
         public bool? Status { get; set; }
         public double? CommissionRate { get; set; }
+        public double? Amount { get; set; }
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
         public AccountInRole Account { get; set; }
+        public WalletsDto Wallets { get; set; }
     }
     public class FilterRequestInStore
     {
