@@ -95,13 +95,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 var shipper = await repository.Shipper.GetShipperById(shipId);
                 return Ok(new { StatusCode = "Successful", data = shipper });
             }
-            catch
+            catch (Exception e)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "Hiện tại đang có đơn hàng chưa hoàn thành !!" +
-                                              "Vui lòng kiểm tra lại đơn hàng và thử lại "
+                    message = e.Message
                 });
             }
         }
