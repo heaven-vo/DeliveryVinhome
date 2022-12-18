@@ -31,4 +31,19 @@
     {
         public double? CommissionBalance { get; set; }
     }
+    public class WalletsDto
+    {
+        public string Id { get; set; } = null!;
+        public string? AccountId { get; set; }
+        //public string? StoreName { get; set; }
+        //public string? ShipName { get; set; }
+        public double? Amount { get; set; }
+        public int? Type { get; set; }
+        public bool? Active { get; set; }
+    }
+    public class WalletsFilter
+    {
+        //public string? SearchByStoreName { get; set; } = "";
+        public int? SearchByType { get; set; } = -1;
+    }
 }
