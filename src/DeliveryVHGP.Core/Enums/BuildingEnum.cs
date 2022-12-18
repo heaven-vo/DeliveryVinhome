@@ -1,4 +1,4 @@
-﻿namespace DeliveryVHGP.DeliveryAlgorithm.Model
+﻿namespace DeliveryVHGP.Core.Enums
 {
     public enum BuildingEnum
     {

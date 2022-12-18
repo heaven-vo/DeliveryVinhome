@@ -6,6 +6,8 @@
         public int success { get; set; }
         public int canceled { get; set; }
         public int customerFail { get; set; }
+        public double totalDistance { get; set; }
+        public double totalProfit { get; set; }
     }
     public class DeliveryShipperReportModel
     {

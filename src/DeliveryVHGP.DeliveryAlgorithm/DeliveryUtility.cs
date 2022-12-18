@@ -1,11 +1,7 @@
-﻿using DeliveryVHGP.Core.Models;
+﻿using DeliveryVHGP.Core.Enums;
+using DeliveryVHGP.Core.Models;
 using DeliveryVHGP.DeliveryAlgorithm.Model;
 using Google.OrTools.ConstraintSolver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DeliveryVHGP.DeliveryAlgorithm
 {

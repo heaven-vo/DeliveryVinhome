@@ -1,4 +1,5 @@
-﻿using DeliveryVHGP.Core.Data;
+﻿using DeliveryVHGP.Core.Const;
+using DeliveryVHGP.Core.Data;
 using DeliveryVHGP.Core.Entities;
 using DeliveryVHGP.Core.Enums;
 using DeliveryVHGP.Core.Interfaces.IRepositories;
@@ -97,10 +98,16 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task<int> CreateSingleRoute(List<SegmentModel> listSegments)
         {
+            var buildings = System.Enum.GetValues(typeof(BuildingEnum))
+                        .Cast<BuildingEnum>()
+                        .Select(d => (d, (int)d))
+                        .ToList();
             List<SegmentDeliveryRoute> listRoute = new List<SegmentDeliveryRoute>();
             List<OrderAction> listAction = new List<OrderAction>();
+
             foreach (var segment in listSegments)
             {
+                double totalDistance = 0;
                 SegmentDeliveryRoute route = new SegmentDeliveryRoute() { Id = Guid.NewGuid().ToString(), Type = (int)RouteTypeEnum.DeliveryFood, Status = (int)RouteStatusEnum.NotAssign, Description = "Mode 1" };
                 List<RouteEdge> listEdge = new List<RouteEdge>();
 
@@ -125,13 +132,28 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     actionPickUp.OrderActionType = (int)OrderActionEnum.PickupStore;
                     actionDelivery.OrderActionType = (int)OrderActionEnum.DeliveryCus;
                 }
+                int bu1 = 0, bu2 = 0;
+                foreach (var build in buildings)
+                {
+                    if (build.Item1.ToString() == segment.fromBuilding)
+                    {
+                        bu1 = build.Item2 - 1;
+                    }
+                    else if (build.Item1.ToString() == segment.toBuilding)
+                    {
+                        bu2 = build.Item2 - 1;
+                    }
+                }
+                edgeDelivery.Distance = DistanceMatrix.distanceMatrixData[bu1, bu2];
+                totalDistance = (double)edgeDelivery.Distance;
+
                 listAction.Add(actionDelivery);
                 listAction.Add(actionPickUp);
                 listEdge.Add(edgePickUp);
                 listEdge.Add(edgeDelivery);
 
                 route.RouteEdges = listEdge;
-                route.Distance = 0;
+                route.Distance = totalDistance;
                 listRoute.Add(route);
             }
             try

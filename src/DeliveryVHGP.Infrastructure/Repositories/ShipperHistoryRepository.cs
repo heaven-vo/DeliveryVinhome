@@ -127,42 +127,50 @@ namespace DeliveryVHGP.Infrastructure.Repositories
         }
         public async Task<ShipperReportModel> GetShipperReport(string shipperId, DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-            ShipperReportModel report = new ShipperReportModel() { total = 0, success = 0, canceled = 0, customerFail = 0 };
+            double totalProfit = 0;
+            ShipperReportModel report = new ShipperReportModel() { total = 0, success = 0, canceled = 0, customerFail = 0, totalDistance = 0, totalProfit = 0 };
+            List<ShipperHistory> listHistory = new List<ShipperHistory>();
             if (request.DateFilter != "")
             {
                 DateTime dateTime = DateTime.Parse(request.DateFilter);
                 var nextDay = dateTime.AddDays(1);
-                var history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
+                listHistory = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
                 && x.CreateDate > dateTime && x.CreateDate < nextDay).ToListAsync();
-                if (!history.Any())
-                {
-                    return report;
-                }
-                report.total = history.Count();
-                report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
-                report.canceled = history.Where(x => x.Status == (int)StatusEnum.fail
-                    && (x.Order.Status == (int)FailStatus.StoreFail || x.Order.Status == (int)FailStatus.ShipperFail)
-                    ).Count();
-                report.customerFail = history.Where(x => x.Status == (int)StatusEnum.fail && x.Order.Status == (int)FailStatus.CustomerFail).Count();
-                return report;
             }
             else if (monthFilter.Month != 0)
             {
-                var history = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
+                listHistory = await context.ShipperHistories.Include(x => x.Order).Where(x => x.ShipperId == shipperId
                 && x.CreateDate.Value.Year == monthFilter.Year && x.CreateDate.Value.Month == monthFilter.Month).ToListAsync();
-                if (!history.Any())
-                {
-                    return report;
-                }
-                report.total = history.Count();
-                report.success = history.Where(x => x.Status == (int)StatusEnum.success).Count();
-                report.canceled = history.Where(x => x.Status == (int)StatusEnum.fail
-                    && (x.Order.Status == (int)FailStatus.StoreFail || x.Order.Status == (int)FailStatus.ShipperFail)
-                    ).Count();
-                report.customerFail = history.Where(x => x.Status == (int)StatusEnum.fail && x.Order.Status == (int)FailStatus.CustomerFail).Count();
+            }
+            if (!listHistory.Any())
+            {
                 return report;
             }
-            return null;
+            report.total = listHistory.Count();
+            report.success = listHistory.Where(x => x.Status == (int)StatusEnum.success).Count();
+            report.canceled = listHistory.Where(x => x.Status == (int)StatusEnum.fail
+                && (x.Order.Status == (int)FailStatus.StoreFail || x.Order.Status == (int)FailStatus.ShipperFail)
+                ).Count();
+            report.customerFail = listHistory.Where(x => x.Status == (int)StatusEnum.fail && x.Order.Status == (int)FailStatus.CustomerFail).Count();
+            report.totalDistance = await GetDeliveryDistanse(shipperId, request, monthFilter);
+            foreach (var history in listHistory)
+            {
+                var order = await context.Orders.Include(x => x.Service).Where(x => x.Id == history.OrderId).FirstOrDefaultAsync();
+                if (order == null)
+                {
+                    continue;
+                }
+                if (order.ServiceId == DeliveryService.FastService)
+                {
+                    totalProfit += (double)order.ShipCost * ShipFee.ShipperCommission * 2;
+                }
+                if (order.ServiceId == DeliveryService.NormalService)
+                {
+                    totalProfit += (double)order.ShipCost * ShipFee.ShipperCommission;
+                }
+            }
+            report.totalProfit = totalProfit;
+            return report;
         }
         public async Task<DeliveryShipperReportModel> GetDeliveryAllShipperReport(DateFilterRequest request, MonthFilterRequest monthFilter, int page, int pageSize)
         {
@@ -203,22 +211,49 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     shipperInReport.canceledOrder = history.Where(x => x.ShipperId == shipper.Id && x.Status == (int)StatusEnum.fail).Count();
                     shipperInReport.refundBalance = await context.Wallets.Where(x => x.AccountId == shipper.Id && x.Type == (int)WalletTypeEnum.Refund && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
                     shipperInReport.debitBalance = await context.Wallets.Where(x => x.AccountId == shipper.Id && x.Type == (int)WalletTypeEnum.Debit && x.Active == true).Select(x => x.Amount).FirstOrDefaultAsync();
-                    var distance = await (from his in context.ShipperHistories
-                                          join order in context.Orders on his.OrderId equals order.Id
-                                          join orderAction in context.OrderActions on order.Id equals orderAction.OrderId
-                                          join edge in context.RouteEdges on orderAction.RouteEdgeId equals edge.Id
-                                          where his.ShipperId == shipper.Id && his.Status == (int)StatusEnum.success
-                                          && his.ActionType == orderAction.OrderActionType
-                                          select edge.Distance).FirstOrDefaultAsync();
-                    if (distance != null)
-                    {
-                        shipperInReport.distance = distance;
-                    }
+                    var distance = await GetDeliveryDistanse(shipper.Id, request, monthFilter);
+                    shipperInReport.distance = distance;
                     shipperInReports.Add(shipperInReport);
                 }
                 report.shipperInReports = shipperInReports;
             }
             return report;
+        }
+        public async Task<double> GetDeliveryDistanse(string shipperId, DateFilterRequest request, MonthFilterRequest monthFilter)
+        {
+            double totalDistance = 0;
+            List<double?> listDistance = new List<double?>();
+            if (request.DateFilter != "")
+            {
+                DateTime dateTime = DateTime.Parse(request.DateFilter);
+                var nextDay = dateTime.AddDays(1);
+                listDistance = await (from his in context.ShipperHistories
+                                      join order in context.Orders on his.OrderId equals order.Id
+                                      join orderAction in context.OrderActions on order.Id equals orderAction.OrderId
+                                      join edge in context.RouteEdges on orderAction.RouteEdgeId equals edge.Id
+                                      where his.ShipperId == shipperId && his.Status == (int)StatusEnum.success
+                                      && his.ActionType == orderAction.OrderActionType && his.CreateDate > dateTime && his.CreateDate < nextDay
+                                      select edge.Distance).ToListAsync();
+
+            }
+            else if (monthFilter.Month != 0)
+            {
+                listDistance = await (from his in context.ShipperHistories
+                                      join order in context.Orders on his.OrderId equals order.Id
+                                      join orderAction in context.OrderActions on order.Id equals orderAction.OrderId
+                                      join edge in context.RouteEdges on orderAction.RouteEdgeId equals edge.Id
+                                      where his.ShipperId == shipperId && his.Status == (int)StatusEnum.success
+                                      && his.ActionType == orderAction.OrderActionType && his.CreateDate.Value.Year == monthFilter.Year && his.CreateDate.Value.Month == monthFilter.Month
+                                      select edge.Distance).ToListAsync();
+            }
+            if (listDistance.Any())
+            {
+                foreach (var distance in listDistance)
+                {
+                    totalDistance += (double)distance;
+                }
+            }
+            return totalDistance;
         }
     }
 }
