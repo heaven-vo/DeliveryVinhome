@@ -194,10 +194,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                             {
                                 result.Status = shipper.Status;
                             }
-                            if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
-                                || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
-                                || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
-                                throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
+                            if ( order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                 || order.Status == (int)InProcessStatus.CustomerDelivery)
+                                throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!!" +
                                                              "Vui lòng kiểm tra lại đơn hàng và thử lại");
                         }
                     }
@@ -246,9 +245,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                 context.Shippers.Remove(deShip);
                                 context.Transactions.RemoveRange(tran);
                             }
-                            if (order.Status == (int)OrderStatusEnum.New || order.Status == (int)OrderStatusEnum.Received || order.Status == (int)OrderStatusEnum.Assigning
-                                || order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
-                                || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery)
+                            if ( order.Status == (int)OrderStatusEnum.Accepted || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
+                                 || order.Status == (int)InProcessStatus.CustomerDelivery)
                                 throw new Exception("Hiện tại đang có đơn hàng chưa hoàn thành!!" +
                                                              "Vui lòng kiểm tra lại đơn hàng và thử lại");
                         }
