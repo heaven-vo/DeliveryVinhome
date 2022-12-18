@@ -197,7 +197,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 foreach (var shipper in listShipper)
                 {
-                    ShipperInReport shipperInReport = new ShipperInReport() { fullname = shipper.FullName, phone = shipper.Phone, distance = 0 };
+                    ShipperInReport shipperInReport = new ShipperInReport() { id = shipper.Id, fullname = shipper.FullName, phone = shipper.Phone, distance = 0 };
                     shipperInReport.totalOrder = history.Where(x => x.ShipperId == shipper.Id).Count();
                     shipperInReport.successfulOrder = history.Where(x => x.ShipperId == shipper.Id && x.Status == (int)StatusEnum.success).Count();
                     shipperInReport.canceledOrder = history.Where(x => x.ShipperId == shipper.Id && x.Status == (int)StatusEnum.fail).Count();

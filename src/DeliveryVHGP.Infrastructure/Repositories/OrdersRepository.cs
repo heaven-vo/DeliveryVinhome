@@ -1245,7 +1245,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                         }
                         if (actionType == (int)OrderActionEnum.DeliveryCus)
                         {
-                            tran.Amount = order.Total + shipFeePercent * 2 * order.ShipCost;
+                            tran.Amount = order.Total + order.ShipCost;
                             tran.Action = (int)TransactionActionEnum.plus;
                             tran.Type = (int)TransactionTypeEnum.refund;
                             tran.WalletId = refundWallet.Id;

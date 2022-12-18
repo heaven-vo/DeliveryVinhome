@@ -16,6 +16,7 @@
     }
     public class ShipperInReport
     {
+        public string id { get; set; }
         public string? fullname { get; set; }
         public string? phone { get; set; }
         public double? distance { get; set; }

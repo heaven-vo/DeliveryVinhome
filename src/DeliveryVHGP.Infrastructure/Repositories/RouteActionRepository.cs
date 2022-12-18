@@ -28,6 +28,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 foreach (var route in listRoute)
                 {
+                    double? totalAdvance = 0;
+                    double? totalCod = 0;
                     RouteModel routeModel = new RouteModel() { RouteId = route.Id, EdgeNum = route.RouteEdges.Count(), ShipperId = route.ShipperId, Type = route.Type, Status = route.Status };
                     var first = route.RouteEdges.Where(x => x.Priority == 1).Select(x => x.ToBuildingId).FirstOrDefault();
                     var last = route.RouteEdges.OrderByDescending(x => x.Priority).Select(x => x.ToBuildingId).FirstOrDefault();
@@ -42,28 +44,39 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                         orderActions.AddRange(edge.OrderActions);
                     }
                     var listOrderAction = orderActions.GroupBy(x => x.OrderId).Select(x => x.First()).ToList();
-                    var listOrderId = listOrderAction.Select(x => x.OrderId).ToList();
+                    //var listOrderId = listOrderAction.Select(x => x.OrderId).ToList();
                     routeModel.OrderNum = listOrderAction.Count;
-                    var listOrder = await context.Orders.Include(x => x.Payments).Where(x => listOrderId.Contains(x.Id)).ToListAsync();
 
-                    double? total = 0;
-                    double? totalCod = 0;
-                    foreach (var order in listOrder)
+                    //var listOrder = await context.Orders.Include(x => x.Payments).Where(x => listOrderId.Contains(x.Id)).ToListAsync();
+                    //foreach (var order in listOrder)
+                    //{
+                    //    if (order.Payments.Any())
+                    //    {
+                    //        Console.WriteLine(order.Id + ": " + order.Payments.First().Type);
+                    //    }
+                    //    //total += await context.Orders.Where(x => x.Id == order.OrderId).Select(x => x.Total).FirstOrDefaultAsync();
+                    //    total += order.Total;
+                    //    if (order.Payments.First().Type == (int)PaymentEnum.Cash)
+                    //    {
+                    //        totalCod += order.Total;
+                    //    }
+                    //}
+
+                    foreach (var action in orderActions)
                     {
-                        if (order.Payments.Any())
+                        var orderAction = await context.OrderActions.Include(x => x.Order).ThenInclude(x => x.Payments).Where(x => x.Id == action.Id).FirstOrDefaultAsync();
+                        if (action.OrderActionType == (int)OrderActionEnum.PickupStore)
                         {
-                            Console.WriteLine(order.Id + ": " + order.Payments.First().Type);
+                            totalAdvance += orderAction.Order.Total;
                         }
-                        //total += await context.Orders.Where(x => x.Id == order.OrderId).Select(x => x.Total).FirstOrDefaultAsync();
-                        total += order.Total;
-                        if (order.Payments.First().Type == (int)PaymentEnum.Cash)
+                        if (action.OrderActionType == (int)OrderActionEnum.DeliveryCus && orderAction.Order.Payments.First().Type == (int)PaymentEnum.Cash)
                         {
-                            totalCod += order.Total;
+                            totalCod += (orderAction.Order.Total + orderAction.Order.ShipCost);
                         }
                     }
-                    routeModel.TotalBill = total;
-                    routeModel.TotalCod = totalCod;
 
+                    routeModel.TotalAdvance = totalAdvance;
+                    routeModel.TotalCod = totalCod;
                     listRouteModel.Add(routeModel);
                 }
             }

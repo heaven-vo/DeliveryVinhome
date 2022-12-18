@@ -16,7 +16,7 @@ namespace DeliveryVHGP.Core.Models
         [FirestoreProperty]
         public int OrderNum { get; set; }
         [FirestoreProperty]
-        public double? TotalBill { get; set; }
+        public double? TotalAdvance { get; set; }
         [FirestoreProperty]
         public double? TotalCod { get; set; }
         [FirestoreProperty]
