@@ -46,7 +46,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                CategoryId = c.Id,
                                                ProductCategory = c.Name,
                                                CreateAt = p.CreateAt,
-                                               UpdateAt = p.UpdateAt
+                                               UpdateAt = p.UpdateAt,
+                                               Status = pm.Status
                                            }
                                      ).OrderByDescending(t => t.CreateAt).Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
 

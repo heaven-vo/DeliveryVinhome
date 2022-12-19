@@ -14,7 +14,7 @@
         public double? MinimumDeIn { get; set; }
         public string? Description { get; set; }
         public double? Rate { get; set; }
-        public string? StoreId{ get; set; }
+        public string? StoreId { get; set; }
         public string? StoreName { get; set; }
         public string? StoreImage { get; set; }
         public string? Slogan { get; set; }
@@ -22,5 +22,6 @@
         public string? ProductCategory { get; set; }
         public string? CreateAt { get; set; }
         public string? UpdateAt { get; set; }
+        public bool? Status { get; set; }
     }
 }
