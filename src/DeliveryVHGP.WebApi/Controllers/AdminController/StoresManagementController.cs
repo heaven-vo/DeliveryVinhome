@@ -204,13 +204,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 var storee = await repository.Store.GetStoreById(storeId);
                 return Ok(new {StatusCode = "Successful" , data = storee});
             }
-            catch
+            catch (Exception e)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "Hiện tại cửa hàng đang đơn hàng chưa hoàn thành !!" +
-                                              "Vui lòng kiểm tra lại đơn hàng và thử lại "
+                    message = e.Message
                 });
             }
         }
