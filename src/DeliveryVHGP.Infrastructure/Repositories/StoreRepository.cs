@@ -1,15 +1,4 @@
-﻿using DeliveryVHGP.Core.Data;
-using DeliveryVHGP.Core.Entities;
-using DeliveryVHGP.Core.Enums;
-using DeliveryVHGP.Core.Interface.IRepositories;
-using DeliveryVHGP.Core.Models;
-using DeliveryVHGP.Infrastructure.Repositories.Common;
-using DeliveryVHGP.Infrastructure.Services;
-using DeliveryVHGP_WebApi.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using static DeliveryVHGP.Core.Models.OrderAdminDto;
-
-namespace DeliveryVHGP.WebApi.Repositories
+﻿namespace DeliveryVHGP.WebApi.Repositories
 {
     public class StoreRepository : RepositoryBase<Store>, IStoreRepository
     {
@@ -26,6 +15,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    join b in context.Brands on store.BrandId equals b.Id
                                    join building in context.Buildings on store.BuildingId equals building.Id
                                    join sc in context.StoreCategories on store.StoreCategoryId equals sc.Id
+                                   join a in context.Accounts on store.Id equals a.Id
+                                   join w in context.Wallets on a.Id equals w.AccountId
                                    where store.Name.Contains(request.SearchByStoreName)
                                    where b.Name.Contains(request.SearchByBrand)
                                    where building.Name.Contains(request.SearchByBuilding)
@@ -43,6 +34,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        StoreCateName = sc.Name,
                                        Status = store.Status,
                                        CommissionRate = store.CommissionRate,
+                                       Amount = w.Amount,
                                        CreateAt = store.CreateAt,
                                        UpdateAt = store.UpdateAt
 
@@ -538,6 +530,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                                join b in context.Brands on s.BrandId equals b.Id
                                join sc in context.StoreCategories on s.StoreCategoryId equals sc.Id
                                join bs in context.Buildings on s.BuildingId equals bs.Id
+                               join a in context.Accounts on s.Id equals a.Id
+                               join w in context.Wallets on a.Id equals w.AccountId
                                where s.Id == storeId
                                select new ViewListStoreModel()
                                {
@@ -554,6 +548,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    StoreCategoryId = sc.Id,
                                    Status = s.Status,
                                    CommissionRate = s.CommissionRate,
+                                   Amount = w.Amount,
                                    CreateAt = s.CreateAt,
                                    UpdateAt = s.UpdateAt,
                                }).FirstOrDefaultAsync();
@@ -671,13 +666,15 @@ namespace DeliveryVHGP.WebApi.Repositories
                     result.Status = store.Status;
                 }
                 if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
-                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                          "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
+            if (status == null)
+            {
+                result.Status = store.Status;
+            }
 
-            //result.Status = store.Status;
             result.UpdateAt = time;
             account.Password = store.Password;
 
@@ -707,15 +704,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                     result.Status = store.Status;
                 }
                 if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
-                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            //if (status == null)
-            //{
-            //    result.Status = store.Status;
-            //}
+            if (status == null)
+            {
+                result.Status = store.Status;
+            }
 
             try
             {

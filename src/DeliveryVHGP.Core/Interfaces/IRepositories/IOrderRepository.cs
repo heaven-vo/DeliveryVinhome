@@ -31,5 +31,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
         Task CancelOrderByAdmin(string orderId, int orderStatus, string messageFail);
         Task CancelOrderByStore(string orderId, string messageFail);
         Task<Object> DeleteOrder();
+        Task<object> GetWalletsStore(int pageIndex, int pageSize, WalletsFilter request);
+        Task<Object> getWalletById(string walletId);
     }
 }
