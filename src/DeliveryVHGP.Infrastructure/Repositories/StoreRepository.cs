@@ -677,8 +677,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     result.Status = store.Status;
                 }
                 if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
-                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                          "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
@@ -710,8 +709,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                     result.Status = store.Status;
                 }
                 if (status.Status == (int)OrderStatusEnum.New || status.Status == (int)OrderStatusEnum.Received || status.Status == (int)OrderStatusEnum.Assigning
-                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery
-                    || status.Status == (int)InProcessStatus.AtHub || status.Status == (int)InProcessStatus.CustomerDelivery)
+                    || status.Status == (int)OrderStatusEnum.Accepted || status.Status == (int)OrderStatusEnum.InProcess || status.Status == (int)InProcessStatus.HubDelivery)
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
