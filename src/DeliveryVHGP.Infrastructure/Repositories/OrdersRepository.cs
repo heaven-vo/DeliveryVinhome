@@ -438,7 +438,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 report.TotalProfitOrder = (double)lstOrder.Where(p => p.Status == (int)OrderStatusEnum.Completed).Sum(o => o.ShipCost*0.2) + (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.VNPay).Sum(o => o.Amount*0.2)+ (double)lstPayment.Where(p => p.Type == (int)PaymentEnum.Cash).Sum(o => o.Amount*0.2); // Lợi nhuận
 
                 return report;
-            }
+            } 
             else if (monthFilter.Month != 0)
             {
                 var lstOrder = await (from orderr in context.Orders
