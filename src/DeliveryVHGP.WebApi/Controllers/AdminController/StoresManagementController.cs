@@ -171,7 +171,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         }
         /// <summary>
         /// Update status store  with pagination
-        /// </summary>
+        /// </summary> 
         //PUT: api/v1/store?id
         [HttpPut("{storeId}")]
         public async Task<ActionResult> UpdateStoreById(string storeId, StoreDto store , Boolean imgUpdate)
