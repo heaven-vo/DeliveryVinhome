@@ -166,7 +166,6 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 return 0;
             }
-
             return 1;
         }
         public async Task CreateActionOrder(List<NodeModel> listNode, List<SegmentModel> listSegments)
@@ -339,9 +338,8 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             {
                 DeviceId = tokens,
                 IsAndroiodDevice = true,
-                Title = "Đơn mới",
-                Body = "Bạn có đơn mới" +
-                ", hãy vào app để kiểm tra "
+                Title = "Xác nhận đơn",
+                Body = "Tài xế đã nhận đơn, vui lòng chuẩn bị đơn hàng"
             };
             await _notificationService.SendNotification(notificationModel);
             await firestoreService.UpdateRoute(routeId, new RouteUpdateModel { ShipperId = shipperId, Status = (int)RouteStatusEnum.ToDo });

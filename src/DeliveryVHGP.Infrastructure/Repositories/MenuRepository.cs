@@ -35,6 +35,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                         StartHour = 0,
                         EndHour = 24,
                         SaleMode = "3",
+                        Priority = 1,
+                        ShipCost = 15000,
                         Active = true
                     };
                     await context.AddAsync(newMenu);
@@ -73,10 +75,6 @@ namespace DeliveryVHGP.WebApi.Repositories
                 StartTime = x.StartHour,
                 EndTime = x.EndHour
             }).ToListAsync();
-            //if (!listMenu.Any())
-            //{
-            //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Contact {0} not found.", modeId)));
-            //}
             return listMenu;
         }
         public async Task<MenuDto> GetMenuDetail(string menuId)
@@ -190,14 +188,15 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuNotProductView> GetMenuByModeAndShowListCategory(string modeId)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuNotProductView
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Image = x.Image,
-                StartTime = x.StartHour,
-                EndTime = x.EndHour
-            }).FirstOrDefaultAsync();
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId && x.StartHour <= time && x.EndHour > time)
+                .OrderByDescending(x => x.Priority).Select(x => new MenuNotProductView
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image,
+                    StartTime = x.StartHour,
+                    EndTime = x.EndHour
+                }).FirstOrDefaultAsync();
             if (menuView.Id == null) throw new Exception("Not found menu");
 
             var listCategory = await (from menu in context.Menus
@@ -218,8 +217,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<List<StoreCategoryInMenuView>> GetListStoreCateInMenuNow(string modeId, int storeCateSize, int storeSize)
         {
             double time = await GetTime();
-            var menuId = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
-            ).FirstOrDefaultAsync();
+            var menuId = await context.Menus.Where(x => x.SaleMode == modeId && x.StartHour <= time && x.EndHour > time)
+                .OrderByDescending(x => x.Priority).Select(x => x.Id).FirstOrDefaultAsync();
             if (menuId == null) throw new Exception("Not found menu");
 
             var listStoreCate = await (from menu in context.Menus
@@ -258,8 +257,8 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<List<StoreInMenuView>> GetListStoreInMenuNow(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuId = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => x.Id
-            ).FirstOrDefaultAsync();
+            var menuId = await context.Menus.Where(x => x.SaleMode == modeId && x.StartHour <= time && x.EndHour > time)
+                .OrderByDescending(x => x.Priority).Select(x => x.Id).FirstOrDefaultAsync();
             if (menuId == null) throw new Exception("Not found menu");
 
             var listStore = await (from menu in context.Menus
@@ -282,15 +281,16 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuView> GetMenuByModeAndGroupByStore(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Image = x.Image,
-                StartTime = x.StartHour,
-                EndTime = x.EndHour
-            }).FirstOrDefaultAsync();
-            if (menuView.Id == null) throw new Exception("Not found menu");
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId && x.StartHour <= time && x.EndHour > time)
+                .OrderByDescending(x => x.Priority).Select(x => new MenuView
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image,
+                    StartTime = x.StartHour,
+                    EndTime = x.EndHour
+                }).FirstOrDefaultAsync();
+            if (menuView == null) throw new Exception("Not found menu");
 
             var listStore = await (from menu in context.Menus
                                    join sm in context.StoreInMenus on menu.Id equals sm.MenuId
@@ -316,14 +316,15 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<MenuView> GetMenuByModeAndGroupByCategory(string modeId, int page, int pageSize)
         {
             double time = await GetTime();
-            var menuView = await context.Menus.Where(x => x.SaleMode == modeId).Where(x => x.StartHour <= time).Where(x => x.EndHour > time).Select(x => new MenuView
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Image = x.Image,
-                StartTime = x.StartHour,
-                EndTime = x.EndHour
-            }).FirstOrDefaultAsync();
+            var menuView = await context.Menus.Where(x => x.SaleMode == modeId && x.StartHour <= time && x.EndHour > time)
+                .OrderByDescending(x => x.Priority).Select(x => new MenuView
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Image = x.Image,
+                    StartTime = x.StartHour,
+                    EndTime = x.EndHour
+                }).FirstOrDefaultAsync();
             if (menuView == null) throw new Exception("Not found menu");
 
             var listCategory = await (from menu in context.Menus
@@ -357,14 +358,15 @@ namespace DeliveryVHGP.WebApi.Repositories
                 listDate.Add(date.Value.AddDays(i));
             }
 
-            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter)).Select(x => new MenuViewMode3
-            {
-                Id = x.Id,
-                Image = x.Image,
-                Name = x.Name,
-                DayFilter = x.DayFilter.ToString()
-            }).OrderBy(x => x.DayFilter).ToListAsync();
-            if (listMenuMode3 == null) throw new Exception("Not found menu");
+            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter))
+                .Select(x => new MenuViewMode3
+                {
+                    Id = x.Id,
+                    Image = x.Image,
+                    Name = x.Name,
+                    DayFilter = x.DayFilter.ToString()
+                }).OrderBy(x => x.DayFilter).ToListAsync();
+            if (!listMenuMode3.Any()) throw new Exception("Not found menu");
             foreach (var me in listMenuMode3)
             {
                 var listStore = await (from menu in context.Menus
@@ -381,7 +383,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                            Building = bu.Name,
                                            StoreCategory = sc.Name
                                        }).Take(pageSize).ToListAsync();
-                if (listStore != null)
+                if (listStore.Any())
                     me.ListStores = listStore;
             }
             return listMenuMode3;// ?? new List<MenuViewMode3>();
@@ -396,13 +398,14 @@ namespace DeliveryVHGP.WebApi.Repositories
                 listDate.Add(date.Value.AddDays(i));
             }
 
-            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter)).OrderBy(x => x.DayFilter).Select(x => new MenuMode3Model
-            {
-                Id = x.Id,
-                Name = x.Name,
-                DayFilter = x.DayFilter.ToString(),
-                DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
-            }).ToListAsync();
+            var listMenuMode3 = await context.Menus.Where(m => m.SaleMode == "3" && listDate.Contains((DateTime)m.DayFilter))
+                .OrderBy(x => x.DayFilter).Select(x => new MenuMode3Model
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    DayFilter = x.DayFilter.ToString(),
+                    DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
+                }).ToListAsync();
             var listCate = await (from menu in context.Menus
                                   join ct in context.CategoryInMenus on menu.Id equals ct.MenuId
                                   join cate in context.Categories on ct.CategoryId equals cate.Id
@@ -413,7 +416,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Name = cate.Name,
                                       Image = cate.Image
                                   }).ToListAsync();
-            List<StoreInMenuView> listStore = null;
+            List<StoreInMenuView> listStore = new List<StoreInMenuView>();
             if (request.searchBy == "")
             {
                 listStore = await (from menu in context.Menus

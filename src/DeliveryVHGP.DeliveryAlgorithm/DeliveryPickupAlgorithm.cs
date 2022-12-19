@@ -18,12 +18,9 @@ namespace DeliveryVHGP.DeliveryAlgorithm
         }
         public void AlgorithsProcess(List<SegmentModel> listSegments)
         {
-            //List<SegmentModel> list = new List<SegmentModel>() { new SegmentModel(){fromBuilding = "b1", toBuilding = "b3"},
-            //                                                     new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"},
-            //                                                    new SegmentModel(){fromBuilding = "b5", toBuilding = "b6"}};
             // Instantiate the data problem.
             DataModel data = new DataModel();
-            data.VehicleNumber = 5;
+            data.VehicleNumber = 1;
             data.PickupsDeliveriesData = ChangeBuildingIdIntoInt(listSegments); //{1,6},{2,6},{1,6},{2,1} 
             foreach (var a in listSegments)
             {
@@ -41,7 +38,6 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             {
                 NodesMapping node = new NodesMapping() { RealNode = data.ListNodes[i], FakeNode = data.ListNodeWithNewIndex[i] };
                 map.Add(node);
-                //Console.WriteLine(node.RealNode + " " + node.FakeNode);
             }
             data.NodesMappings = map;
             data.PickupsDeliveries = ChangeSegmentToNew(data.PickupsDeliveriesData, map); //{1,6},{2,6},{1,6},{2,1} ->{1,3},{2,3},{1,3},{2,1}
@@ -67,7 +63,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             routing.SetArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
             // Add Distance constraint.
-            routing.AddDimension(transitCallbackIndex, 0, 100000,
+            routing.AddDimension(transitCallbackIndex, 0, 1000000,
                                  true, // start cumul to zero
                                  "Distance");
             RoutingDimension distanceDimension = routing.GetMutableDimension("Distance");
@@ -90,7 +86,7 @@ namespace DeliveryVHGP.DeliveryAlgorithm
             RoutingSearchParameters searchParameters =
                 operations_research_constraint_solver.DefaultRoutingSearchParameters();
             searchParameters.FirstSolutionStrategy = FirstSolutionStrategy.Types.Value.PathCheapestArc;//PathMostConstrainedArc;
-            searchParameters.TimeLimit = new Duration { Seconds = 5 };
+            searchParameters.TimeLimit = new Duration { Seconds = 10 };
 
             // Solve the problem.
             Assignment solution = routing.SolveWithParameters(searchParameters);
@@ -180,13 +176,10 @@ namespace DeliveryVHGP.DeliveryAlgorithm
                     }
                 }
                 Console.WriteLine("Segment of the route: {0}", listSegments.Count);
-                Console.WriteLine("IF____________________");
                 int check = await repo.RouteAction.CreateRoute(listRoute, listSegments);
                 if (check > 0)
                 {
-                    Console.WriteLine("BEFFOR____________________");
                     await repo.RouteAction.CreateActionOrder(NodeAction, listSegments);
-                    Console.WriteLine("AFTER____________________");
                 }
                 //Console.WriteLine("Maximum distance of the routes: {0}m", maxRouteDistance);
             }
@@ -197,7 +190,6 @@ namespace DeliveryVHGP.DeliveryAlgorithm
         public int[][] ChangeBuildingIdIntoInt(List<SegmentModel> input)
         {
             var enumCount = System.Enum.GetNames(typeof(BuildingEnum)).Length;
-            Console.WriteLine("Enum count: " + enumCount);
             int[][] result = new int[input.Count()][];
             var buildings = System.Enum.GetValues(typeof(BuildingEnum))
                         .Cast<BuildingEnum>()

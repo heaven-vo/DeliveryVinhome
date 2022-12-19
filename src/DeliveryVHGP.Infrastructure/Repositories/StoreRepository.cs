@@ -63,7 +63,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 TotalOrderCancel = 0,
                 TotalOrderCompleted = 0,
                 TotalOrder = 0,
-            
+
             };
 
             //SystemReportModelInStore report = new SystemReportModelInStore()
@@ -77,7 +77,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join s in context.Stores on orderr.StoreId equals s.Id
                                       where s.Id == storeId && h.ToStatus == 0 && h.CreateDate > dateTime && h.CreateDate < nextDay
                                       select orderr).ToListAsync();
-         
+
 
                 if (!lstOrder.Any())
                 {
@@ -98,7 +98,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
-                
+
                 return report;
             }
             else if (monthFilter.Month != 0)
@@ -109,7 +109,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       join s in context.Stores on orderr.StoreId equals s.Id
                                       where s.Id == storeId && h.ToStatus == 0 && h.CreateDate.Value.Year == monthFilter.Year && h.CreateDate.Value.Month == monthFilter.Month
                                       select orderr).ToListAsync();
-               
+
 
                 if (!lstOrder.Any())
                 {
@@ -129,7 +129,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                                     || order.Status == (int)OrderStatusEnum.InProcess || order.Status == (int)InProcessStatus.HubDelivery
                                                     || order.Status == (int)InProcessStatus.AtHub || order.Status == (int)InProcessStatus.CustomerDelivery
                                                   ).Count(); //tong don hang
-              
+
                 return report;
             }
             return null;
@@ -137,16 +137,16 @@ namespace DeliveryVHGP.WebApi.Repositories
 
         public async Task<PriceReportModel> GetPriceOrdersReports(string storeId, DateFilterRequest request, MonthFilterRequest monthFilter)
         {
-           PriceReportModel report = new PriceReportModel()
+            PriceReportModel report = new PriceReportModel()
             {
-               TotalShipFree = 0,
-               TotalPaymentVNPay = 0,
-               TotalPaymentCash = 0,
-               TotalOrder = 0,
-               TotalRevenueOrder = 0,
-               TotalProfitOrder = 0
+                TotalShipFree = 0,
+                TotalPaymentVNPay = 0,
+                TotalPaymentCash = 0,
+                TotalOrder = 0,
+                TotalRevenueOrder = 0,
+                TotalProfitOrder = 0
 
-           };
+            };
 
             //SystemReportModelInStore report = new SystemReportModelInStore()
             if (request.DateFilter != "")
@@ -533,7 +533,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<Object> GetStoreById(string storeId)
         {
-            
+
             var store = await (from s in context.Stores
                                join b in context.Brands on s.BrandId equals b.Id
                                join sc in context.StoreCategories on s.StoreCategoryId equals sc.Id
@@ -625,7 +625,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         }
         public async Task<AccountInRole> GetAccountInStore(string storeId)
         {
-            if ( storeId == null)
+            if (storeId == null)
             {
                 return null;
             }
@@ -677,8 +677,8 @@ namespace DeliveryVHGP.WebApi.Repositories
                          "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
 
-                //result.Status = store.Status;
-                result.UpdateAt = time;
+            //result.Status = store.Status;
+            result.UpdateAt = time;
             account.Password = store.Password;
 
             try
@@ -694,10 +694,13 @@ namespace DeliveryVHGP.WebApi.Repositories
         public async Task<StatusStoreDto> UpdateStatusStore(string storeId, StatusStoreDto store)
         {
             var result = await context.Stores.FindAsync(storeId);
+            if (result == null)
+            {
+                throw new Exception("Store not exsit");
+            }
             var status = context.Orders.OrderByDescending(x => x.Id).FirstOrDefault(x => x.StoreId == storeId);
             if (status != null)
             {
-                //var OrderStatus = context.OrderStatuses.FirstOrDefault(os => os.Id == status.Status);
                 if (status.Status == (int)OrderStatusEnum.Fail || status.Status == (int)OrderStatusEnum.Completed || status.Status == (int)FailStatus.OutTime
                                         || status.Status == (int)FailStatus.StoreFail || status.Status == (int)FailStatus.ShipperFail || status.Status == (int)FailStatus.CustomerFail)
                 {
