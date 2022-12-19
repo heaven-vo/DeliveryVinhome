@@ -681,9 +681,12 @@ namespace DeliveryVHGP.WebApi.Repositories
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                          "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
+            if(status == null)
+                {
+                result.Status = store.Status;
+            }
 
-                //result.Status = store.Status;
-                result.UpdateAt = time;
+            result.UpdateAt = time;
             account.Password = store.Password;
 
             try
@@ -713,10 +716,10 @@ namespace DeliveryVHGP.WebApi.Repositories
                     throw new Exception("Hiện tại cửa hàng đang có đơn hàng chưa hoàn thành!!" +
                                                  "Vui lòng kiểm tra lại đơn hàng và thử lại");
             }
-            //if (status == null)
-            //{
-            //    result.Status = store.Status;
-            //}
+            if (status == null)
+            {
+                result.Status = store.Status;
+            }
 
             try
             {
