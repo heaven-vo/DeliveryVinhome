@@ -227,7 +227,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                           Name = category.Name,
                                           Image = category.Image
                                       }).ToListAsync();
-
+            //listCategory = listCategory.GroupBy(x => x.Id).Select(x => x.First()).ToList();
             menuView.ListCategoryInMenus = listCategory;
             return menuView;
         }
@@ -425,8 +425,9 @@ namespace DeliveryVHGP.WebApi.Repositories
                     DayOfWeek = x.DayFilter.Value.DayOfWeek.ToString()
                 }).ToListAsync();
             var listCate = await (from menu in context.Menus
-                                  join ct in context.CategoryInMenus on menu.Id equals ct.MenuId
-                                  join cate in context.Categories on ct.CategoryId equals cate.Id
+                                  join pm in context.ProductInMenus on menu.Id equals pm.MenuId
+                                  join product in context.Products on pm.ProductId equals product.Id
+                                  join cate in context.Categories on product.CategoryId equals cate.Id
                                   where menu.Id == menuId
                                   select new CategoryInMenuView
                                   {
@@ -434,6 +435,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                       Name = cate.Name,
                                       Image = cate.Image
                                   }).ToListAsync();
+            listCate = listCate.GroupBy(x => x.Id).Select(x => x.First()).ToList();
             List<StoreInMenuView> listStore = new List<StoreInMenuView>();
             if (request.searchBy == "")
             {
