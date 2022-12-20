@@ -85,7 +85,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                 }).ToListAsync();
                 return listMenuMode3;
             }
-            var listMenu = await context.Menus.Where(m => m.SaleMode == modeId).Select(x => new MenuView
+            var listMenu = await context.Menus.Where(m => m.SaleMode == modeId).OrderBy(x => x.StartHour).Select(x => new MenuView
             {
                 Id = x.Id,
                 Image = x.Image,
