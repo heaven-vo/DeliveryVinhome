@@ -410,7 +410,7 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                     ShipCost = action.Order.ShipCost,
                     ActionType = action.OrderActionType,
                     Phone = action.Order.PhoneNumber,
-                    Name = action.Order.FullName,
+                    CusName = action.Order.FullName,
                     ActionStatus = action.Status
                 };
                 orderActionModel.Total = action.Order.Total;
@@ -433,10 +433,10 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                         .Where(x => x.Id == action.OrderId).Select(x => x.Store.Building.Hub.Name).FirstOrDefaultAsync();
 #pragma warning restore CS8601 // Possible null reference assignment.
                 }
-                //if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
-                //{
-                //    orderActionModel.Name = action.Order.FullName;
-                //}
+                if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
+                {
+                    orderActionModel.Name = action.Order.FullName;
+                }
                 orderActionModel.ServiceName = await context.Services.Where(x => x.Id == action.Order.ServiceId).Select(x => x.Name).FirstOrDefaultAsync();
                 var orderDetails = await context.OrderDetails.Where(x => x.OrderId == action.OrderId)
                     .Select(x => new OrderDetailActionModel

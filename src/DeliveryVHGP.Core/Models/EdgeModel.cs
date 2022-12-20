@@ -14,6 +14,7 @@
         public string ActionId { get; set; }
         public string OrderId { get; set; }
         public string Name { get; set; }
+        public string CusName { get; set; }
         public string Phone { get; set; }
         public string Note { get; set; }
         public int? PaymentType { get; set; }
