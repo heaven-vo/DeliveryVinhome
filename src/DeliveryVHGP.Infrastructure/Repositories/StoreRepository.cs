@@ -46,6 +46,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                        Status = store.Status,
                                        CommissionRate = store.CommissionRate,
                                        Amount = w.Amount,
+                                       CreditAccount = store.CreditAccount,
                                        CreateAt = store.CreateAt,
                                        UpdateAt = store.UpdateAt
 
@@ -560,6 +561,7 @@ namespace DeliveryVHGP.WebApi.Repositories
                                    Status = s.Status,
                                    CommissionRate = s.CommissionRate,
                                    Amount = w.Amount,
+                                   CreditAccount = s.CreditAccount,
                                    CreateAt = s.CreateAt,
                                    UpdateAt = s.UpdateAt,
                                }).FirstOrDefaultAsync();

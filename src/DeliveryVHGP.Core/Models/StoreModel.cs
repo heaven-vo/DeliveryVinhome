@@ -14,6 +14,7 @@
         public string? StoreCateId { get; set; }
         public string? StoreCateName { get; set; }
         public string? Password { get; set; }
+        public string? CreditAccount { get; set; }
         public bool? Status { get; set; }
         public double? CommissionRate { get; set; }
         public double? Amount { get; set; }
