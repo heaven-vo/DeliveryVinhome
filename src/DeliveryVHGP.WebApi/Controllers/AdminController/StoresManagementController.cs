@@ -1,6 +1,12 @@
-﻿namespace DeliveryVHGP.WebApi.Controllers
+﻿using DeliveryVHGP.Core.Interfaces;
+using DeliveryVHGP.Core.Models;
+using DeliveryVHGP_WebApi.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using static DeliveryVHGP.Core.Models.OrderAdminDto;
+
+namespace DeliveryVHGP.WebApi.Controllers
 {
-    [Route("api/v1/store-management/stores")]
+    [Microsoft.AspNetCore.Mvc.Route("api/v1/store-management/stores")]
     [ApiController]
     public class StoresManagementController : ControllerBase
     {
