@@ -1,10 +1,4 @@
-﻿using DeliveryVHGP.Core.Interfaces;
-using DeliveryVHGP.Core.Models;
-using DeliveryVHGP_WebApi.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using static DeliveryVHGP.Core.Models.OrderAdminDto;
-
-namespace DeliveryVHGP.WebApi.Controllers
+﻿namespace DeliveryVHGP.WebApi.Controllers
 {
     [Route("api/v1/store-management/stores")]
     [ApiController]
@@ -171,7 +165,7 @@ namespace DeliveryVHGP.WebApi.Controllers
         }
         /// <summary>
         /// Update status store  with pagination
-        /// </summary>
+        /// </summary> 
         //PUT: api/v1/store?id
         [HttpPut("{storeId}")]
         public async Task<ActionResult> UpdateStoreById(string storeId, StoreDto store, Boolean imgUpdate)
@@ -182,12 +176,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 var storee = await repository.Store.GetStoreById(storeId);
                 return Ok(new { StatusCode = "Successful", data = storee });
             }
-            catch
+            catch (Exception e)
             {
                 return Ok(new
                 {
-                    message = "Hiện tại cửa hàng đang có trong menu !!" +
-                                               "Vui lòng xóa cửa hàng khỏi menu và thử lại "
+                    StatusCode = "Fail",
+                    message = e.Message
                 });
             }
         }
@@ -204,13 +198,12 @@ namespace DeliveryVHGP.WebApi.Controllers
                 var storee = await repository.Store.GetStoreById(storeId);
                 return Ok(new { StatusCode = "Successful", data = storee });
             }
-            catch
+            catch (Exception e)
             {
                 return Ok(new
                 {
                     StatusCode = "Fail",
-                    message = "Hiện tại cửa hàng đang đơn hàng chưa hoàn thành !!" +
-                                              "Vui lòng kiểm tra lại đơn hàng và thử lại "
+                    message = e.Message
                 });
             }
         }
