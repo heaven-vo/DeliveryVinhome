@@ -19,6 +19,12 @@ namespace DeliveryVHGP.WebApi.Controllers
             await repository.Menu.CreateMenuMode3();
             return Ok();
         }
+        [HttpDelete("menu3")]
+        public async Task<ActionResult> DeleteMenu3()
+        {
+            await repository.Menu.DeleteMenuMode3();
+            return Ok();
+        }
         //[HttpGet("Route")]
         //public async Task<ActionResult> CreateRoute()
         //{

@@ -16,7 +16,7 @@ namespace DeliveryVHGP.WebApi.Repositories
         {
             DateTime dateNow = DateTime.UtcNow.AddHours(7).Date;
             List<DateTime> listDate = new List<DateTime>();
-            for (int i = 1; i <= 7; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 listDate.Add(dateNow.AddDays(i));
             }
@@ -39,10 +39,28 @@ namespace DeliveryVHGP.WebApi.Repositories
                         ShipCost = 15000,
                         Active = true
                     };
+                    var listCate = await context.Categories.ToListAsync();
+                    if (listCate.Any())
+                    {
+                        List<CategoryInMenu> listCt = new List<CategoryInMenu>();
+                        foreach (var category in listCate)
+                        {
+                            CategoryInMenu ct = new CategoryInMenu() { Id = Guid.NewGuid().ToString(), CategoryId = category.Id, MenuId = newMenu.Id };
+                            listCt.Add(ct);
+                        }
+                        newMenu.CategoryInMenus = listCt;
+                    }
                     await context.AddAsync(newMenu);
                 }
                 await Save();
             }
+
+        }
+        public async Task DeleteMenuMode3()
+        {
+            var listMenu = await context.Menus.Where(x => x.SaleMode == "3").ToListAsync();
+            context.RemoveRange(listMenu);
+            await Save();
 
         }
         public async Task<List<MenuView>> GetListMenuByModeId(string modeId)

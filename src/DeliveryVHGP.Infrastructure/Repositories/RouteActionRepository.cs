@@ -401,7 +401,18 @@ namespace DeliveryVHGP.Infrastructure.Repositories
             List<OrderActionModel> listOrderActions = new List<OrderActionModel>();
             foreach (var action in listAction)
             {
-                OrderActionModel orderActionModel = new OrderActionModel() { ActionId = action.Id, OrderId = action.OrderId, Note = action.Order.Note, PaymentType = action.Order.Payments.First().Type, ShipCost = action.Order.ShipCost, ActionType = action.OrderActionType, ActionStatus = action.Status };
+                OrderActionModel orderActionModel = new OrderActionModel()
+                {
+                    ActionId = action.Id,
+                    OrderId = action.OrderId,
+                    Note = action.Order.Note,
+                    PaymentType = action.Order.Payments.First().Type,
+                    ShipCost = action.Order.ShipCost,
+                    ActionType = action.OrderActionType,
+                    Phone = action.Order.PhoneNumber,
+                    Name = action.Order.FullName,
+                    ActionStatus = action.Status
+                };
                 orderActionModel.Total = action.Order.Total;
                 //if (orderActionModel.PaymentType == (int)PaymentEnum.Cash)
                 //{
@@ -422,12 +433,10 @@ namespace DeliveryVHGP.Infrastructure.Repositories
                         .Where(x => x.Id == action.OrderId).Select(x => x.Store.Building.Hub.Name).FirstOrDefaultAsync();
 #pragma warning restore CS8601 // Possible null reference assignment.
                 }
-                if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
-                {
-                    orderActionModel.Name = action.Order.FullName;
-                    orderActionModel.Phone = action.Order.PhoneNumber;
-
-                }
+                //if (orderActionModel.ActionType == (int)OrderActionEnum.DeliveryCus)
+                //{
+                //    orderActionModel.Name = action.Order.FullName;
+                //}
                 orderActionModel.ServiceName = await context.Services.Where(x => x.Id == action.Order.ServiceId).Select(x => x.Name).FirstOrDefaultAsync();
                 var orderDetails = await context.OrderDetails.Where(x => x.OrderId == action.OrderId)
                     .Select(x => new OrderDetailActionModel

@@ -88,9 +88,9 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         // GET: api/Orders
         [HttpGet("byStoreId/orders-preparing")]
-        public async Task<ActionResult> GetOrderPreparingByStore( string storeId, int pageIndex, int pageSize)
+        public async Task<ActionResult> GetOrderPreparingByStore(string storeId, int pageIndex, int pageSize)
         {
-            var listOder = await repository.Store.GetListOrderPreparingsByStore(storeId ,pageIndex, pageSize);
+            var listOder = await repository.Store.GetListOrderPreparingsByStore(storeId, pageIndex, pageSize);
             if (storeId == null)
                 return NotFound();
             return Ok(listOder);
@@ -174,20 +174,20 @@ namespace DeliveryVHGP.WebApi.Controllers
         /// </summary>
         //PUT: api/v1/store?id
         [HttpPut("{storeId}")]
-        public async Task<ActionResult> UpdateStoreById(string storeId, StoreDto store , Boolean imgUpdate)
+        public async Task<ActionResult> UpdateStoreById(string storeId, StoreDto store, Boolean imgUpdate)
         {
             try
             {
                 var productToUpdate = await repository.Store.UpdateStore(storeId, store, imgUpdate);
                 var storee = await repository.Store.GetStoreById(storeId);
-                return Ok(storee);
+                return Ok(new { StatusCode = "Successful", data = storee });
             }
             catch
             {
-               return Ok(new
+                return Ok(new
                 {
                     message = "Hiện tại cửa hàng đang có trong menu !!" +
-                                              "Vui lòng xóa cửa hàng khỏi menu và thử lại "
+                                               "Vui lòng xóa cửa hàng khỏi menu và thử lại "
                 });
             }
         }
@@ -202,7 +202,7 @@ namespace DeliveryVHGP.WebApi.Controllers
             {
                 var productToUpdate = await repository.Store.UpdateStatusStore(storeId, store);
                 var storee = await repository.Store.GetStoreById(storeId);
-                return Ok(new {StatusCode = "Successful" , data = storee});
+                return Ok(new { StatusCode = "Successful", data = storee });
             }
             catch
             {

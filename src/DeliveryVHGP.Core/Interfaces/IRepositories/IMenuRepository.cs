@@ -7,6 +7,7 @@ namespace DeliveryVHGP.Core.Interface.IRepositories
     public interface IMenuRepository : IRepositoryBase<Menu>
     {
         Task CreateMenuMode3();
+        Task DeleteMenuMode3();
         Task<MenuDto> GetMenuDetail(string menuId);
         Task<List<MenuView>> GetListMenuByModeId(string modeId);
         Task<MenuViewModel> Filter(string KeySearch, string menuId, int page, int pageSize); //search
