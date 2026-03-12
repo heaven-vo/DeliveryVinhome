@@ -10,8 +10,8 @@ This ecosystem provides an end-to-end solution for ordering and delivery service
   - Admin Dashboard: For system-wide management and monitoring.
 
 ## 🚀 Key Features & Engineering Challenges
-1. Delivery Route Optimization:
-  - Problem: High-rise buildings present unique logistics challenges with vertical travel and dense delivery points.
+**1. Delivery Route Optimization:**
+- Problem: High-rise buildings present unique logistics challenges with vertical travel and dense delivery points.
   - Solution: Designed and optimized a specialized Delivery Algorithm to minimize travel distance and ensure efficient distribution.
 
 2. Real-time Synchronization:
@@ -31,10 +31,10 @@ This ecosystem provides an end-to-end solution for ordering and delivery service
   - DevOps: GitHub, CI/CD Pipeline.
 
 # 👨‍💼 Leadership & Responsibilities
-As the Team Lead of 4 members, I was responsible for:
+  - As the Team Lead of 4 members, I was responsible for:
 
-Managing the full project lifecycle using Agile/Scrum (sprint planning, resource allocation).
+  - Managing the full project lifecycle using Agile/Scrum (sprint planning, resource allocation).
 
-Architecting the system schema and cross-platform communication logic.
+  - Architecting the system schema and cross-platform communication logic.
 
-Collaborating with stakeholders to transform business requirements into high-fidelity UX/UI designs.
+  - Collaborating with stakeholders to transform business requirements into high-fidelity UX/UI designs.
