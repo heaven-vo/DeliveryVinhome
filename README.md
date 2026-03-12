@@ -1,7 +1,7 @@
-🚚 Apartment Delivery Ecosystem (Capstone Project)
+## 🚚 Apartment Delivery Ecosystem (Capstone Project)
 An optimized delivery system for high-rise apartment complexes featuring a specialized Route Optimization Algorithm.
 
-📖 Overview
+## 📖 Overview
 This ecosystem provides an end-to-end solution for ordering and delivery services within complex apartment environments. It consists of 4 integrated applications:
 
 User App: For residents to browse stores and place orders.
